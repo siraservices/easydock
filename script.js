@@ -97,6 +97,19 @@ function resetForm() {
         error.textContent = '';
     });
     
+    // Clear user type validation errors
+    const userTypeOptions = document.querySelector('.user-type-selector');
+    if (userTypeOptions) {
+        userTypeOptions.style.border = '';
+        userTypeOptions.style.borderRadius = '';
+        userTypeOptions.style.backgroundColor = '';
+        
+        const existingError = document.getElementById('userTypeError');
+        if (existingError) {
+            existingError.remove();
+        }
+    }
+    
     // Hide and reset success message
     const successMessage = document.getElementById('successMessage');
     successMessage.style.display = 'none';
@@ -125,6 +138,17 @@ function selectUserType(type) {
     
     // Set hidden input value
     document.getElementById('userType').value = type;
+    
+    // Clear any validation error styling
+    const userTypeOptions = document.querySelector('.user-type-selector');
+    userTypeOptions.style.border = '';
+    userTypeOptions.style.borderRadius = '';
+    userTypeOptions.style.backgroundColor = '';
+    
+    const existingError = document.getElementById('userTypeError');
+    if (existingError) {
+        existingError.remove();
+    }
 }
 
 // Form Validation
@@ -148,9 +172,45 @@ function validateForm() {
     
     // User type validation
     const userType = document.getElementById('userType');
+    const userTypeOptions = document.querySelector('.user-type-selector');
+    
     if (!userType.value) {
-        alert('Please select whether you are a Yacht Owner or Marina Owner');
+        // Add visual indicator to user type selection
+        userTypeOptions.style.border = '2px solid #ef4444';
+        userTypeOptions.style.borderRadius = '8px';
+        userTypeOptions.style.backgroundColor = '#fef2f2';
+        
+        // Show a more user-friendly error message
+        const errorDiv = document.createElement('div');
+        errorDiv.id = 'userTypeError';
+        errorDiv.style.color = '#dc2626';
+        errorDiv.style.fontSize = '0.875rem';
+        errorDiv.style.marginTop = '0.5rem';
+        errorDiv.style.textAlign = 'center';
+        errorDiv.textContent = 'Please select whether you are a Yacht Owner or Marina Owner';
+        
+        // Remove any existing error message
+        const existingError = document.getElementById('userTypeError');
+        if (existingError) {
+            existingError.remove();
+        }
+        
+        userTypeOptions.appendChild(errorDiv);
+        
+        // Scroll to user type selection
+        userTypeOptions.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
         isValid = false;
+    } else {
+        // Clear any error styling
+        userTypeOptions.style.border = '';
+        userTypeOptions.style.borderRadius = '';
+        userTypeOptions.style.backgroundColor = '';
+        
+        const existingError = document.getElementById('userTypeError');
+        if (existingError) {
+            existingError.remove();
+        }
     }
     
     return isValid;
