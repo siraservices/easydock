@@ -97,8 +97,16 @@ function resetForm() {
         error.textContent = '';
     });
     
-    // Hide success message
-    document.getElementById('successMessage').style.display = 'none';
+    // Hide and reset success message
+    const successMessage = document.getElementById('successMessage');
+    successMessage.style.display = 'none';
+    successMessage.innerHTML = '';
+    successMessage.style.background = '';
+    successMessage.style.borderRadius = '';
+    successMessage.style.boxShadow = '';
+    successMessage.style.border = '';
+    successMessage.style.marginTop = '';
+    successMessage.style.color = '';
     
     // Enable submit button
     const submitBtn = document.getElementById('submitBtn');
@@ -148,6 +156,36 @@ function validateForm() {
     return isValid;
 }
 
+// Enhanced Thank You Message
+function showThankYouMessage() {
+    const successMessage = document.getElementById('successMessage');
+    
+    // Create enhanced thank you content with icon and styling
+    successMessage.innerHTML = `
+        <div style="text-align: center; padding: 2rem;">
+            <div style="background: #22c55e; color: white; width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; font-size: 2rem;">
+                <i class="fas fa-check"></i>
+            </div>
+            <h3 style="color: #1f2937; margin-bottom: 1rem; font-size: 1.5rem;">Thank You!</h3>
+            <p style="color: #6b7280; margin-bottom: 1rem; font-size: 1.1rem;">Your information has been successfully submitted.</p>
+            <p style="color: #6b7280; font-size: 0.95rem;">We'll be in touch soon to discuss your marina needs and help you get started with EasyDock.</p>
+            <div style="margin-top: 1.5rem; padding: 1rem; background: #f0f9ff; border-radius: 8px; border-left: 4px solid #0ea5e9;">
+                <p style="color: #0c4a6e; margin: 0; font-size: 0.9rem;">
+                    <i class="fas fa-info-circle" style="margin-right: 0.5rem;"></i>
+                    This window will close automatically in a few seconds.
+                </p>
+            </div>
+        </div>
+    `;
+    
+    successMessage.style.display = 'block';
+    successMessage.style.background = '#ffffff';
+    successMessage.style.borderRadius = '12px';
+    successMessage.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.1)';
+    successMessage.style.border = '1px solid #e5e7eb';
+    successMessage.style.marginTop = '1rem';
+}
+
 // Form Submission
 async function handleFormSubmit(event) {
     event.preventDefault();
@@ -173,19 +211,17 @@ async function handleFormSubmit(event) {
         });
         
         if (response.ok) {
-            // Show success message
-            const successMessage = document.getElementById('successMessage');
-            successMessage.textContent = 'Thank you! We\'ll be in touch soon to discuss your marina needs.';
-            successMessage.style.display = 'block';
+            // Show enhanced thank you message
+            showThankYouMessage();
             
             // Hide form
             event.target.style.display = 'none';
             
-            // Close modal after 3 seconds
+            // Close modal after 5 seconds (extended time for enhanced message)
             setTimeout(() => {
                 closeModal();
                 event.target.style.display = 'block';
-            }, 3000);
+            }, 5000);
             
             // Optional: Still log locally for tracking
             const leadData = {
@@ -204,11 +240,23 @@ async function handleFormSubmit(event) {
     } catch (error) {
         console.error('Form submission error:', error);
         
-        // Show error message
+        // Show enhanced error message
         const successMessage = document.getElementById('successMessage');
-        successMessage.textContent = 'Sorry, there was an error submitting your form. Please try again.';
+        successMessage.innerHTML = `
+            <div style="text-align: center; padding: 1.5rem;">
+                <div style="background: #ef4444; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 1.5rem;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <h3 style="color: #dc2626; margin-bottom: 0.5rem;">Submission Error</h3>
+                <p style="color: #6b7280; margin: 0;">Sorry, there was an error submitting your form. Please try again.</p>
+            </div>
+        `;
         successMessage.style.display = 'block';
-        successMessage.style.color = '#ef4444';
+        successMessage.style.background = '#fef2f2';
+        successMessage.style.borderRadius = '12px';
+        successMessage.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.1)';
+        successMessage.style.border = '1px solid #fecaca';
+        successMessage.style.marginTop = '1rem';
         
         // Re-enable submit button
         submitBtn.disabled = false;
