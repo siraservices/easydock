@@ -218,7 +218,9 @@ function validateForm() {
 
 // Enhanced Thank You Message
 function showThankYouMessage() {
+    console.log('showThankYouMessage() called');
     const successMessage = document.getElementById('successMessage');
+    console.log('successMessage element found:', !!successMessage);
     
     // Create enhanced thank you content with icon and styling
     successMessage.innerHTML = `
@@ -249,10 +251,14 @@ function showThankYouMessage() {
 // Form Submission
 async function handleFormSubmit(event) {
     event.preventDefault();
+    console.log('Form submission started');
     
     if (!validateForm()) {
+        console.log('Form validation failed');
         return;
     }
+    
+    console.log('Form validation passed');
     
     const submitBtn = document.getElementById('submitBtn');
     submitBtn.disabled = true;
@@ -260,8 +266,15 @@ async function handleFormSubmit(event) {
     
     try {
         const formData = new FormData(event.target);
+        console.log('Form data created:', {
+            email: formData.get('email'),
+            userType: formData.get('userType'),
+            launchNotify: formData.get('launchNotify'),
+            message: formData.get('message')
+        });
         
         // Submit to Formspree
+        console.log('Sending request to Formspree...');
         const response = await fetch('https://formspree.io/f/xpwlobgz', {
             method: 'POST',
             body: formData,
@@ -270,7 +283,10 @@ async function handleFormSubmit(event) {
             }
         });
         
+        console.log('Response received:', response.status, response.statusText);
+        
         if (response.ok) {
+            console.log('Form submission successful - showing thank you message');
             // Show enhanced thank you message
             showThankYouMessage();
             
@@ -295,10 +311,14 @@ async function handleFormSubmit(event) {
             console.log('Lead submitted successfully:', leadData);
             
         } else {
+            console.log('Form submission failed with status:', response.status);
+            const responseText = await response.text();
+            console.log('Response text:', responseText);
             throw new Error('Form submission failed');
         }
     } catch (error) {
         console.error('Form submission error:', error);
+        console.log('Error details:', error.message);
         
         // Show enhanced error message
         const successMessage = document.getElementById('successMessage');
@@ -368,6 +388,9 @@ document.addEventListener('keydown', (e) => {
         closeModal();
     }
 });
+
+// Make showThankYouMessage globally accessible for testing
+window.showThankYouMessage = showThankYouMessage;
 
 // Initialize animations on page load
 window.addEventListener('load', () => {
