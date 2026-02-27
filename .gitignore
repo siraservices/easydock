@@ -1,0 +1,74 @@
+# EasyDock - Git Ignore File
+
+# Environment variables and secrets
+.env
+.env.local
+.env.*.local
+app/config.js
+app-legacy/config.js
+*.key
+*.pem
+
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+env/
+ENV/
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Next.js
+.next/
+out/
+next-env.d.ts
+
+# Build and dist files
+dist/
+build/
+*.log
+
+# Netlify
+.netlify/
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Email automation specific
+cold-email-automation/*.csv
+cold-email-automation/.env
+
+# Database backups
+*.sql.backup
+*.dump
+
+# Test files
+test-*.csv
+*.test.js
+
+.vercel
+
+# Claude Code local settings
+.claude/

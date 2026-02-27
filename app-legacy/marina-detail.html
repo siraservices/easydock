@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marina Details - EasyDock</title>
+    <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <i class="fas fa-anchor"></i>
+                EasyDock
+            </a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="search.html">Search</a></li>
+                </ul>
+            </nav>
+            <div class="user-menu" style="display: none;">
+                <span class="user-name"></span>
+                <a href="dashboard.html" class="btn btn-secondary">Dashboard</a>
+            </div>
+            <div class="auth-buttons">
+                <a href="auth.html" class="btn btn-secondary login-btn">Sign In</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <div id="loadingState" class="loading">
+            <div class="spinner"></div>
+        </div>
+
+        <div id="marinaContent" style="display: none;">
+            <!-- Marina Info -->
+            <div class="card">
+                <div id="marinaHeader"></div>
+                <div id="marinaDetails"></div>
+            </div>
+
+            <!-- Photos -->
+            <div class="card" id="photosSection" style="display: none;">
+                <h3 class="card-title">Photos</h3>
+                <div id="marinaPhotos" class="grid grid-3"></div>
+            </div>
+
+            <!-- Availability Calendar -->
+            <div class="card">
+                <h3 class="card-title">Availability</h3>
+                <div id="availabilityCalendar"></div>
+            </div>
+
+            <!-- Booking Form -->
+            <div class="card" id="bookingSection" style="display: none;">
+                <h3 class="card-title">Request Booking</h3>
+                <form id="bookingForm">
+                    <div class="grid grid-2">
+                        <div class="form-group">
+                            <label class="form-label" for="checkInDate">Check-In Date</label>
+                            <input type="date" id="checkInDate" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="checkOutDate">Check-Out Date</label>
+                            <input type="date" id="checkOutDate" class="form-input" required>
+                        </div>
+                    </div>
+                    <div class="grid grid-2">
+                        <div class="form-group">
+                            <label class="form-label" for="boatLength">Boat Length (ft)</label>
+                            <input type="number" id="boatLength" class="form-input" required min="1">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="boatWidth">Boat Width (ft)</label>
+                            <input type="number" id="boatWidth" class="form-input" required min="1">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="specialRequests">Special Requests (Optional)</label>
+                        <textarea id="specialRequests" class="form-textarea" placeholder="Any special requirements or questions..."></textarea>
+                    </div>
+                    <div id="priceEstimate" style="margin-bottom: 1.5rem; padding: 1rem; background: var(--light-blue); border-radius: 10px; display: none;">
+                        <strong>Estimated Total: $<span id="estimatedPrice">0.00</span></strong>
+                        <small style="display: block; color: var(--gray-600); margin-top: 0.5rem;">
+                            Commission: $<span id="commissionAmount">0.00</span> (15%)
+                        </small>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Request Booking</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="errorState" style="display: none;">
+            <div class="alert alert-error">
+                <h3>Marina Not Found</h3>
+                <p>The marina you're looking for doesn't exist or is no longer available.</p>
+                <a href="search.html" class="btn btn-primary">Back to Search</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm" type="module"></script>
+    <script src="config.js"></script>
+    <script src="js/supabase-client.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/booking.js"></script>
+    <script>
+        let currentMarina = null;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Get marina ID from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const marinaId = urlParams.get('id');
+
+            if (!marinaId) {
+                showError();
+                return;
+            }
+
+            // Check auth
+            const user = await window.supabaseHelpers.getCurrentUser();
+            if (user) {
+                document.querySelector('.auth-buttons').style.display = 'none';
+                document.querySelector('.user-menu').style.display = 'flex';
+                document.querySelector('.user-name').textContent = user.email;
+            }
+
+            // Load marina details
+            await loadMarinaDetails(marinaId);
+        });
+
+        async function loadMarinaDetails(marinaId) {
+            try {
+                const client = window.getSupabaseClient();
+                if (!client) {
+                    showError();
+                    return;
+                }
+                
+                const { data, error } = await client
+                    .from('marinas')
+                    .select('*')
+                    .eq('id', marinaId)
+                    .eq('is_active', true)
+                    .eq('is_approved', true)
+                    .single();
+
+                if (error || !data) {
+                    showError();
+                    return;
+                }
+
+                currentMarina = data;
+                displayMarinaDetails(data);
+                await loadAvailability(marinaId);
+                
+                // Show booking form if user is logged in
+                const user = await window.supabaseHelpers.getCurrentUser();
+                if (user && user.id !== data.owner_id) {
+                    document.getElementById('bookingSection').style.display = 'block';
+                    setupBookingForm(data);
+                }
+            } catch (error) {
+                console.error('Error loading marina:', error);
+                showError();
+            }
+        }
+
+        function displayMarinaDetails(marina) {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('marinaContent').style.display = 'block';
+
+            // Header
+            document.getElementById('marinaHeader').innerHTML = `
+                <h1 style="font-family: var(--font-secondary); font-size: 2.5rem; color: var(--primary-navy); margin-bottom: 1rem;">
+                    ${marina.name}
+                </h1>
+                <p style="font-size: 1.125rem; color: var(--gray-600); margin-bottom: 1.5rem;">
+                    <i class="fas fa-map-marker-alt"></i> ${marina.address}, ${marina.city}, ${marina.state} ${marina.zip_code || ''}
+                </p>
+            `;
+
+            // Details
+            document.getElementById('marinaDetails').innerHTML = `
+                <div class="grid grid-2" style="margin-bottom: 2rem;">
+                    <div>
+                        <h3 style="color: var(--primary-navy); margin-bottom: 1rem;">Pricing</h3>
+                        <p style="font-size: 1.25rem; font-weight: 600; color: var(--secondary-teal);">
+                            $${marina.base_price_per_day.toFixed(2)}/day
+                        </p>
+                        ${marina.base_price_per_week ? `
+                            <p style="color: var(--gray-600);">$${marina.base_price_per_week.toFixed(2)}/week</p>
+                        ` : ''}
+                        ${marina.base_price_per_month ? `
+                            <p style="color: var(--gray-600);">$${marina.base_price_per_month.toFixed(2)}/month</p>
+                        ` : ''}
+                    </div>
+                    <div>
+                        <h3 style="color: var(--primary-navy); margin-bottom: 1rem;">Boat Size</h3>
+                        ${marina.max_boat_length ? `
+                            <p><i class="fas fa-ruler"></i> Max Length: ${marina.max_boat_length}ft</p>
+                        ` : ''}
+                        ${marina.max_boat_width ? `
+                            <p><i class="fas fa-ruler"></i> Max Width: ${marina.max_boat_width}ft</p>
+                        ` : ''}
+                    </div>
+                </div>
+                ${marina.description ? `
+                    <div style="margin-bottom: 2rem;">
+                        <h3 style="color: var(--primary-navy); margin-bottom: 1rem;">Description</h3>
+                        <p style="color: var(--gray-700); line-height: 1.8;">${marina.description}</p>
+                    </div>
+                ` : ''}
+                ${marina.amenities && marina.amenities.length > 0 ? `
+                    <div>
+                        <h3 style="color: var(--primary-navy); margin-bottom: 1rem;">Amenities</h3>
+                        <div class="marina-amenities">
+                            ${marina.amenities.map(amenity => `
+                                <span class="amenity-tag">${amenity}</span>
+                            `).join('')}
+                        </div>
+                    </div>
+                ` : ''}
+                ${marina.phone || marina.email ? `
+                    <div style="margin-top: 2rem;">
+                        <h3 style="color: var(--primary-navy); margin-bottom: 1rem;">Contact Information</h3>
+                        <div class="contact-info">
+                            ${marina.phone ? `<p><i class="fas fa-phone"></i> ${marina.phone}</p>` : ''}
+                            ${marina.email ? `<p><i class="fas fa-envelope"></i> ${marina.email}</p>` : ''}
+                        </div>
+                    </div>
+                ` : ''}
+            `;
+
+            // Photos
+            if (marina.photos && marina.photos.length > 0) {
+                document.getElementById('photosSection').style.display = 'block';
+                document.getElementById('marinaPhotos').innerHTML = marina.photos.map(photo => `
+                    <img src="${photo}" alt="${marina.name}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 10px;">
+                `).join('');
+            }
+        }
+
+        async function loadAvailability(marinaId) {
+            // Load next 30 days of availability
+            const today = new Date();
+            const calendar = document.getElementById('availabilityCalendar');
+            
+            // Simple calendar display (can be enhanced with full calendar component)
+            calendar.innerHTML = '<p style="color: var(--gray-600);">Select dates in the booking form to check availability.</p>';
+        }
+
+        function setupBookingForm(marina) {
+            const form = document.getElementById('bookingForm');
+            const checkInInput = document.getElementById('checkInDate');
+            const checkOutInput = document.getElementById('checkOutDate');
+
+            // Set minimum date to today
+            const today = new Date().toISOString().split('T')[0];
+            checkInInput.min = today;
+            checkOutInput.min = today;
+
+            // Calculate price when dates change
+            [checkInInput, checkOutInput].forEach(input => {
+                input.addEventListener('change', () => {
+                    calculatePrice(marina);
+                });
+            });
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                await window.bookingFunctions.createBookingRequest(marina.id);
+            });
+        }
+
+        function calculatePrice(marina) {
+            const checkIn = document.getElementById('checkInDate').value;
+            const checkOut = document.getElementById('checkOutDate').value;
+
+            if (!checkIn || !checkOut) return;
+
+            const checkInDate = new Date(checkIn);
+            const checkOutDate = new Date(checkOut);
+            const days = Math.ceil((checkOutDate - checkInDate) / (1000 * 60 * 60 * 24));
+
+            if (days <= 0) return;
+
+            const basePrice = marina.base_price_per_day * days;
+            const commission = basePrice * CONFIG.stripe.commissionRate;
+            const total = basePrice + commission;
+
+            document.getElementById('estimatedPrice').textContent = total.toFixed(2);
+            document.getElementById('commissionAmount').textContent = commission.toFixed(2);
+            document.getElementById('priceEstimate').style.display = 'block';
+        }
+
+        function showError() {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('errorState').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
+

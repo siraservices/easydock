@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyDock - Marina Booking Marketplace</title>
+    <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <i class="fas fa-anchor"></i>
+                EasyDock
+            </a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="search.html">Search Marinas</a></li>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                </ul>
+            </nav>
+            <div class="user-menu" style="display: none;">
+                <span class="user-name"></span>
+                <a href="auth.html" class="btn btn-secondary">Account</a>
+                <button onclick="handleSignOut()" class="btn btn-secondary">Sign Out</button>
+            </div>
+            <div class="auth-buttons">
+                <a href="auth.html" class="btn btn-secondary login-btn">Sign In</a>
+                <a href="auth.html?signup=true" class="btn btn-primary signup-btn">Sign Up</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <div class="card" style="text-align: center; padding: 4rem 2rem;">
+            <h1 style="font-family: var(--font-secondary); font-size: 3rem; color: var(--primary-navy); margin-bottom: 1rem;">
+                Welcome to EasyDock
+            </h1>
+            <p style="font-size: 1.25rem; color: var(--gray-600); margin-bottom: 3rem;">
+                Find the perfect marina space for your boat at the best price
+            </p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="search.html" class="btn btn-primary" style="font-size: 1.125rem; padding: 1rem 2rem;">
+                    <i class="fas fa-search"></i> Search Marinas
+                </a>
+                <a href="auth.html?signup=true" class="btn btn-secondary" style="font-size: 1.125rem; padding: 1rem 2rem;">
+                    <i class="fas fa-user-plus"></i> Get Started
+                </a>
+            </div>
+        </div>
+
+        <div class="grid grid-3" style="margin-top: 3rem;">
+            <div class="card">
+                <div style="text-align: center;">
+                    <i class="fas fa-ship" style="font-size: 3rem; color: var(--secondary-teal); margin-bottom: 1rem;"></i>
+                    <h3 class="card-title">For Boat Owners</h3>
+                    <p style="color: var(--gray-600); margin-bottom: 1.5rem;">
+                        Search and book marina spaces instantly. Compare prices and amenities to find the perfect dock.
+                    </p>
+                    <a href="search.html" class="btn btn-primary">Browse Marinas</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div style="text-align: center;">
+                    <i class="fas fa-anchor" style="font-size: 3rem; color: var(--secondary-teal); margin-bottom: 1rem;"></i>
+                    <h3 class="card-title">For Marina Owners</h3>
+                    <p style="color: var(--gray-600); margin-bottom: 1.5rem;">
+                        List your marina and reach more boat owners. Increase occupancy and revenue with our platform.
+                    </p>
+                    <a href="dashboard.html" class="btn btn-primary">List Your Marina</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div style="text-align: center;">
+                    <i class="fas fa-chart-line" style="font-size: 3rem; color: var(--secondary-teal); margin-bottom: 1rem;"></i>
+                    <h3 class="card-title">How It Works</h3>
+                    <p style="color: var(--gray-600); margin-bottom: 1.5rem;">
+                        Simple booking process. Secure payments. Automated confirmations. Everything you need in one place.
+                    </p>
+                    <a href="search.html" class="btn btn-secondary">Learn More</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm" type="module"></script>
+    <script src="config.js"></script>
+    <script src="js/supabase-client.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Handle sign out
+        async function handleSignOut() {
+            const result = await window.authFunctions.signOut();
+            if (result.success) {
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Check auth status on load
+        document.addEventListener('DOMContentLoaded', async () => {
+            const user = await window.supabaseHelpers.getCurrentUser();
+            if (user) {
+                updateUIForLoggedInUser(user);
+            }
+        });
+
+        function updateUIForLoggedInUser(user) {
+            document.querySelector('.auth-buttons').style.display = 'none';
+            document.querySelector('.user-menu').style.display = 'flex';
+            document.querySelector('.user-name').textContent = user.email;
+        }
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Marinas - EasyDock</title>
+    <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <i class="fas fa-anchor"></i>
+                EasyDock
+            </a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                </ul>
+            </nav>
+            <div class="user-menu" style="display: none;">
+                <span class="user-name"></span>
+                <a href="auth.html" class="btn btn-secondary">Account</a>
+                <button onclick="handleSignOut()" class="btn btn-secondary">Sign Out</button>
+            </div>
+            <div class="auth-buttons">
+                <a href="auth.html" class="btn btn-secondary login-btn">Sign In</a>
+                <a href="auth.html?signup=true" class="btn btn-primary signup-btn">Sign Up</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <h1 style="font-family: var(--font-secondary); font-size: 2.5rem; color: var(--primary-navy); margin-bottom: 2rem;">
+            Search Marinas
+        </h1>
+
+        <!-- Search Filters -->
+        <div class="search-filters">
+            <div class="filter-row">
+                <div class="form-group">
+                    <label class="form-label" for="searchInput">
+                        <i class="fas fa-search"></i> Search
+                    </label>
+                    <input type="text" id="searchInput" class="form-input" placeholder="Marina name, city, or description...">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="stateFilter">
+                        <i class="fas fa-map-marker-alt"></i> State
+                    </label>
+                    <select id="stateFilter" class="form-select">
+                        <option value="">All States</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="maxPriceFilter">
+                        <i class="fas fa-dollar-sign"></i> Max Price/Day
+                    </label>
+                    <input type="number" id="maxPriceFilter" class="form-input" placeholder="No limit" min="0" step="10">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="minBoatLengthFilter">
+                        <i class="fas fa-ruler"></i> Min Boat Length (ft)
+                    </label>
+                    <input type="number" id="minBoatLengthFilter" class="form-input" placeholder="Any size" min="0" step="5">
+                </div>
+            </div>
+        </div>
+
+        <!-- Results -->
+        <div id="marinasContainer" class="grid grid-3">
+            <div class="loading">
+                <div class="spinner"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm" type="module"></script>
+    <script src="config.js"></script>
+    <script src="js/supabase-client.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/search.js"></script>
+    <script>
+        // Initialize search page
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Check auth
+            const user = await window.supabaseHelpers.getCurrentUser();
+            if (user) {
+                document.querySelector('.auth-buttons').style.display = 'none';
+                document.querySelector('.user-menu').style.display = 'flex';
+                document.querySelector('.user-name').textContent = user.email;
+            }
+
+            // Initialize search
+            await window.searchFunctions.initSearch();
+        });
+
+        async function handleSignOut() {
+            const result = await window.authFunctions.signOut();
+            if (result.success) {
+                window.location.href = 'index.html';
+            }
+        }
+
+        function viewMarina(id) {
+            window.location.href = `marina-detail.html?id=${id}`;
+        }
+    </script>
+</body>
+</html>
+

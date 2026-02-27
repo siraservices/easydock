@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - EasyDock</title>
+    <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <i class="fas fa-anchor"></i>
+                EasyDock Admin
+            </a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                </ul>
+            </nav>
+            <div class="user-menu">
+                <span class="user-name"></span>
+                <button onclick="handleSignOut()" class="btn btn-secondary">Sign Out</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <h1 style="font-family: var(--font-secondary); font-size: 2.5rem; color: var(--primary-navy); margin-bottom: 2rem;">
+            Admin Panel
+        </h1>
+
+        <div id="loadingState" class="loading">
+            <div class="spinner"></div>
+        </div>
+
+        <div id="adminContent" style="display: none;">
+            <!-- Stats Overview -->
+            <div class="grid grid-4" style="margin-bottom: 2rem;">
+                <div class="card" style="text-align: center;">
+                    <h3 style="font-size: 2rem; color: var(--secondary-teal); margin-bottom: 0.5rem;" id="statUsers">0</h3>
+                    <p style="color: var(--gray-600);">Total Users</p>
+                </div>
+                <div class="card" style="text-align: center;">
+                    <h3 style="font-size: 2rem; color: var(--secondary-teal); margin-bottom: 0.5rem;" id="statMarinas">0</h3>
+                    <p style="color: var(--gray-600);">Total Marinas</p>
+                </div>
+                <div class="card" style="text-align: center;">
+                    <h3 style="font-size: 2rem; color: var(--secondary-teal); margin-bottom: 0.5rem;" id="statBookings">0</h3>
+                    <p style="color: var(--gray-600);">Total Bookings</p>
+                </div>
+                <div class="card" style="text-align: center;">
+                    <h3 style="font-size: 2rem; color: var(--secondary-teal); margin-bottom: 0.5rem;" id="statRevenue">$0</h3>
+                    <p style="color: var(--gray-600);">Total Revenue</p>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div style="display: flex; gap: 1rem; margin-bottom: 2rem; border-bottom: 2px solid var(--gray-200);">
+                <button onclick="switchAdminTab('marinas')" class="tab-btn active" id="admin-tab-marinas">
+                    Marina Approvals
+                </button>
+                <button onclick="switchAdminTab('bookings')" class="tab-btn" id="admin-tab-bookings">
+                    All Bookings
+                </button>
+                <button onclick="switchAdminTab('users')" class="tab-btn" id="admin-tab-users">
+                    Users
+                </button>
+            </div>
+
+            <!-- Marina Approvals Tab -->
+            <div id="admin-tab-content-marinas" class="tab-content">
+                <div class="card">
+                    <h3 class="card-title">Pending Marina Approvals</h3>
+                    <div id="pendingMarinas"></div>
+                </div>
+            </div>
+
+            <!-- All Bookings Tab -->
+            <div id="admin-tab-content-bookings" class="tab-content" style="display: none;">
+                <div id="allBookings"></div>
+            </div>
+
+            <!-- Users Tab -->
+            <div id="admin-tab-content-users" class="tab-content" style="display: none;">
+                <div id="allUsers"></div>
+            </div>
+        </div>
+
+        <div id="unauthorized" style="display: none;">
+            <div class="alert alert-error">
+                <h3>Unauthorized Access</h3>
+                <p>You must be an admin to access this page.</p>
+                <a href="dashboard.html" class="btn btn-primary">Go to Dashboard</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm" type="module"></script>
+    <script src="config.js"></script>
+    <script src="js/supabase-client.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/admin.js"></script>
+    <script>
+        async function handleSignOut() {
+            const result = await window.authFunctions.signOut();
+            if (result.success) {
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+</body>
+</html>
+

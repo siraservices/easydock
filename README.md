@@ -1,122 +1,183 @@
-# EasyDock Marina Arbitrage Landing Page
+# EasyDock MVP - Marina Booking Marketplace
 
-A professional, single-page landing page for EasyDock - a marina arbitrage platform connecting yacht owners with available docking spaces.
+A full-stack marina booking marketplace built with Supabase, Vanilla JavaScript, and Netlify. Connect boat owners with marina owners for seamless dock reservations.
 
 ## Features
 
-- **Modern Professional Design**: Nautical theme with navy blues, teals, and gold accents
-- **Fully Responsive**: Optimized for mobile, tablet, and desktop devices
-- **Interactive Lead Capture**: Modal popup system with form validation
-- **Real-time Animations**: Smooth scrolling and engaging visual effects
-- **WordPress Compatible**: Can be used as a custom page template
-- **SEO Optimized**: Proper meta tags and structured data
-- **Performance Optimized**: Fast loading with embedded CSS/JS
+- **User Authentication**: Sign up/login with email/password (Supabase Auth)
+- **Marina Listings**: Marina owners can create and manage listings
+- **Search & Filter**: Boat owners can search marinas by location, price, boat size
+- **Booking System**: Request, approve, and manage bookings
+- **Admin Panel**: Approve marinas, view analytics, manage users
+- **Responsive Design**: Works on mobile, tablet, and desktop
 
-## Sections Included
+## Tech Stack
 
-1. **Hero Section** - Compelling headline with dual CTAs
-2. **How It Works** - Tabbed process for yacht owners and marina owners
-3. **Features** - Premium platform capabilities
-4. **Marina Network** - Statistics and coverage map
-5. **Affiliate Program** - Yacht broker commission program
-6. **Testimonials** - Social proof and customer stories
-7. **Footer** - Contact info, links, and newsletter signup
+- **Backend**: Supabase (PostgreSQL, Auth, Storage)
+- **Frontend**: Vanilla JavaScript, HTML, CSS
+- **Hosting**: Netlify
+- **Payments**: Stripe (to be integrated)
+- **Email**: EmailJS (optional)
 
-## Lead Capture System
+## Quick Start
 
-The page includes a sophisticated modal popup system that triggers on any interactive element:
+1. **Set Up Supabase** - See [docs/SETUP_GUIDE.md](docs/SETUP_GUIDE.md) for detailed instructions
+2. **Configure App** - Update `app/config.js` with your Supabase credentials
+3. **Create Admin** - Sign up and set your user role to 'admin' in Supabase
+4. **Deploy** - See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for deployment instructions
 
-- **User Type Selection**: Yacht Owner or Marina Owner
-- **Form Fields**: Email (required), Phone (required), Message (optional)
-- **Validation**: Real-time form validation with error messages
-- **Lead Storage**: Captured leads stored in JavaScript array (demo)
-- **Success Handling**: Thank you message and auto-close functionality
+For detailed setup instructions, see [docs/SETUP_GUIDE.md](docs/SETUP_GUIDE.md)
 
-## Deployment Options
-
-### Option 1: Direct Hosting (Hostinger)
-1. Upload `index.html` to your web hosting root directory
-2. The file will work immediately as a standalone page
-3. Optionally rename to `landing.html` or place in subdirectory
-
-### Option 2: WordPress Integration
-1. Create a new page in WordPress
-2. Switch to "Text" or "Code" editor mode
-3. Copy and paste the HTML content
-4. Publish the page
-
-### Option 3: WordPress Custom Template
-1. Copy `index.html` to your active theme directory
-2. Rename to `page-easydock.php`
-3. Add WordPress header: `<?php /* Template Name: EasyDock Landing */ ?>`
-4. Create a new page and select the "EasyDock Landing" template
-
-## Customization
-
-### Colors
-The CSS uses custom properties (variables) for easy color customization:
-- `--primary-navy`: #1e3a8a
-- `--secondary-teal`: #0d9488
-- `--accent-gold`: #f59e0b
-
-### Content
-- Update business statistics in the trust indicators
-- Replace placeholder images with actual marina photos
-- Modify commission rates in the affiliate section
-- Add real testimonials and customer information
-
-### Lead Processing
-Currently leads are stored in a JavaScript array for demo purposes. For production:
-1. Replace the form submission with actual backend integration
-2. Connect to your CRM or email marketing system
-3. Add server-side validation and security measures
-
-## Technical Specifications
-
-- **HTML5** with semantic structure
-- **CSS3** with Flexbox/Grid layouts
-- **Vanilla JavaScript** for all interactions
-- **Google Fonts** (Inter & Poppins)
-- **Font Awesome** icons
-- **No external dependencies** (works offline)
-
-## Browser Compatibility
-
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
-- Mobile browsers (iOS Safari, Chrome Mobile)
-
-## Performance Features
-
-- Optimized images with WebP format support
-- Embedded CSS/JS for reduced HTTP requests
-- Efficient loading strategies
-- Mobile-first responsive design
-- Smooth animations with hardware acceleration
-
-## SEO Features
-
-- Proper meta tags for search engines
-- Open Graph tags for social media sharing
-- Structured data markup for business information
-- Semantic HTML structure
-- Optimized content hierarchy
-
-## File Structure
+## Project Structure
 
 ```
 easydock/
-├── index.html          # Main landing page
-└── README.md          # This documentation
+├── app/                    # Main web application
+├── landing-page/           # Marketing landing page
+├── cold-email-automation/  # Email outreach tools
+├── database/               # Database schema
+├── docs/                   # Documentation
+└── netlify.toml            # Deployment config
 ```
+
+See [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) for complete file structure.
+
+## Documentation
+
+- **[Setup Guide](docs/SETUP_GUIDE.md)** - Step-by-step setup instructions
+- **[Architecture](docs/ARCHITECTURE.md)** - Technical details and system design
+- **[Deployment Guide](docs/DEPLOYMENT.md)** - Production deployment instructions
+- **[Project Structure](PROJECT_STRUCTURE.md)** - Complete file organization
+
+## Setup Instructions
+
+### 1. Supabase Setup
+
+1. Create a Supabase account at https://supabase.com
+2. Create a new project
+3. Go to SQL Editor and run the SQL from `database/schema.sql`
+4. Go to Settings > API and copy your:
+   - Project URL
+   - Anon (public) key
+
+### 2. Configure Environment Variables
+
+1. Open `app/config.js`
+2. Update with your Supabase credentials:
+   ```javascript
+   supabase: {
+       url: 'YOUR_SUPABASE_URL',
+       anonKey: 'YOUR_SUPABASE_ANON_KEY'
+   }
+   ```
+
+### 3. Create Admin User
+
+After running the database schema, you'll need to manually set a user as admin:
+
+1. Sign up through the app
+2. Go to Supabase Dashboard > Table Editor > `user_profiles`
+3. Find your user and set `role` to `'admin'`
+
+### 4. Deploy to Netlify
+
+1. Push your code to GitHub
+2. Connect your repository to Netlify
+3. Set build settings:
+   - Build command: (leave empty - no build needed)
+   - Publish directory: `app`
+4. Deploy!
+
+## User Flows
+
+### Boat Owner Flow
+1. Sign up / Sign in
+2. Search for marinas
+3. View marina details
+4. Request booking
+5. Wait for marina owner approval
+6. Complete payment (Stripe integration pending)
+
+### Marina Owner Flow
+1. Sign up as marina owner
+2. Create marina listing
+3. Wait for admin approval
+4. Receive booking requests
+5. Approve/decline bookings
+6. Receive payments (Stripe integration pending)
+
+### Admin Flow
+1. Sign in as admin
+2. Approve/reject marina listings
+3. View analytics and statistics
+4. Manage users and bookings
+
+## Payment Integration (Pending)
+
+Stripe Connect integration is planned for:
+- Boat owners pay upfront
+- Platform takes 15% commission
+- Marina owners receive automatic payouts
+
+## Email Notifications (Optional)
+
+EmailJS can be configured for:
+- Booking confirmations
+- Approval notifications
+- Status updates
+
+## Development
+
+### Local Development
+
+1. Serve the `app` directory with a local server:
+   ```bash
+   # Using Python
+   cd app
+   python -m http.server 8000
+   
+   # Using Node.js
+   npx serve app
+   ```
+
+2. Open http://localhost:8000
+
+### Testing
+
+- Test user signup/login
+- Create marina listings
+- Make booking requests
+- Test admin approval flow
+
+## Security Notes
+
+- Row Level Security (RLS) is enabled on all tables
+- Users can only access their own data
+- Admin users have elevated permissions
+- Never commit `.env` or `config.js` with real credentials
+
+## Future Enhancements
+
+- [ ] Stripe payment integration
+- [ ] Email notifications (EmailJS)
+- [ ] Photo upload for marinas
+- [ ] Advanced calendar/availability system
+- [ ] Messaging between users
+- [ ] Reviews and ratings
+- [ ] Mobile app (React Native)
 
 ## Support
 
-For technical support or customization requests, contact the development team.
+For issues or questions:
+1. Check Supabase logs in dashboard
+2. Check browser console for errors
+3. Verify RLS policies are correct
+4. Ensure admin user is set up correctly
+
+## License
+
+Private - All rights reserved
 
 ---
 
-**EasyDock** - Premium Marina Arbitrage Platform
-*Connecting yacht owners with available docking spaces nationwide*
+**EasyDock** - Connecting boat owners with marina spaces

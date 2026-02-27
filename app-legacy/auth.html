@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In / Sign Up - EasyDock</title>
+    <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <i class="fas fa-anchor"></i>
+                EasyDock
+            </a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="search.html">Search</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container" style="max-width: 500px;">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title" id="formTitle">Sign In</h2>
+            </div>
+
+            <div id="alertContainer"></div>
+
+            <!-- Sign In Form -->
+            <form id="signInForm" style="display: none;">
+                <div class="form-group">
+                    <label class="form-label" for="signInEmail">Email</label>
+                    <input type="email" id="signInEmail" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="signInPassword">Password</label>
+                    <input type="password" id="signInPassword" class="form-input" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Sign In</button>
+                <p style="text-align: center; margin-top: 1rem; color: var(--gray-600);">
+                    Don't have an account? 
+                    <a href="#" onclick="switchToSignUp(); return false;" style="color: var(--secondary-teal);">Sign Up</a>
+                </p>
+            </form>
+
+            <!-- Sign Up Form -->
+            <form id="signUpForm" style="display: none;">
+                <div class="form-group">
+                    <label class="form-label" for="signUpName">Full Name</label>
+                    <input type="text" id="signUpName" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="signUpEmail">Email</label>
+                    <input type="email" id="signUpEmail" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="signUpPassword">Password</label>
+                    <input type="password" id="signUpPassword" class="form-input" required minlength="6">
+                    <small class="form-error" style="display: block; margin-top: 0.25rem;">Must be at least 6 characters</small>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="userType">I am a:</label>
+                    <select id="userType" class="form-select" required>
+                        <option value="">Select...</option>
+                        <option value="boat_owner">Boat Owner</option>
+                        <option value="marina_owner">Marina Owner</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Create Account</button>
+                <p style="text-align: center; margin-top: 1rem; color: var(--gray-600);">
+                    Already have an account? 
+                    <a href="#" onclick="switchToSignIn(); return false;" style="color: var(--secondary-teal);">Sign In</a>
+                </p>
+            </form>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm" type="module"></script>
+    <script src="config.js"></script>
+    <script src="js/supabase-client.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Check if signup mode
+        const urlParams = new URLSearchParams(window.location.search);
+        const isSignUp = urlParams.get('signup') === 'true';
+
+        // Show appropriate form
+        if (isSignUp) {
+            switchToSignUp();
+        } else {
+            switchToSignIn();
+        }
+
+        function switchToSignUp() {
+            document.getElementById('signInForm').style.display = 'none';
+            document.getElementById('signUpForm').style.display = 'block';
+            document.getElementById('formTitle').textContent = 'Sign Up';
+            window.history.replaceState({}, '', 'auth.html?signup=true');
+        }
+
+        function switchToSignIn() {
+            document.getElementById('signUpForm').style.display = 'none';
+            document.getElementById('signInForm').style.display = 'block';
+            document.getElementById('formTitle').textContent = 'Sign In';
+            window.history.replaceState({}, '', 'auth.html');
+        }
+
+        function showAlert(message, type = 'info') {
+            const alertContainer = document.getElementById('alertContainer');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            alertContainer.innerHTML = '';
+            alertContainer.appendChild(alert);
+            
+            setTimeout(() => {
+                alert.remove();
+            }, 5000);
+        }
+
+        // Sign In Form Handler
+        document.getElementById('signInForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('signInEmail').value;
+            const password = document.getElementById('signInPassword').value;
+
+            const result = await window.authFunctions.signIn(email, password);
+            
+            if (result.success) {
+                showAlert('Signed in successfully!', 'success');
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1000);
+            } else {
+                showAlert(result.error || 'Sign in failed', 'error');
+            }
+        });
+
+        // Sign Up Form Handler
+        document.getElementById('signUpForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('signUpEmail').value;
+            const password = document.getElementById('signUpPassword').value;
+            const fullName = document.getElementById('signUpName').value;
+            const userType = document.getElementById('userType').value;
+
+            if (!userType) {
+                showAlert('Please select whether you are a Boat Owner or Marina Owner', 'error');
+                return;
+            }
+
+            const result = await window.authFunctions.signUp(email, password, fullName, userType);
+            
+            if (result.success) {
+                showAlert('Account created! Please check your email to verify your account.', 'success');
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 2000);
+            } else {
+                showAlert(result.error || 'Sign up failed', 'error');
+            }
+        });
+
+        // Check if already logged in
+        document.addEventListener('DOMContentLoaded', async () => {
+            const user = await window.supabaseHelpers.getCurrentUser();
+            if (user) {
+                window.location.href = 'dashboard.html';
+            }
+        });
+    </script>
+</body>
+</html>
+

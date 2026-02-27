@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - EasyDock</title>
+    <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <i class="fas fa-anchor"></i>
+                EasyDock
+            </a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="search.html">Search</a></li>
+                </ul>
+            </nav>
+            <div class="user-menu">
+                <span class="user-name"></span>
+                <a href="auth.html" class="btn btn-secondary">Account</a>
+                <button onclick="handleSignOut()" class="btn btn-secondary">Sign Out</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <h1 style="font-family: var(--font-secondary); font-size: 2.5rem; color: var(--primary-navy); margin-bottom: 2rem;">
+            Dashboard
+        </h1>
+
+        <div id="loadingState" class="loading">
+            <div class="spinner"></div>
+        </div>
+
+        <div id="dashboardContent" style="display: none;">
+            <!-- User Type Tabs -->
+            <div style="display: flex; gap: 1rem; margin-bottom: 2rem; border-bottom: 2px solid var(--gray-200);">
+                <button onclick="switchTab('bookings')" class="tab-btn active" id="tab-bookings">
+                    My Bookings
+                </button>
+                <button onclick="switchTab('marinas')" class="tab-btn" id="tab-marinas" style="display: none;">
+                    My Marinas
+                </button>
+                <button onclick="switchTab('create-marina')" class="tab-btn" id="tab-create-marina" style="display: none;">
+                    Create Marina Listing
+                </button>
+            </div>
+
+            <!-- Bookings Tab -->
+            <div id="tab-content-bookings" class="tab-content">
+                <div id="bookingsList"></div>
+            </div>
+
+            <!-- Marinas Tab (for marina owners) -->
+            <div id="tab-content-marinas" class="tab-content" style="display: none;">
+                <div id="marinasList"></div>
+            </div>
+
+            <!-- Create Marina Tab -->
+            <div id="tab-content-create-marina" class="tab-content" style="display: none;">
+                <div class="card">
+                    <h3 class="card-title">Create New Marina Listing</h3>
+                    <form id="createMarinaForm">
+                        <div class="form-group">
+                            <label class="form-label" for="marinaName">Marina Name *</label>
+                            <input type="text" id="marinaName" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="marinaDescription">Description</label>
+                            <textarea id="marinaDescription" class="form-textarea" rows="4"></textarea>
+                        </div>
+                        <div class="grid grid-2">
+                            <div class="form-group">
+                                <label class="form-label" for="marinaAddress">Address *</label>
+                                <input type="text" id="marinaAddress" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="marinaCity">City *</label>
+                                <input type="text" id="marinaCity" class="form-input" required>
+                            </div>
+                        </div>
+                        <div class="grid grid-2">
+                            <div class="form-group">
+                                <label class="form-label" for="marinaState">State *</label>
+                                <input type="text" id="marinaState" class="form-input" required maxlength="2" placeholder="FL">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="marinaZip">Zip Code</label>
+                                <input type="text" id="marinaZip" class="form-input">
+                            </div>
+                        </div>
+                        <div class="grid grid-3">
+                            <div class="form-group">
+                                <label class="form-label" for="pricePerDay">Price per Day ($) *</label>
+                                <input type="number" id="pricePerDay" class="form-input" required min="0" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="pricePerWeek">Price per Week ($)</label>
+                                <input type="number" id="pricePerWeek" class="form-input" min="0" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="pricePerMonth">Price per Month ($)</label>
+                                <input type="number" id="pricePerMonth" class="form-input" min="0" step="0.01">
+                            </div>
+                        </div>
+                        <div class="grid grid-2">
+                            <div class="form-group">
+                                <label class="form-label" for="maxBoatLength">Max Boat Length (ft)</label>
+                                <input type="number" id="maxBoatLength" class="form-input" min="1">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="maxBoatWidth">Max Boat Width (ft)</label>
+                                <input type="number" id="maxBoatWidth" class="form-input" min="1">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Amenities</label>
+                            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                                <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <input type="checkbox" value="wifi" class="amenity-checkbox"> WiFi
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <input type="checkbox" value="electricity" class="amenity-checkbox"> Electricity
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <input type="checkbox" value="water" class="amenity-checkbox"> Water
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <input type="checkbox" value="fuel" class="amenity-checkbox"> Fuel
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <input type="checkbox" value="restaurant" class="amenity-checkbox"> Restaurant
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <input type="checkbox" value="showers" class="amenity-checkbox"> Showers
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <input type="checkbox" value="laundry" class="amenity-checkbox"> Laundry
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="marinaPhone">Phone</label>
+                            <input type="tel" id="marinaPhone" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="marinaEmail">Email</label>
+                            <input type="email" id="marinaEmail" class="form-input">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Create Listing</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Marina Modal -->
+        <div id="editMarinaModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Edit Marina Listing</h3>
+                    <button onclick="closeEditModal()" class="modal-close">&times;</button>
+                </div>
+                <form id="editMarinaForm">
+                    <input type="hidden" id="editMarinaId">
+                    <div class="form-group">
+                        <label class="form-label" for="editMarinaName">Marina Name *</label>
+                        <input type="text" id="editMarinaName" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="editMarinaDescription">Description</label>
+                        <textarea id="editMarinaDescription" class="form-textarea" rows="4"></textarea>
+                    </div>
+                    <div class="grid grid-2">
+                        <div class="form-group">
+                            <label class="form-label" for="editMarinaAddress">Address *</label>
+                            <input type="text" id="editMarinaAddress" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="editMarinaCity">City *</label>
+                            <input type="text" id="editMarinaCity" class="form-input" required>
+                        </div>
+                    </div>
+                    <div class="grid grid-2">
+                        <div class="form-group">
+                            <label class="form-label" for="editMarinaState">State *</label>
+                            <input type="text" id="editMarinaState" class="form-input" required maxlength="2" placeholder="FL">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="editMarinaZip">Zip Code</label>
+                            <input type="text" id="editMarinaZip" class="form-input">
+                        </div>
+                    </div>
+                    <div class="grid grid-3">
+                        <div class="form-group">
+                            <label class="form-label" for="editPricePerDay">Price per Day ($) *</label>
+                            <input type="number" id="editPricePerDay" class="form-input" required min="0" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="editPricePerWeek">Price per Week ($)</label>
+                            <input type="number" id="editPricePerWeek" class="form-input" min="0" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="editPricePerMonth">Price per Month ($)</label>
+                            <input type="number" id="editPricePerMonth" class="form-input" min="0" step="0.01">
+                        </div>
+                    </div>
+                    <div class="grid grid-2">
+                        <div class="form-group">
+                            <label class="form-label" for="editMaxBoatLength">Max Boat Length (ft)</label>
+                            <input type="number" id="editMaxBoatLength" class="form-input" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="editMaxBoatWidth">Max Boat Width (ft)</label>
+                            <input type="number" id="editMaxBoatWidth" class="form-input" min="1">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Amenities</label>
+                        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" value="wifi" class="edit-amenity-checkbox"> WiFi
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" value="electricity" class="edit-amenity-checkbox"> Electricity
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" value="water" class="edit-amenity-checkbox"> Water
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" value="fuel" class="edit-amenity-checkbox"> Fuel
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" value="restaurant" class="edit-amenity-checkbox"> Restaurant
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" value="showers" class="edit-amenity-checkbox"> Showers
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" value="laundry" class="edit-amenity-checkbox"> Laundry
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="editMarinaPhone">Phone</label>
+                        <input type="tel" id="editMarinaPhone" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="editMarinaEmail">Email</label>
+                        <input type="email" id="editMarinaEmail" class="form-input">
+                    </div>
+                    <div style="display: flex; gap: 1rem;">
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                        <button type="button" onclick="closeEditModal()" class="btn btn-secondary">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm" type="module"></script>
+    <script src="config.js"></script>
+    <script src="js/supabase-client.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/booking.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script>
+        async function handleSignOut() {
+            const result = await window.authFunctions.signOut();
+            if (result.success) {
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+</body>
+</html>
+
