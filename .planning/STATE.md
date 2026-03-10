@@ -3,11 +3,27 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
+stopped_at: Completed 01-02-PLAN.md — idempotent webhook + test infrastructure
+last_updated: "2026-03-10T03:19:08.010Z"
+last_activity: 2026-03-10 — Plan 01-01 completed (price hardening + atomic booking)
+progress:
+  total_phases: 5
+  completed_phases: 1
+  total_plans: 2
+  completed_plans: 2
+  percent: 100
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: in-progress
 stopped_at: Completed 01-booking-hardening 01-01-PLAN.md
 last_updated: "2026-03-10T03:17:50.698Z"
 last_activity: 2026-03-10 — Plan 01-01 completed (price hardening + atomic booking)
 progress:
-  total_phases: 5
+  [██████████] 100%
   completed_phases: 0
   total_plans: 2
   completed_plans: 1
@@ -50,6 +66,7 @@ Progress: [█████░░░░░] 50%
 - Trend: —
 
 *Updated after each plan completion*
+| Phase 01-booking-hardening P02 | 5m | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -64,6 +81,8 @@ Recent decisions affecting current work:
 - [Phase 01-booking-hardening]: Fee split: yacht owner pays 10% surcharge; marina absorbs 5% from payout; platform_fee_amount stored as 15% of base price for Phase 4 Stripe Connect transfers
 - [Phase 01-booking-hardening]: Admin client used for RPC create_booking_atomic (SECURITY DEFINER); user client for slip lookup (respects RLS)
 - [Phase 01-booking-hardening]: Same-day turnover allowed via strict < and > date operators in conflict check
+- [Phase 01-booking-hardening]: Webhook returns 500 on DB failure to enable Stripe retry — not 200 which would silently drop the event
+- [Phase 01-booking-hardening]: Auto-refund on payment capture + DB failure prevents customer being charged without a confirmed booking
 
 ### Pending Todos
 
@@ -78,6 +97,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-10T03:17:50.695Z
-Stopped at: Completed 01-booking-hardening 01-01-PLAN.md
+Last session: 2026-03-10T03:19:08.005Z
+Stopped at: Completed 01-02-PLAN.md — idempotent webhook + test infrastructure
 Resume file: None

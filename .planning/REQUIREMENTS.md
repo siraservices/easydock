@@ -11,7 +11,7 @@ Requirements for public launch. Each maps to roadmap phases.
 
 - [x] **HARD-01**: Server calculates total price from slip rate and dates instead of trusting client-submitted price
 - [x] **HARD-02**: Booking creation uses database transaction to prevent double-booking race condition on same slip/dates
-- [ ] **HARD-03**: Stripe webhook handler verifies database write succeeded before returning 200
+- [x] **HARD-03**: Stripe webhook handler verifies database write succeeded before returning 200
 
 ### Landing Page
 
@@ -91,7 +91,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 |-------------|-------|--------|
 | HARD-01 | Phase 1 | Complete |
 | HARD-02 | Phase 1 | Complete |
-| HARD-03 | Phase 1 | Pending |
+| HARD-03 | Phase 1 | Complete |
 | LAND-01 | Phase 2 | Pending |
 | LAND-02 | Phase 2 | Pending |
 | MARI-01 | Phase 2 | Pending |
