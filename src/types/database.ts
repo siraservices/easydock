@@ -190,6 +190,7 @@ export interface Database {
           vessel_length: number | null;
           vessel_type: string | null;
           total_price: number;
+          platform_fee_amount: number | null;
           stripe_payment_intent_id: string | null;
           stripe_charge_id: string | null;
           status:
@@ -214,6 +215,7 @@ export interface Database {
           vessel_length?: number | null;
           vessel_type?: string | null;
           total_price: number;
+          platform_fee_amount?: number | null;
           stripe_payment_intent_id?: string | null;
           stripe_charge_id?: string | null;
           status?:
@@ -237,6 +239,7 @@ export interface Database {
           vessel_length?: number | null;
           vessel_type?: string | null;
           total_price?: number;
+          platform_fee_amount?: number | null;
           stripe_payment_intent_id?: string | null;
           stripe_charge_id?: string | null;
           status?:
@@ -273,9 +276,55 @@ export interface Database {
           },
         ];
       };
+      stripe_processed_events: {
+        Row: {
+          id: string;              // Stripe event ID (e.g., evt_xxx)
+          event_type: string;
+          processed_at: string;
+          booking_id: string | null;
+        };
+        Insert: {
+          id: string;
+          event_type: string;
+          processed_at?: string;
+          booking_id?: string | null;
+        };
+        Update: {
+          id?: string;
+          event_type?: string;
+          processed_at?: string;
+          booking_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "stripe_processed_events_booking_id_fkey";
+            columns: ["booking_id"];
+            isOneToOne: false;
+            referencedRelation: "bookings";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
     };
     Views: Record<string, never>;
-    Functions: Record<string, never>;
+    Functions: {
+      create_booking_atomic: {
+        Args: {
+          p_slip_id: string;
+          p_marina_id: string;
+          p_boat_owner_id: string;
+          p_check_in: string;
+          p_check_out: string;
+          p_total_price: number;
+          p_vessel_name: string;
+          p_vessel_length: number;
+          p_vessel_type: string;
+          p_special_requests: string;
+          p_platform_fee_amount?: number | null;
+        };
+        Returns: { booking_id: string | null; conflict: boolean }[];
+      };
+    };
     Enums: Record<string, never>;
   };
 }
