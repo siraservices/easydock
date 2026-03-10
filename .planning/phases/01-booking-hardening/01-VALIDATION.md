@@ -38,9 +38,9 @@ created: 2026-03-09
 
 | Task ID | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|-----------|-------------------|-------------|--------|
-| 01-01-01 | 01 | 1 | HARD-01 | unit | `npx vitest run src/__tests__/checkout.test.ts` | ❌ W0 | ⬜ pending |
-| 01-01-02 | 01 | 1 | HARD-02 | unit | `npx vitest run src/__tests__/checkout.test.ts` | ❌ W0 | ⬜ pending |
-| 01-02-01 | 02 | 1 | HARD-03 | unit | `npx vitest run src/__tests__/webhook.test.ts` | ❌ W0 | ⬜ pending |
+| 01-01-01 | 01 | 1 | HARD-01 | unit | `npx vitest run src/__tests__/checkout-pricing.test.ts` | ❌ W0 | ⬜ pending |
+| 01-01-02 | 01 | 1 | HARD-02 | unit | `npx vitest run src/__tests__/checkout-pricing.test.ts` | ❌ W0 | ⬜ pending |
+| 01-02-01 | 02 | 1 | HARD-03 | unit | `npx vitest run src/__tests__/webhook-idempotency.test.ts` | ❌ W0 | ⬜ pending |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
@@ -50,8 +50,8 @@ created: 2026-03-09
 
 - [ ] `vitest` + `@vitejs/plugin-react` — install test framework
 - [ ] `vitest.config.ts` — configure vitest for Next.js project
-- [ ] `src/__tests__/checkout.test.ts` — stubs for HARD-01, HARD-02
-- [ ] `src/__tests__/webhook.test.ts` — stubs for HARD-03
+- [ ] `src/__tests__/checkout-pricing.test.ts` — stubs for HARD-01, HARD-02
+- [ ] `src/__tests__/webhook-idempotency.test.ts` — stubs for HARD-03
 
 *If none: "Existing infrastructure covers all phase requirements."*
 
