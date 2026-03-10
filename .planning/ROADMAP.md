@@ -28,11 +28,11 @@ Decimal phases appear between their surrounding integers in numeric order.
   1. Submitting a manipulated price in the checkout request does not change what the user is charged — the server ignores client-supplied price and recalculates from slip rate and dates
   2. Two simultaneous booking requests for the same slip and dates result in exactly one confirmed booking and one rejection
   3. A booking only reaches "confirmed" status in the database after the Stripe webhook has successfully verified the payment and completed the database write
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 01-01: Server-side price recalculation and double-booking prevention
-- [ ] 01-02: Webhook hardening with idempotency and Realtime subscription
+- [ ] 01-01-PLAN.md — Server-side price calculation, atomic double-booking prevention via PostgreSQL RPC, and database migration
+- [ ] 01-02-PLAN.md — Idempotent webhook handler with error-aware responses and Vitest test scaffolding
 
 ### Phase 2: Landing Page and Marina Onboarding
 **Goal**: The public home page is the Next.js app, marina owners can upload photos, and every marina has geocoded coordinates ready for the map
