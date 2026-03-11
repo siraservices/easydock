@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect, useState, useMemo, useCallback } from "react";
+import { useEffect, useRef, useState, useMemo, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
 import SearchFiltersBar, {
   type SearchFilters,
@@ -37,6 +37,46 @@ export default function SearchPage() {
     new Set()
   );
   const [hoveredMarinaId, setHoveredMarinaId] = useState<string | null>(null);
+  const [initialCenter, setInitialCenter] = useState<
+    { longitude: number; latitude: number } | undefined
+  >(undefined);
+  const hoverSourceRef = useRef<"map" | "list" | null>(null);
+  const listRef = useRef<HTMLDivElement>(null);
+
+  // Request geolocation on mount; on success fly map to user location
+  useEffect(() => {
+    if (!navigator.geolocation) return;
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setInitialCenter({
+          longitude: pos.coords.longitude,
+          latitude: pos.coords.latitude,
+        });
+      },
+      () => {
+        // Permission denied or unavailable — map defaults to South Florida
+      }
+    );
+  }, []);
+
+  // Scroll the list to the highlighted card when hover originates from the map
+  useEffect(() => {
+    if (!hoveredMarinaId || hoverSourceRef.current !== "map") return;
+    const el = listRef.current?.querySelector<HTMLElement>(
+      `[data-marina-id="${hoveredMarinaId}"]`
+    );
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }, [hoveredMarinaId]);
+
+  const handleHoverMarinaFromMap = useCallback((id: string | null) => {
+    hoverSourceRef.current = id ? "map" : null;
+    setHoveredMarinaId(id);
+  }, []);
+
+  const handleHoverMarinaFromList = useCallback((id: string | null) => {
+    hoverSourceRef.current = id ? "list" : null;
+    setHoveredMarinaId(id);
+  }, []);
 
   const fetchSlips = useCallback(async () => {
     setLoading(true);
@@ -111,14 +151,15 @@ export default function SearchPage() {
             marinas={marinas}
             onVisibleMarinaIdsChange={setVisibleMarinaIds}
             hoveredMarinaId={hoveredMarinaId}
-            onHoverMarina={setHoveredMarinaId}
+            onHoverMarina={handleHoverMarinaFromMap}
             onSelectMarina={handleSelectMarina}
+            initialCenter={initialCenter}
           />
         )}
       </div>
 
       {/* List — right side, scrollable */}
-      <div className="w-[40%] h-full overflow-y-auto flex-shrink-0">
+      <div ref={listRef} className="w-[40%] h-full overflow-y-auto flex-shrink-0">
         <div className="p-4">
           <SearchFiltersBar
             filters={filters}
@@ -138,6 +179,8 @@ export default function SearchPage() {
                     slip={slip}
                     checkIn={filters.checkIn}
                     checkOut={filters.checkOut}
+                    isHighlighted={hoveredMarinaId === slip.marinas.id}
+                    onHover={handleHoverMarinaFromList}
                   />
                 </div>
               ))}

@@ -15,6 +15,7 @@ interface MapViewProps {
   hoveredMarinaId: string | null;
   onHoverMarina: (id: string | null) => void;
   onSelectMarina: (id: string) => void;
+  initialCenter?: { longitude: number; latitude: number };
 }
 
 export default function MapView({
@@ -23,9 +24,22 @@ export default function MapView({
   hoveredMarinaId,
   onHoverMarina,
   onSelectMarina,
+  initialCenter,
 }: MapViewProps) {
   const mapRef = useRef<MapRef>(null);
   const [initialized, setInitialized] = useState(false);
+  const initialCenterApplied = useRef(false);
+
+  // Fly to geolocation result if it arrives after map has rendered
+  useEffect(() => {
+    if (initialCenter && initialized && mapRef.current && !initialCenterApplied.current) {
+      initialCenterApplied.current = true;
+      mapRef.current.flyTo({
+        center: [initialCenter.longitude, initialCenter.latitude],
+        zoom: 12,
+      });
+    }
+  }, [initialCenter, initialized]);
 
   // Initialize visible marina IDs to ALL marinas on first render
   // so the list is not empty before the first map move
@@ -68,8 +82,8 @@ export default function MapView({
     <Map
       ref={mapRef}
       initialViewState={{
-        longitude: -80.1,
-        latitude: 26.1,
+        longitude: initialCenter?.longitude ?? -80.1,
+        latitude: initialCenter?.latitude ?? 26.1,
         zoom: 10,
       }}
       mapStyle="mapbox://styles/mapbox/streets-v12"

@@ -13,9 +13,17 @@ interface SlipCardProps {
   slip: Slip;
   checkIn?: string;
   checkOut?: string;
+  isHighlighted?: boolean;
+  onHover?: (marinaId: string | null) => void;
 }
 
-export default function SlipCard({ slip, checkIn, checkOut }: SlipCardProps) {
+export default function SlipCard({
+  slip,
+  checkIn,
+  checkOut,
+  isHighlighted,
+  onHover,
+}: SlipCardProps) {
   const marina = slip.marinas;
   const photo = marina.photos?.[0];
   const params = new URLSearchParams();
@@ -24,7 +32,14 @@ export default function SlipCard({ slip, checkIn, checkOut }: SlipCardProps) {
   const query = params.toString() ? `?${params.toString()}` : "";
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border overflow-hidden hover:shadow-md transition-shadow">
+    <div
+      data-marina-id={marina.id}
+      onMouseEnter={() => onHover?.(marina.id)}
+      onMouseLeave={() => onHover?.(null)}
+      className={`bg-white rounded-xl shadow-sm border overflow-hidden hover:shadow-md transition-shadow ${
+        isHighlighted ? "ring-2 ring-teal-500 shadow-lg" : ""
+      }`}
+    >
       {/* Photo */}
       <div className="h-40 bg-gradient-to-br from-navy-100 to-teal-50 relative">
         {photo ? (
