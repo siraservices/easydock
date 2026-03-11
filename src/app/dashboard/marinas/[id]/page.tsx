@@ -10,6 +10,7 @@ import LoadingSpinner from "@/components/ui/loading-spinner";
 import StatusBadge from "@/components/ui/status-badge";
 import SlipRow from "@/components/slip-row";
 import SlipFormModal from "@/components/slip-form-modal";
+import AvailabilityCalendar from "@/components/availability-calendar";
 import type { Database } from "@/types/database";
 
 type Marina = Database["public"]["Tables"]["marinas"]["Row"];
@@ -185,6 +186,22 @@ export default function MarinaDetailPage() {
             </div>
           )}
         </div>
+
+        {/* Slip availability calendar */}
+        {slips.length > 0 && (
+          <details open className="bg-white rounded-xl shadow-sm border mt-6">
+            <summary className="flex items-center justify-between p-5 border-b cursor-pointer list-none">
+              <h2 className="text-lg font-semibold text-navy-800">
+                Slip Availability
+              </h2>
+              <span className="text-gray-400 text-sm select-none">&#9660;</span>
+            </summary>
+            <AvailabilityCalendar
+              slips={slips.map((s) => ({ id: s.id, name: s.name }))}
+              marinaId={id}
+            />
+          </details>
+        )}
 
         {/* Slip form modal */}
         <SlipFormModal
