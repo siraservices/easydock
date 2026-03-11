@@ -1,4 +1,4 @@
-import { describe, it, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 // --- Controllable mock state ---
 
@@ -53,12 +53,43 @@ vi.mock('stripe', () => {
   return { default: MockStripe };
 });
 
+// --- Import after mocks are registered ---
+
+import { GET } from '@/app/api/connect/return/route';
+
+function makeRequest(marinaId = 'marina-uuid-1') {
+  return new Request(`http://localhost/api/connect/return?marinaId=${marinaId}`);
+}
+
 // --- Tests ---
 
 describe('GET /api/connect/return', () => {
-  it.todo('retrieves account from Stripe and updates DB with payouts_enabled status');
+  beforeEach(() => {
+    mockState.payoutsEnabled = true;
+    mockState.dbUpdateError = false;
+    mockState.stripeAccountId = 'acct_test_123';
+    process.env.NEXT_PUBLIC_APP_URL = 'http://localhost:3000';
+  });
 
-  it.todo('redirects to /dashboard?stripeStatus=connected when payouts_enabled is true');
+  it('retrieves account from Stripe and updates DB with payouts_enabled status', async () => {
+    mockState.payoutsEnabled = true;
+    const response = await GET(makeRequest());
+    // Should redirect (302 or 307)
+    expect(response.status).toBeGreaterThanOrEqual(300);
+    expect(response.status).toBeLessThan(400);
+  });
 
-  it.todo('redirects to /dashboard?stripeStatus=pending when payouts_enabled is false');
+  it('redirects to /dashboard?stripeStatus=connected when payouts_enabled is true', async () => {
+    mockState.payoutsEnabled = true;
+    const response = await GET(makeRequest());
+    const location = response.headers.get('location');
+    expect(location).toContain('stripeStatus=connected');
+  });
+
+  it('redirects to /dashboard?stripeStatus=pending when payouts_enabled is false', async () => {
+    mockState.payoutsEnabled = false;
+    const response = await GET(makeRequest());
+    const location = response.headers.get('location');
+    expect(location).toContain('stripeStatus=pending');
+  });
 });

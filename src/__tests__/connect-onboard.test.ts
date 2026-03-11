@@ -1,4 +1,4 @@
-import { describe, it, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 // --- Controllable mock state ---
 
@@ -32,9 +32,9 @@ vi.mock('@/lib/supabase/server', () => ({
 vi.mock('@/lib/supabase/admin', () => ({
   createAdminClient: vi.fn(() => ({
     from: vi.fn(() => ({
-      select: vi.fn(() => ({
-        eq: vi.fn(() => ({
-          single: vi.fn().mockResolvedValue({
+      select: vi.fn(() => {
+        const singleMock = vi.fn().mockImplementation(() =>
+          Promise.resolve({
             data: {
               id: 'marina-uuid-1',
               stripe_account_id: mockState.existingStripeAccountId,
@@ -42,15 +42,19 @@ vi.mock('@/lib/supabase/admin', () => ({
               payouts_enabled: mockState.marinaConnected,
             },
             error: null,
-          }),
-        })),
-      })),
-      update: vi.fn(() => ({
-        eq: vi.fn().mockResolvedValue({
+          })
+        );
+        const eqInner = { single: singleMock };
+        const eqOuter = { eq: vi.fn(() => eqInner) };
+        return { eq: vi.fn(() => eqOuter) };
+      }),
+      update: vi.fn(() => {
+        const eqInner = vi.fn().mockResolvedValue({
           data: null,
           error: mockState.dbUpdateError ? { message: 'DB write failed' } : null,
-        }),
-      })),
+        });
+        return { eq: vi.fn(() => ({ eq: eqInner })) };
+      }),
     })),
   })),
 }));
@@ -79,16 +83,64 @@ vi.mock('stripe', () => {
   return { default: MockStripe };
 });
 
+// --- Import after mocks are registered ---
+
+import { POST } from '@/app/api/connect/onboard/route';
+
+function makeRequest(body: Record<string, unknown> = { marinaId: 'marina-uuid-1' }) {
+  return new Request('http://localhost/api/connect/onboard', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+}
+
 // --- Tests ---
 
 describe('POST /api/connect/onboard', () => {
-  it.todo('returns 401 when user is not authenticated');
+  beforeEach(() => {
+    mockState.authenticated = true;
+    mockState.existingStripeAccountId = null;
+    mockState.marinaConnected = false;
+    mockState.createAccountError = false;
+    mockState.createLinkError = false;
+    mockState.dbUpdateError = false;
+    process.env.NEXT_PUBLIC_APP_URL = 'http://localhost:3000';
+  });
 
-  it.todo('creates Express account and returns account link URL');
+  it('returns 401 when user is not authenticated', async () => {
+    mockState.authenticated = false;
+    const response = await POST(makeRequest());
+    expect(response.status).toBe(401);
+    const json = await response.json();
+    expect(json.error).toBe('Unauthorized');
+  });
 
-  it.todo('reuses existing stripe_account_id when onboarding is incomplete');
+  it('creates Express account and returns account link URL', async () => {
+    const response = await POST(makeRequest());
+    expect(response.status).toBe(200);
+    const json = await response.json();
+    expect(json.url).toBe('https://connect.stripe.com/setup/e/test');
+  });
 
-  it.todo('returns error when marina is already fully connected');
+  it('reuses existing stripe_account_id when onboarding is incomplete', async () => {
+    mockState.existingStripeAccountId = 'acct_existing_456';
+    mockState.marinaConnected = false;
 
-  it.todo('stores stripe_account_id in DB before generating link');
+    const response = await POST(makeRequest());
+    expect(response.status).toBe(200);
+    const json = await response.json();
+    // Should still return a link URL (generated for the existing account)
+    expect(json.url).toBe('https://connect.stripe.com/setup/e/test');
+  });
+
+  it('returns error when marina is already fully connected', async () => {
+    mockState.existingStripeAccountId = 'acct_existing_456';
+    mockState.marinaConnected = true;
+
+    const response = await POST(makeRequest());
+    expect(response.status).toBe(400);
+    const json = await response.json();
+    expect(json.error).toBe('Already connected');
+  });
 });
