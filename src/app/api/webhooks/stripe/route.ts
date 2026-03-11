@@ -134,6 +134,40 @@ export async function POST(request: Request) {
       break;
     }
 
+    case "account.updated": {
+      const account = event.data.object as Stripe.Account;
+      // For Connect webhook events, use event.account (the connected account ID)
+      // if available; otherwise fall back to account.id
+      const connectedAccountId =
+        (event as Stripe.Event & { account?: string }).account ?? account.id;
+
+      const { error: updateError } = await supabase
+        .from("marinas")
+        .update({
+          stripe_onboarding_complete: account.details_submitted ?? false,
+          payouts_enabled: account.payouts_enabled ?? false,
+        } as never)
+        .eq("stripe_account_id", connectedAccountId);
+
+      if (updateError) {
+        console.error("DB write failed for account.updated:", updateError);
+        // Return 500 so Stripe retries
+        return NextResponse.json(
+          { error: "Database write failed" },
+          { status: 500 }
+        );
+      }
+
+      // Record event with null booking_id (not a booking event)
+      await supabase.from("stripe_processed_events").insert({
+        id: event.id,
+        event_type: event.type,
+        booking_id: null,
+      });
+
+      break;
+    }
+
     default:
       // Unhandled event type — acknowledge receipt without processing
       break;

@@ -1,4 +1,4 @@
-import { describe, it, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 // --- Controllable mock state ---
 
@@ -9,6 +9,11 @@ const mockState = {
   dbUpdateError: false,
   existingEvent: false,
 };
+
+// --- Mock insert/update fns for assertions ---
+
+const mockInsert = vi.fn().mockResolvedValue({ data: null, error: null });
+const mockUpdate = vi.fn();
 
 // --- Mock: @/lib/supabase/admin ---
 
@@ -25,13 +30,13 @@ vi.mock('@/lib/supabase/admin', () => ({
               }),
             })),
           })),
-          insert: vi.fn().mockResolvedValue({ data: null, error: null }),
+          insert: mockInsert,
         };
       }
       if (table === 'marinas') {
         return {
           update: vi.fn(() => ({
-            eq: vi.fn().mockResolvedValue({
+            eq: mockUpdate.mockResolvedValue({
               data: null,
               error: mockState.dbUpdateError ? { message: 'DB write failed' } : null,
             }),
@@ -52,6 +57,7 @@ vi.mock('stripe', () => {
         constructEvent: vi.fn(() => ({
           id: 'evt_test_123',
           type: 'account.updated',
+          account: mockState.stripeAccountId,
           data: {
             object: {
               id: mockState.stripeAccountId,
@@ -66,12 +72,70 @@ vi.mock('stripe', () => {
   return { default: MockStripe };
 });
 
+// --- Import after mocks ---
+
+import { POST } from '@/app/api/webhooks/stripe/route';
+
+function makeRequest(body = '{}') {
+  return new Request('http://localhost/api/webhooks/stripe', {
+    method: 'POST',
+    body,
+    headers: { 'stripe-signature': 'sig_test' },
+  });
+}
+
 // --- Tests ---
 
 describe('POST /api/webhooks/stripe — account.updated', () => {
-  it.todo('updates marinas stripe_onboarding_complete and payouts_enabled on account.updated event');
+  beforeEach(() => {
+    mockState.payoutsEnabled = true;
+    mockState.detailsSubmitted = true;
+    mockState.stripeAccountId = 'acct_test_123';
+    mockState.dbUpdateError = false;
+    mockState.existingEvent = false;
+    mockInsert.mockClear();
+    mockUpdate.mockClear();
+    mockInsert.mockResolvedValue({ data: null, error: null });
+  });
 
-  it.todo('returns 500 when DB update fails (triggers Stripe retry)');
+  it('updates marinas stripe_onboarding_complete and payouts_enabled on account.updated event', async () => {
+    const response = await POST(makeRequest());
+    expect(response.status).toBe(200);
+    const json = await response.json();
+    expect(json.received).toBe(true);
 
-  it.todo('records event in stripe_processed_events with null booking_id');
+    // marinas table must have been updated
+    expect(mockUpdate).toHaveBeenCalled();
+
+    // Event must be recorded in stripe_processed_events with null booking_id
+    expect(mockInsert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        id: 'evt_test_123',
+        event_type: 'account.updated',
+        booking_id: null,
+      })
+    );
+  });
+
+  it('returns 500 when DB update fails (triggers Stripe retry)', async () => {
+    mockState.dbUpdateError = true;
+
+    const response = await POST(makeRequest());
+    expect(response.status).toBe(500);
+
+    // Event must NOT be recorded — DB failed, Stripe must retry
+    expect(mockInsert).not.toHaveBeenCalled();
+  });
+
+  it('records event in stripe_processed_events with null booking_id', async () => {
+    const response = await POST(makeRequest());
+    expect(response.status).toBe(200);
+
+    expect(mockInsert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        booking_id: null,
+        event_type: 'account.updated',
+      })
+    );
+  });
 });
