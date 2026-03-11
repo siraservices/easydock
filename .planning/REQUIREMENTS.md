@@ -32,9 +32,9 @@ Requirements for public launch. Each maps to roadmap phases.
 
 ### Stripe Connect
 
-- [ ] **PAY-01**: Marina owner can link their Stripe account via Connect Express onboarding flow
-- [ ] **PAY-02**: Checkout splits payment: EasyDock takes percentage fee, remainder transfers to marina's Stripe account
-- [ ] **PAY-03**: Marina owner can view payout history and upcoming transfers in their dashboard
+- [x] **PAY-01**: Marina owner can link their Stripe account via Connect Express onboarding flow
+- [x] **PAY-02**: Checkout splits payment: EasyDock takes percentage fee, remainder transfers to marina's Stripe account
+- [x] **PAY-03**: Marina owner can view payout history and upcoming transfers in their dashboard
 
 ### Booking Management
 
@@ -100,9 +100,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SRCH-01 | Phase 3 | Complete |
 | SRCH-02 | Phase 3 | Complete |
 | SRCH-03 | Phase 3 | Complete |
-| PAY-01 | Phase 4 | Pending |
-| PAY-02 | Phase 4 | Pending |
-| PAY-03 | Phase 4 | Pending |
+| PAY-01 | Phase 4 | Complete |
+| PAY-02 | Phase 4 | Complete |
+| PAY-03 | Phase 4 | Complete |
 | BOOK-01 | Phase 5 | Pending |
 | BOOK-02 | Phase 5 | Pending |
 | BOOK-03 | Phase 5 | Pending |
