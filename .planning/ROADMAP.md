@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Booking Hardening** - Fix price tampering, double-booking, and webhook gaps before anything is built on top (completed 2026-03-10)
 - [x] **Phase 2: Landing Page and Marina Onboarding** - Integrate marketing home page and give marina owners photo uploads and geocoded listings (completed 2026-03-11)
-- [x] **Phase 3: Map Search** - Replace text-based search with Mapbox map and allow unauthenticated browsing (completed 2026-03-11)
+- [x] **Phase 3: Map Search** - Replace text-based search with Mapbox map and allow unauthenticated browsing (completed 2026-03-11)
 - [ ] **Phase 4: Stripe Connect Payouts** - Wire marketplace payments so marina owners can onboard and receive real money
 - [ ] **Phase 5: Booking Lifecycle and Notifications** - Booking inbox, cancellations with refunds, and email notifications for both parties
 
@@ -74,12 +74,12 @@ Plans:
   2. A completed booking charges the yacht owner the correct total, deducts EasyDock's platform fee, and the remainder transfers to the marina's connected Stripe account
   3. A marina whose Stripe onboarding is incomplete cannot accept bookings — the checkout is blocked with a clear message
   4. A marina owner can view their payout history (via Stripe Express dashboard link) from within the EasyDock dashboard
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 04-01: Database migration and Connect onboarding API routes
-- [ ] 04-02: Checkout rewrite with transfer_data and platform fee
-- [ ] 04-03: Payout history view and onboarding status webhook
+- [ ] 04-01-PLAN.md — Database migration, TypeScript types, and Connect onboarding API routes (onboard, return, refresh)
+- [ ] 04-02-PLAN.md — Checkout rewrite with destination charge (transfer_data + application_fee_amount) and unbookable-marina error handling
+- [ ] 04-03-PLAN.md — Dashboard Connect UI (banner, status badge, payout button), login-link API, and account.updated webhook
 
 ### Phase 5: Booking Lifecycle and Notifications
 **Goal**: Marina owners can manage incoming bookings, either party can cancel with correct refund handling, and both parties receive email on every booking event — the product is ready for public launch
