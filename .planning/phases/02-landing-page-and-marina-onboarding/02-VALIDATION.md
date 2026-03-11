@@ -2,8 +2,8 @@
 phase: 2
 slug: landing-page-and-marina-onboarding
 status: draft
-nyquist_compliant: false
-wave_0_complete: false
+nyquist_compliant: true
+wave_0_complete: true
 created: 2026-03-10
 ---
 
@@ -36,26 +36,17 @@ created: 2026-03-10
 
 ## Per-Task Verification Map
 
-| Task ID | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
-|---------|------|------|-------------|-----------|-------------------|-------------|--------|
-| 02-01-01 | 01 | 1 | LAND-01 | manual-only | n/a | n/a | pending |
-| 02-01-02 | 01 | 1 | LAND-02 | unit | `npx vitest run src/__tests__/lead-api.test.ts` | Wave 0 | pending |
-| 02-02-01 | 02 | 1 | MARI-01 | unit | `npx vitest run src/__tests__/photo-drop-zone.test.ts` | Wave 0 | pending |
-| 02-03-01 | 03 | 2 | MARI-02 | unit | `npx vitest run src/__tests__/geocode-api.test.ts` | Wave 0 | pending |
-| 02-03-02 | 03 | 2 | MARI-03 | unit | `npx vitest run src/__tests__/availability-calendar.test.ts` | Wave 0 | pending |
+| Task ID | Plan | Wave | Requirement | Test Type | Automated Command | Status |
+|---------|------|------|-------------|-----------|-------------------|--------|
+| 02-01-01 | 01 | 1 | LAND-01 | manual-only | n/a | pending |
+| 02-01-02 | 01 | 1 | LAND-02 | unit (inline TDD) | `npx vitest run src/__tests__/lead-api.test.ts` | pending |
+| 02-02-01 | 02 | 1 | MARI-01 | unit (inline TDD) | `npx vitest run src/__tests__/photo-drop-zone.test.ts` | pending |
+| 02-02-02 | 02 | 1 | MARI-02 | unit (inline TDD) | `npx vitest run src/__tests__/geocode-api.test.ts` | pending |
+| 02-03-01 | 03 | 1 | MARI-03 | unit (inline TDD) | `npx vitest run src/__tests__/availability-calendar.test.ts` | pending |
 
 *Status: pending / green / red / flaky*
 
----
-
-## Wave 0 Requirements
-
-- [ ] `src/__tests__/lead-api.test.ts` — stubs for LAND-02 (validation logic, 400/201 responses)
-- [ ] `src/__tests__/photo-drop-zone.test.ts` — stubs for MARI-01 (drag events, file extraction)
-- [ ] `src/__tests__/geocode-api.test.ts` — stubs for MARI-02 (Mapbox response parsing + failure path)
-- [ ] `src/__tests__/availability-calendar.test.ts` — stubs for MARI-03 (date overlap logic)
-
-*Vitest already installed — no framework setup needed.*
+*Note: All test files are created inline within their respective TDD tasks (tasks marked `tdd="true"`). No separate Wave 0 stub plan is needed — each task writes tests as part of the RED-GREEN-REFACTOR cycle.*
 
 ---
 
@@ -69,11 +60,11 @@ created: 2026-03-10
 
 ## Validation Sign-Off
 
-- [ ] All tasks have `<automated>` verify or Wave 0 dependencies
-- [ ] Sampling continuity: no 3 consecutive tasks without automated verify
-- [ ] Wave 0 covers all MISSING references
-- [ ] No watch-mode flags
-- [ ] Feedback latency < 5s
-- [ ] `nyquist_compliant: true` set in frontmatter
+- [x] All tasks have `<automated>` verify or are marked manual-only
+- [x] Sampling continuity: no 3 consecutive tasks without automated verify
+- [x] Inline TDD approach: each `tdd="true"` task creates its own test file
+- [x] No watch-mode flags
+- [x] Feedback latency < 5s
+- [x] `nyquist_compliant: true` set in frontmatter
 
 **Approval:** pending
