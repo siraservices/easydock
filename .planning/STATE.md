@@ -3,11 +3,27 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
+stopped_at: Completed 04-stripe-connect-payouts 04-01-PLAN.md
+last_updated: "2026-03-11T21:54:21.258Z"
+last_activity: 2026-03-11 — Plan 03-02 completed (bi-directional hover sync + mobile layout)
+progress:
+  total_phases: 5
+  completed_phases: 3
+  total_plans: 11
+  completed_plans: 9
+  percent: 82
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: in-progress
 stopped_at: Completed 04-stripe-connect-payouts 04-00-PLAN.md
 last_updated: "2026-03-11T21:51:38.120Z"
 last_activity: 2026-03-11 — Plan 04-00 completed (Stripe Connect test scaffolding)
 progress:
-  total_phases: 5
+  [████████░░] 82%
   completed_phases: 3
   total_plans: 11
   completed_plans: 8
@@ -59,6 +75,8 @@ Progress: [████████░░] 88%
 | Phase 03-map-search P01 | 5 min | 2 tasks | 6 files |
 | Phase 03-map-search P02 | 20 min | 3 tasks | 3 files |
 | Phase 04-stripe-connect-payouts P00 | 5min | 2 tasks | 5 files |
+| Phase 04-stripe-connect-payouts P01 | 3min | 2 tasks | 7 files |
+| Phase 04-stripe-connect-payouts P01 | 5m | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -88,6 +106,11 @@ Recent decisions affecting current work:
 - [Phase 03-map-search]: Geolocation uses mapRef.current.flyTo after mount rather than updating initialViewState to avoid map re-initialization
 - [Phase 03-map-search]: Mobile map overlay uses fixed inset-0 z-40 with Tailwind responsive classes — no JS media query needed for the base layout
 - [Phase 04-stripe-connect-payouts]: Stub files use controllable mockState objects matching webhook-idempotency.test.ts pattern so Plan 01-03 executors can toggle mock behavior without restructuring
+- [Phase 04-stripe-connect-payouts]: Store stripe_account_id in DB before generating account link (link is one-time-use; must persist even if user closes tab mid-flow)
+- [Phase 04-stripe-connect-payouts]: Return route always retrieves from Stripe (never trusts DB status) for authoritative payouts_enabled/details_submitted
+- [Phase 04-stripe-connect-payouts]: Refresh route uses NextResponse.redirect (not JSON) — Stripe calls refresh_url as a browser redirect target
+- [Phase 04-stripe-connect-payouts]: stripe_account_id stored in DB before generating account link — link is one-time-use; must persist even if user closes tab mid-flow
+- [Phase 04-stripe-connect-payouts]: Return route always calls stripe.accounts.retrieve() for authoritative status — never trusts cached DB values for payouts_enabled or details_submitted
 
 ### Pending Todos
 
@@ -101,6 +124,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-11T21:51:38.116Z
-Stopped at: Completed 04-stripe-connect-payouts 04-00-PLAN.md
+Last session: 2026-03-11T21:54:21.255Z
+Stopped at: Completed 04-stripe-connect-payouts 04-01-PLAN.md
 Resume file: None
