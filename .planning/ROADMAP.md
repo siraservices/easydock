@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Booking Hardening** - Fix price tampering, double-booking, and webhook gaps before anything is built on top (completed 2026-03-10)
 - [x] **Phase 2: Landing Page and Marina Onboarding** - Integrate marketing home page and give marina owners photo uploads and geocoded listings (completed 2026-03-11)
-- [ ] **Phase 3: Map Search** - Replace text-based search with Mapbox map and allow unauthenticated browsing
+- [x] **Phase 3: Map Search** - Replace text-based search with Mapbox map and allow unauthenticated browsing (completed 2026-03-11)
 - [ ] **Phase 4: Stripe Connect Payouts** - Wire marketplace payments so marina owners can onboard and receive real money
 - [ ] **Phase 5: Booking Lifecycle and Notifications** - Booking inbox, cancellations with refunds, and email notifications for both parties
 
@@ -106,6 +106,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 |-------|----------------|--------|-----------|
 | 1. Booking Hardening | 2/2 | Complete   | 2026-03-10 |
 | 2. Landing Page and Marina Onboarding | 3/3 | Complete   | 2026-03-11 |
-| 3. Map Search | 1/2 | In Progress|  |
+| 3. Map Search | 2/2 | Complete   | 2026-03-11 |
 | 4. Stripe Connect Payouts | 0/3 | Not started | - |
 | 5. Booking Lifecycle and Notifications | 0/3 | Not started | - |

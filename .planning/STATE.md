@@ -3,31 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 03-map-search 03-01-PLAN.md
-last_updated: "2026-03-11T20:02:55.931Z"
-last_activity: 2026-03-10 — Plan 01-01 completed (price hardening + atomic booking)
+stopped_at: Completed 03-map-search 03-02-PLAN.md
+last_updated: "2026-03-11T21:00:00.000Z"
+last_activity: 2026-03-11 — Plan 03-02 completed (bi-directional hover sync + mobile layout)
 progress:
   total_phases: 5
-  completed_phases: 2
-  total_plans: 7
-  completed_plans: 6
-  percent: 100
----
-
----
-gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: in-progress
-stopped_at: Completed 01-booking-hardening 01-01-PLAN.md
-last_updated: "2026-03-10T03:17:50.698Z"
-last_activity: 2026-03-10 — Plan 01-01 completed (price hardening + atomic booking)
-progress:
-  [██████████] 100%
-  completed_phases: 0
-  total_plans: 2
-  completed_plans: 1
-  percent: 50
+  completed_phases: 3
+  total_plans: 8
+  completed_plans: 7
+  percent: 88
 ---
 
 # Project State
@@ -37,33 +21,35 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-09)
 
 **Core value:** A yacht owner can find an available slip, book it, and pay — and a marina owner receives that booking and gets paid.
-**Current focus:** Phase 1 — Booking Hardening
+**Current focus:** Phase 4 — Stripe Connect
 
 ## Current Position
 
-Phase: 1 of 5 (Booking Hardening)
-Plan: 1 of 2 in current phase
-Status: In Progress
-Last activity: 2026-03-10 — Plan 01-01 completed (price hardening + atomic booking)
+Phase: 3 of 5 (Map Search) — COMPLETE
+Plan: 2 of 2 in current phase — COMPLETE
+Status: In Progress (moving to Phase 4)
+Last activity: 2026-03-11 — Plan 03-02 completed (bi-directional hover sync + mobile layout)
 
-Progress: [█████░░░░░] 50%
+Progress: [████████░░] 88%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 1
-- Average duration: 3 min
-- Total execution time: 3 min
+- Total plans completed: 7
+- Average duration: ~5 min
+- Total execution time: ~35 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01-booking-hardening | 1/2 | 3 min | 3 min |
+| 01-booking-hardening | 2/2 | ~10 min | 5 min |
+| 02-landing-page-and-marina-onboarding | 3/3 | ~15 min | 5 min |
+| 03-map-search | 2/2 | ~10 min | 5 min |
 
 **Recent Trend:**
-- Last 5 plans: 3 min
-- Trend: —
+- Last 5 plans: ~5 min each
+- Trend: Consistent
 
 *Updated after each plan completion*
 | Phase 01-booking-hardening P02 | 5m | 2 tasks | 4 files |
@@ -71,6 +57,7 @@ Progress: [█████░░░░░] 50%
 | Phase 02-landing-page-and-marina-onboarding P01 | 5m | 2 tasks | 7 files |
 | Phase 02-landing-page-and-marina-onboarding P03 | 5m | 2 tasks | 4 files |
 | Phase 03-map-search P01 | 5 min | 2 tasks | 6 files |
+| Phase 03-map-search P02 | 20 min | 3 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -96,6 +83,9 @@ Recent decisions affecting current work:
 - [Phase 03-map-search]: AnySupabaseClient any-type used in buildSlipQuery to avoid Supabase v2 generic arity mismatch
 - [Phase 03-map-search]: MapView initializes visibleMarinaIds to all marinas on first render so list is not empty before first map move fires
 - [Phase 03-map-search]: Search button triggers Supabase re-fetch; viewport pan/zoom updates visible list client-side without re-fetching
+- [Phase 03-map-search]: hoverSource ref distinguishes map-initiated vs card-initiated hovers to prevent scroll-into-view from fighting user scroll
+- [Phase 03-map-search]: Geolocation uses mapRef.current.flyTo after mount rather than updating initialViewState to avoid map re-initialization
+- [Phase 03-map-search]: Mobile map overlay uses fixed inset-0 z-40 with Tailwind responsive classes — no JS media query needed for the base layout
 
 ### Pending Todos
 
@@ -106,10 +96,9 @@ None yet.
 - [Phase 4]: Verify `transfer_data` vs `on_behalf_of` distinction in current Stripe Connect docs before implementation — tax and compliance implications differ.
 - [Phase 4]: Payment capture timing decision unresolved — instant capture at checkout vs manual capture at marina approval. Must decide before Phase 4 begins.
 - [Phase 5]: Confirm `resend` package is still ^3.x and API surface unchanged before installation.
-- [Phase 3]: Confirm react-map-gl current stable version before install.
 
 ## Session Continuity
 
-Last session: 2026-03-11T20:02:42.874Z
-Stopped at: Completed 03-map-search 03-01-PLAN.md
+Last session: 2026-03-11T21:00:00.000Z
+Stopped at: Completed 03-map-search 03-02-PLAN.md
 Resume file: None
