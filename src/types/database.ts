@@ -67,6 +67,9 @@ export interface Database {
           email: string | null;
           website: string | null;
           is_active: boolean;
+          stripe_account_id: string | null;
+          stripe_onboarding_complete: boolean;
+          payouts_enabled: boolean;
           created_at: string;
           updated_at: string;
         };
@@ -87,6 +90,9 @@ export interface Database {
           email?: string | null;
           website?: string | null;
           is_active?: boolean;
+          stripe_account_id?: string | null;
+          stripe_onboarding_complete?: boolean;
+          payouts_enabled?: boolean;
           created_at?: string;
           updated_at?: string;
         };
@@ -106,6 +112,9 @@ export interface Database {
           email?: string | null;
           website?: string | null;
           is_active?: boolean;
+          stripe_account_id?: string | null;
+          stripe_onboarding_complete?: boolean;
+          payouts_enabled?: boolean;
           updated_at?: string;
         };
         Relationships: [
