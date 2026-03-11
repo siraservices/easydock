@@ -14,7 +14,10 @@ export async function POST(request: Request) {
 
   const name = typeof body.name === 'string' ? body.name : '';
   const email = typeof body.email === 'string' ? body.email : '';
-  const user_type = typeof body.user_type === 'string' ? body.user_type : '';
+  const rawUserType = typeof body.user_type === 'string' ? body.user_type : '';
+  const user_type: 'yacht_owner' | 'marina_owner' | '' = (
+    rawUserType === 'yacht_owner' || rawUserType === 'marina_owner' ? rawUserType : ''
+  );
 
   // Inline validation
   const errors: Record<string, string> = {};
@@ -36,11 +39,12 @@ export async function POST(request: Request) {
   }
 
   // Insert via admin client (bypasses RLS)
+  // user_type is narrowed to the union type after validation above
   const supabase = createAdminClient();
   const { error } = await supabase.from('marina_leads').insert({
     name: name.trim(),
     email: email.toLowerCase().trim(),
-    user_type,
+    user_type: user_type as 'yacht_owner' | 'marina_owner',
   });
 
   if (error) {

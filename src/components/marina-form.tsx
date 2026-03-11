@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import { uploadMarinaPhoto, deleteMarinaPhoto } from "@/lib/supabase/storage";
 import { useAuth } from "@/lib/auth-context";
 import { AMENITIES } from "@/lib/constants";
+import PhotoDropZone from "@/components/photo-drop-zone";
 import type { Database } from "@/types/database";
 
 type Marina = Database["public"]["Tables"]["marinas"]["Row"];
@@ -36,6 +37,7 @@ export default function MarinaForm({ initialData }: MarinaFormProps) {
   const [photos, setPhotos] = useState<string[]>(initialData?.photos || []);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [geocodingWarning, setGeocodingWarning] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   function toggleAmenity(key: string) {
@@ -44,9 +46,8 @@ export default function MarinaForm({ initialData }: MarinaFormProps) {
     );
   }
 
-  async function handlePhotoUpload(e: React.ChangeEvent<HTMLInputElement>) {
-    const files = e.target.files;
-    if (!files || !user) return;
+  async function handleDroppedFiles(files: File[]) {
+    if (!user) return;
 
     if (photos.length + files.length > 5) {
       setError("Maximum 5 photos allowed.");
@@ -58,7 +59,7 @@ export default function MarinaForm({ initialData }: MarinaFormProps) {
 
     try {
       const newUrls: string[] = [];
-      for (const file of Array.from(files)) {
+      for (const file of files) {
         const url = await uploadMarinaPhoto(supabase, user.id, file);
         newUrls.push(url);
       }
@@ -79,10 +80,39 @@ export default function MarinaForm({ initialData }: MarinaFormProps) {
     }
   }
 
+  async function geocodeAndUpdate(marinaId: string, fullAddress: string) {
+    try {
+      const res = await fetch("/api/marinas/geocode", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ address: fullAddress }),
+      });
+
+      if (!res.ok) {
+        setGeocodingWarning(true);
+        return;
+      }
+
+      const { lat, lng } = await res.json();
+
+      if (lat !== null && lng !== null) {
+        await supabase
+          .from("marinas")
+          .update({ lat, lng } as never)
+          .eq("id", marinaId);
+      } else {
+        setGeocodingWarning(true);
+      }
+    } catch {
+      setGeocodingWarning(true);
+    }
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!user) return;
     setError(null);
+    setGeocodingWarning(false);
     setIsSubmitting(true);
 
     const marinaData = {
@@ -99,6 +129,8 @@ export default function MarinaForm({ initialData }: MarinaFormProps) {
       photos,
     };
 
+    const fullAddress = [address, city, state, zip].filter(Boolean).join(", ");
+
     try {
       if (initialData) {
         const { error: updateError } = await supabase
@@ -107,7 +139,16 @@ export default function MarinaForm({ initialData }: MarinaFormProps) {
           .eq("id", initialData.id);
 
         if (updateError) throw updateError;
-        router.push(`/dashboard/marinas/${initialData.id}`);
+
+        // Geocode after save — marina is persisted even if geocoding fails
+        await geocodeAndUpdate(initialData.id, fullAddress);
+
+        if (!geocodingWarning) {
+          router.push(`/dashboard/marinas/${initialData.id}`);
+        } else {
+          // Still redirect but warning is visible
+          router.push(`/dashboard/marinas/${initialData.id}`);
+        }
       } else {
         const { data, error: insertError } = (await supabase
           .from("marinas")
@@ -116,7 +157,12 @@ export default function MarinaForm({ initialData }: MarinaFormProps) {
           .single()) as unknown as { data: { id: string } | null; error: Error | null };
 
         if (insertError) throw insertError;
-        router.push(`/dashboard/marinas/${data!.id}`);
+        const marinaId = data!.id;
+
+        // Geocode after save — marina is persisted even if geocoding fails
+        await geocodeAndUpdate(marinaId, fullAddress);
+
+        router.push(`/dashboard/marinas/${marinaId}`);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to save marina.");
@@ -124,11 +170,19 @@ export default function MarinaForm({ initialData }: MarinaFormProps) {
     }
   }
 
+  const [heroPhoto, ...thumbnailPhotos] = photos;
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
           {error}
+        </div>
+      )}
+
+      {geocodingWarning && (
+        <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded-lg text-sm">
+          Address couldn&apos;t be geocoded &mdash; marina won&apos;t appear on map until address is corrected.
         </div>
       )}
 
@@ -319,38 +373,64 @@ export default function MarinaForm({ initialData }: MarinaFormProps) {
         <label className="block text-sm font-medium text-gray-700 mb-2">
           Photos ({photos.length}/5)
         </label>
+
+        {/* Airbnb-style photo display: hero large at top, thumbnails below */}
         {photos.length > 0 && (
-          <div className="flex gap-3 mb-3 flex-wrap">
-            {photos.map((url) => (
-              <div key={url} className="relative w-24 h-24">
-                <img
-                  src={url}
-                  alt="Marina"
-                  className="w-full h-full object-cover rounded-lg"
-                />
-                <button
-                  type="button"
-                  onClick={() => removePhoto(url)}
-                  className="absolute -top-2 -right-2 bg-red-500 text-white w-5 h-5 rounded-full text-xs flex items-center justify-center hover:bg-red-600"
-                >
-                  &times;
-                </button>
+          <div className="mb-3 space-y-3">
+            {/* Hero photo */}
+            <div className="relative w-full">
+              <img
+                src={heroPhoto}
+                alt="Marina hero"
+                className="w-full h-64 object-cover rounded-lg"
+              />
+              <button
+                type="button"
+                onClick={() => removePhoto(heroPhoto)}
+                className="absolute top-2 right-2 bg-red-500 text-white w-6 h-6 rounded-full text-xs flex items-center justify-center hover:bg-red-600 shadow"
+                aria-label="Remove hero photo"
+              >
+                &times;
+              </button>
+            </div>
+
+            {/* Remaining thumbnails */}
+            {thumbnailPhotos.length > 0 && (
+              <div className="flex gap-3 flex-wrap">
+                {thumbnailPhotos.map((url) => (
+                  <div key={url} className="relative w-24 h-24">
+                    <img
+                      src={url}
+                      alt="Marina"
+                      className="w-full h-full object-cover rounded-lg"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removePhoto(url)}
+                      className="absolute -top-2 -right-2 bg-red-500 text-white w-5 h-5 rounded-full text-xs flex items-center justify-center hover:bg-red-600"
+                      aria-label="Remove photo"
+                    >
+                      &times;
+                    </button>
+                  </div>
+                ))}
               </div>
-            ))}
+            )}
           </div>
         )}
+
+        {/* Drop zone (only shown when under max) */}
         {photos.length < 5 && (
-          <input
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={handlePhotoUpload}
+          <PhotoDropZone
+            onFiles={handleDroppedFiles}
             disabled={uploading}
-            className="text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100"
+            currentCount={photos.length}
+            maxCount={5}
           />
         )}
+
         {uploading && (
-          <p className="text-sm text-gray-500 mt-1">Uploading...</p>
+          <p className="text-sm text-gray-500 mt-2">Uploading...</p>
         )}
       </div>
 
