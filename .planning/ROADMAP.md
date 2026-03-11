@@ -74,9 +74,10 @@ Plans:
   2. A completed booking charges the yacht owner the correct total, deducts EasyDock's platform fee, and the remainder transfers to the marina's connected Stripe account
   3. A marina whose Stripe onboarding is incomplete cannot accept bookings — the checkout is blocked with a clear message
   4. A marina owner can view their payout history (via Stripe Express dashboard link) from within the EasyDock dashboard
-**Plans**: 3 plans
+**Plans**: 4 plans
 
 Plans:
+- [ ] 04-00-PLAN.md — Wave 0 test stub scaffolding for all Connect test files
 - [ ] 04-01-PLAN.md — Database migration, TypeScript types, and Connect onboarding API routes (onboard, return, refresh)
 - [ ] 04-02-PLAN.md — Checkout rewrite with destination charge (transfer_data + application_fee_amount) and unbookable-marina error handling
 - [ ] 04-03-PLAN.md — Dashboard Connect UI (banner, status badge, payout button), login-link API, and account.updated webhook
@@ -107,5 +108,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 1. Booking Hardening | 2/2 | Complete   | 2026-03-10 |
 | 2. Landing Page and Marina Onboarding | 3/3 | Complete   | 2026-03-11 |
 | 3. Map Search | 2/2 | Complete   | 2026-03-11 |
-| 4. Stripe Connect Payouts | 0/3 | Not started | - |
+| 4. Stripe Connect Payouts | 0/4 | Not started | - |
 | 5. Booking Lifecycle and Notifications | 0/3 | Not started | - |
