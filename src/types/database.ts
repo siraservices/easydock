@@ -276,6 +276,30 @@ export interface Database {
           },
         ];
       };
+      marina_leads: {
+        Row: {
+          id: string;
+          name: string;
+          email: string;
+          user_type: 'yacht_owner' | 'marina_owner';
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          email: string;
+          user_type: 'yacht_owner' | 'marina_owner';
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          email?: string;
+          user_type?: 'yacht_owner' | 'marina_owner';
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       stripe_processed_events: {
         Row: {
           id: string;              // Stripe event ID (e.g., evt_xxx)
