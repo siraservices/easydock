@@ -105,7 +105,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Booking Hardening | 2/2 | Complete   | 2026-03-10 |
-| 2. Landing Page and Marina Onboarding | 0/3 | Not started | - |
+| 2. Landing Page and Marina Onboarding | 2/3 | In Progress|  |
 | 3. Map Search | 0/2 | Not started | - |
 | 4. Stripe Connect Payouts | 0/3 | Not started | - |
 | 5. Booking Lifecycle and Notifications | 0/3 | Not started | - |

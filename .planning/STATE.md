@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Phase 2 context gathered
-last_updated: "2026-03-11T02:43:45.198Z"
+stopped_at: Completed 02-landing-page-and-marina-onboarding 02-02-PLAN.md
+last_updated: "2026-03-11T03:12:53.322Z"
 last_activity: 2026-03-10 — Plan 01-01 completed (price hardening + atomic booking)
 progress:
   total_phases: 5
   completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
+  total_plans: 5
+  completed_plans: 3
   percent: 100
 ---
 
@@ -67,6 +67,7 @@ Progress: [█████░░░░░] 50%
 
 *Updated after each plan completion*
 | Phase 01-booking-hardening P02 | 5m | 2 tasks | 4 files |
+| Phase 02-landing-page-and-marina-onboarding P02 | 5 min | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -83,6 +84,9 @@ Recent decisions affecting current work:
 - [Phase 01-booking-hardening]: Same-day turnover allowed via strict < and > date operators in conflict check
 - [Phase 01-booking-hardening]: Webhook returns 500 on DB failure to enable Stripe retry — not 200 which would silently drop the event
 - [Phase 01-booking-hardening]: Auto-refund on payment capture + DB failure prevents customer being charged without a confirmed booking
+- [Phase 02-landing-page-and-marina-onboarding]: PhotoDropZone uses pointer-events-none on children to prevent drag-leave flicker
+- [Phase 02-landing-page-and-marina-onboarding]: Geocoding runs after marina save so record persists even if Mapbox fails
+- [Phase 02-landing-page-and-marina-onboarding]: Mapbox v6 geometry.coordinates is [lng, lat] order, not [lat, lng]
 
 ### Pending Todos
 
@@ -97,6 +101,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-11T02:43:45.173Z
-Stopped at: Phase 2 context gathered
-Resume file: .planning/phases/02-landing-page-and-marina-onboarding/02-CONTEXT.md
+Last session: 2026-03-11T03:12:53.317Z
+Stopped at: Completed 02-landing-page-and-marina-onboarding 02-02-PLAN.md
+Resume file: None
