@@ -22,7 +22,7 @@ Requirements for public launch. Each maps to roadmap phases.
 
 - [x] **MARI-01**: Marina owner can upload photos for their marina listing via drag-and-drop UI
 - [x] **MARI-02**: Marina address is auto-geocoded to lat/lng when marina is created or edited
-- [ ] **MARI-03**: Marina owner can view a visual availability calendar showing booked vs open dates per slip
+- [x] **MARI-03**: Marina owner can view a visual availability calendar showing booked vs open dates per slip
 
 ### Map Search
 
@@ -96,7 +96,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | LAND-02 | Phase 2 | Complete |
 | MARI-01 | Phase 2 | Complete |
 | MARI-02 | Phase 2 | Complete |
-| MARI-03 | Phase 2 | Pending |
+| MARI-03 | Phase 2 | Complete |
 | SRCH-01 | Phase 3 | Pending |
 | SRCH-02 | Phase 3 | Pending |
 | SRCH-03 | Phase 3 | Pending |

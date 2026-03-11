@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 02-landing-page-and-marina-onboarding 02-01-PLAN.md
-last_updated: "2026-03-11T03:13:27.382Z"
+stopped_at: Completed 02-landing-page-and-marina-onboarding 02-03-PLAN.md
+last_updated: "2026-03-11T03:13:36.103Z"
 last_activity: 2026-03-10 — Plan 01-01 completed (price hardening + atomic booking)
 progress:
   total_phases: 5
@@ -90,6 +90,8 @@ Recent decisions affecting current work:
 - [Phase 02-landing-page-and-marina-onboarding]: Geocoding runs after marina save so record persists even if Mapbox fails
 - [Phase 02-landing-page-and-marina-onboarding]: Mapbox v6 geometry.coordinates is [lng, lat] order, not [lat, lng]
 - [Phase 02-landing-page-and-marina-onboarding]: marina_leads TypeScript type added manually to database.ts since table is new and not yet in Supabase — type provides compile-time safety
+- [Phase 02-landing-page-and-marina-onboarding]: isDayBooked accepts YYYY-MM-DD strings (not Date objects) to eliminate UTC/local timezone ambiguity in calendar date comparison
+- [Phase 02-landing-page-and-marina-onboarding]: Used native HTML <details open> collapsible for availability calendar section — no JS toggle state needed
 
 ### Pending Todos
 
@@ -104,6 +106,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-11T03:13:16.248Z
-Stopped at: Completed 02-landing-page-and-marina-onboarding 02-01-PLAN.md
+Last session: 2026-03-11T03:13:36.098Z
+Stopped at: Completed 02-landing-page-and-marina-onboarding 02-03-PLAN.md
 Resume file: None
