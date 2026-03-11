@@ -12,7 +12,7 @@ Five phases to close the transaction loop: harden the existing booking flow befo
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [x] **Phase 1: Booking Hardening** - Fix price tampering, double-booking, and webhook gaps before anything is built on top (completed 2026-03-10)
+- [x] **Phase 1: Booking Hardening** - Fix price tampering, double-booking, and webhook gaps before anything is built on top (completed 2026-03-10)
 - [ ] **Phase 2: Landing Page and Marina Onboarding** - Integrate marketing home page and give marina owners photo uploads and geocoded listings
 - [ ] **Phase 3: Map Search** - Replace text-based search with Mapbox map and allow unauthenticated browsing
 - [ ] **Phase 4: Stripe Connect Payouts** - Wire marketplace payments so marina owners can onboard and receive real money
@@ -44,12 +44,12 @@ Plans:
   3. A marina owner uploads photos via drag-and-drop in the marina form and the images appear publicly on the listing
   4. Creating or editing a marina with a street address automatically populates the lat/lng fields without the marina owner entering coordinates manually
   5. A marina owner opens the availability calendar and sees which dates each slip is booked versus open
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 02-01: Landing page integration as Next.js home page
-- [ ] 02-02: Photo upload component wired into marina form
-- [ ] 02-03: Geocoding on marina create/edit and availability calendar
+- [ ] 02-01-PLAN.md — Landing page integration with lead capture form and marina_leads API route
+- [ ] 02-02-PLAN.md — Drag-and-drop photo upload and Mapbox geocoding for marina form
+- [ ] 02-03-PLAN.md — Read-only availability calendar on marina detail page
 
 ### Phase 3: Map Search
 **Goal**: Yacht owners can browse marina locations on an interactive map without signing in, and filter results by vessel dimensions
