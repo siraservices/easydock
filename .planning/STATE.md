@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 04-stripe-connect-payouts 04-01-PLAN.md
-last_updated: "2026-03-11T21:54:21.258Z"
+stopped_at: Completed 04-stripe-connect-payouts 04-03-PLAN.md
+last_updated: "2026-03-11T21:58:53.651Z"
 last_activity: 2026-03-11 — Plan 03-02 completed (bi-directional hover sync + mobile layout)
 progress:
   total_phases: 5
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 11
-  completed_plans: 9
+  completed_plans: 11
   percent: 82
 ---
 
@@ -77,6 +77,8 @@ Progress: [████████░░] 88%
 | Phase 04-stripe-connect-payouts P00 | 5min | 2 tasks | 5 files |
 | Phase 04-stripe-connect-payouts P01 | 3min | 2 tasks | 7 files |
 | Phase 04-stripe-connect-payouts P01 | 5m | 2 tasks | 8 files |
+| Phase 04-stripe-connect-payouts P02 | 5m | 2 tasks | 3 files |
+| Phase 04-stripe-connect-payouts P03 | 2min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -111,6 +113,10 @@ Recent decisions affecting current work:
 - [Phase 04-stripe-connect-payouts]: Refresh route uses NextResponse.redirect (not JSON) — Stripe calls refresh_url as a browser redirect target
 - [Phase 04-stripe-connect-payouts]: stripe_account_id stored in DB before generating account link — link is one-time-use; must persist even if user closes tab mid-flow
 - [Phase 04-stripe-connect-payouts]: Return route always calls stripe.accounts.retrieve() for authoritative status — never trusts cached DB values for payouts_enabled or details_submitted
+- [Phase 04-stripe-connect-payouts]: adminClient used for marina Connect status check in checkout route — RLS may block stripe_account_id and payouts_enabled for user client
+- [Phase 04-stripe-connect-payouts]: safeFee = min(applicationFeeCents, totalChargeCents - 1) prevents Stripe rejection when fee >= charge total
+- [Phase 04-stripe-connect-payouts]: event.account used as connected account ID for account.updated webhook (falls back to account.id)
+- [Phase 04-stripe-connect-payouts]: Webhook endpoint must be configured in Stripe Dashboard for 'Events on Connected accounts' to receive account.updated — dashboard config step, not code
 
 ### Pending Todos
 
@@ -124,6 +130,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-11T21:54:21.255Z
-Stopped at: Completed 04-stripe-connect-payouts 04-01-PLAN.md
+Last session: 2026-03-11T21:58:53.648Z
+Stopped at: Completed 04-stripe-connect-payouts 04-03-PLAN.md
 Resume file: None
