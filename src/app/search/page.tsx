@@ -10,6 +10,7 @@ import SlipCard from "@/components/slip-card";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import EmptyState from "@/components/ui/empty-state";
 import { buildSlipQuery } from "@/lib/hooks/use-map-filter";
+import { MOCK_SLIPS } from "@/lib/mock-data";
 import type { Database } from "@/types/database";
 
 type Marina = Database["public"]["Tables"]["marinas"]["Row"];
@@ -82,36 +83,47 @@ export default function SearchPage() {
   const fetchSlips = useCallback(async () => {
     setLoading(true);
 
+    // Try Supabase first, fall back to mock data
     const query = buildSlipQuery(supabase, filters);
-    const { data: rawSlips } = (await query) as unknown as {
+    const { data: rawSlips, error } = (await query) as unknown as {
       data: Slip[] | null;
+      error: { message: string } | null;
     };
 
-    if (!rawSlips || rawSlips.length === 0) {
-      setSlips([]);
-      setLoading(false);
-      return;
-    }
+    let resultSlips: Slip[];
 
-    // If dates selected, filter out slips with conflicting bookings
-    if (filters.checkIn && filters.checkOut) {
-      const slipIds = rawSlips.map((s) => s.id);
-      const { data: conflicts } = (await supabase
-        .from("bookings")
-        .select("slip_id")
-        .in("slip_id", slipIds)
-        .in("status", ["pending", "approved", "confirmed"])
-        .lt("check_in", filters.checkOut)
-        .gt("check_out", filters.checkIn)) as unknown as {
-        data: { slip_id: string }[] | null;
-      };
-
-      const conflictIds = new Set(conflicts?.map((b) => b.slip_id) ?? []);
-      setSlips(rawSlips.filter((s) => !conflictIds.has(s.id)));
+    if (error || !rawSlips || rawSlips.length === 0) {
+      if (error) {
+        console.warn("Supabase unavailable, using demo data:", error.message);
+      }
+      // Fall back to mock data with client-side filtering
+      resultSlips = MOCK_SLIPS.filter((slip) => {
+        if (filters.boatLength && slip.length_ft < parseInt(filters.boatLength, 10)) return false;
+        if (filters.boatBeam && slip.width_ft !== null && slip.width_ft < parseInt(filters.boatBeam, 10)) return false;
+        return true;
+      });
     } else {
-      setSlips(rawSlips);
+      resultSlips = rawSlips;
+
+      // If dates selected, filter out slips with conflicting bookings
+      if (filters.checkIn && filters.checkOut) {
+        const slipIds = resultSlips.map((s) => s.id);
+        const { data: conflicts } = (await supabase
+          .from("bookings")
+          .select("slip_id")
+          .in("slip_id", slipIds)
+          .in("status", ["pending", "approved", "confirmed"])
+          .lt("check_in", filters.checkOut)
+          .gt("check_out", filters.checkIn)) as unknown as {
+          data: { slip_id: string }[] | null;
+        };
+
+        const conflictIds = new Set(conflicts?.map((b) => b.slip_id) ?? []);
+        resultSlips = resultSlips.filter((s) => !conflictIds.has(s.id));
+      }
     }
 
+    setSlips(resultSlips);
     setLoading(false);
   }, [supabase, filters]);
 

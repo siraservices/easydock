@@ -18,6 +18,26 @@ interface MapViewProps {
   initialCenter?: { longitude: number; latitude: number };
 }
 
+const DAILY_MAP_LOAD_LIMIT = 1500;
+
+function checkMapLoadBudget(): boolean {
+  try {
+    const today = new Date().toISOString().slice(0, 10);
+    const stored = localStorage.getItem("mapbox_loads");
+    const data = stored ? JSON.parse(stored) : { date: today, count: 0 };
+    if (data.date !== today) {
+      data.date = today;
+      data.count = 0;
+    }
+    if (data.count >= DAILY_MAP_LOAD_LIMIT) return false;
+    data.count += 1;
+    localStorage.setItem("mapbox_loads", JSON.stringify(data));
+    return true;
+  } catch {
+    return true;
+  }
+}
+
 export default function MapView({
   marinas,
   onVisibleMarinaIdsChange,
@@ -28,7 +48,19 @@ export default function MapView({
 }: MapViewProps) {
   const mapRef = useRef<MapRef>(null);
   const [initialized, setInitialized] = useState(false);
+  const [budgetExceeded, setBudgetExceeded] = useState(false);
   const initialCenterApplied = useRef(false);
+
+  useEffect(() => {
+    if (!checkMapLoadBudget()) {
+      setBudgetExceeded(true);
+      // Still show all marinas in the list even without the map
+      const allIds = new Set(
+        marinas.filter((m) => m.lat !== null && m.lng !== null).map((m) => m.id)
+      );
+      onVisibleMarinaIdsChange(allIds);
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Fly to geolocation result if it arrives after map has rendered
   useEffect(() => {
@@ -77,6 +109,18 @@ export default function MapView({
   const validMarinas = marinas.filter(
     (m) => m.lat !== null && m.lng !== null
   );
+
+  if (budgetExceeded) {
+    return (
+      <div className="flex items-center justify-center h-full bg-gray-100 text-center p-6">
+        <div>
+          <span className="text-4xl block mb-2">&#9875;</span>
+          <p className="font-semibold text-navy-800">Map limit reached for today</p>
+          <p className="text-sm text-gray-500 mt-1">Browse marinas from the list. Map resets daily.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <Map
