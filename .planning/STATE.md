@@ -4,29 +4,14 @@ milestone: v1.0
 milestone_name: milestone
 status: in-progress
 stopped_at: Completed 04-stripe-connect-payouts 04-00-PLAN.md
-last_updated: "2026-03-11T21:51:30.002Z"
-last_activity: 2026-03-11 — Plan 03-02 completed (bi-directional hover sync + mobile layout)
+last_updated: "2026-03-11T21:51:38.120Z"
+last_activity: 2026-03-11 — Plan 04-00 completed (Stripe Connect test scaffolding)
 progress:
   total_phases: 5
   completed_phases: 3
   total_plans: 11
   completed_plans: 8
----
-
----
-gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: in-progress
-stopped_at: Completed 03-map-search 03-02-PLAN.md
-last_updated: "2026-03-11T21:00:00.000Z"
-last_activity: 2026-03-11 — Plan 03-02 completed (bi-directional hover sync + mobile layout)
-progress:
-  total_phases: 5
-  completed_phases: 3
-  total_plans: 8
-  completed_plans: 7
-  percent: 88
+  percent: 73
 ---
 
 # Project State
@@ -73,7 +58,7 @@ Progress: [████████░░] 88%
 | Phase 02-landing-page-and-marina-onboarding P03 | 5m | 2 tasks | 4 files |
 | Phase 03-map-search P01 | 5 min | 2 tasks | 6 files |
 | Phase 03-map-search P02 | 20 min | 3 tasks | 3 files |
-| Phase 04-stripe-connect-payouts P00 | 2m | 2 tasks | 5 files |
+| Phase 04-stripe-connect-payouts P00 | 5min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -116,6 +101,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-11T21:51:17.080Z
+Last session: 2026-03-11T21:51:38.116Z
 Stopped at: Completed 04-stripe-connect-payouts 04-00-PLAN.md
 Resume file: None
