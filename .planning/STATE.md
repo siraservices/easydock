@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Phase 3 context gathered
-last_updated: "2026-03-11T19:34:35.539Z"
+stopped_at: Completed 03-map-search 03-01-PLAN.md
+last_updated: "2026-03-11T20:02:55.931Z"
 last_activity: 2026-03-10 — Plan 01-01 completed (price hardening + atomic booking)
 progress:
   total_phases: 5
   completed_phases: 2
-  total_plans: 5
-  completed_plans: 5
+  total_plans: 7
+  completed_plans: 6
   percent: 100
 ---
 
@@ -70,6 +70,7 @@ Progress: [█████░░░░░] 50%
 | Phase 02-landing-page-and-marina-onboarding P02 | 5 min | 2 tasks | 7 files |
 | Phase 02-landing-page-and-marina-onboarding P01 | 5m | 2 tasks | 7 files |
 | Phase 02-landing-page-and-marina-onboarding P03 | 5m | 2 tasks | 4 files |
+| Phase 03-map-search P01 | 5 min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -92,6 +93,9 @@ Recent decisions affecting current work:
 - [Phase 02-landing-page-and-marina-onboarding]: marina_leads TypeScript type added manually to database.ts since table is new and not yet in Supabase — type provides compile-time safety
 - [Phase 02-landing-page-and-marina-onboarding]: isDayBooked accepts YYYY-MM-DD strings (not Date objects) to eliminate UTC/local timezone ambiguity in calendar date comparison
 - [Phase 02-landing-page-and-marina-onboarding]: Used native HTML <details open> collapsible for availability calendar section — no JS toggle state needed
+- [Phase 03-map-search]: AnySupabaseClient any-type used in buildSlipQuery to avoid Supabase v2 generic arity mismatch
+- [Phase 03-map-search]: MapView initializes visibleMarinaIds to all marinas on first render so list is not empty before first map move fires
+- [Phase 03-map-search]: Search button triggers Supabase re-fetch; viewport pan/zoom updates visible list client-side without re-fetching
 
 ### Pending Todos
 
@@ -106,6 +110,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-11T19:34:35.535Z
-Stopped at: Phase 3 context gathered
-Resume file: .planning/phases/03-map-search/03-CONTEXT.md
+Last session: 2026-03-11T20:02:42.874Z
+Stopped at: Completed 03-map-search 03-01-PLAN.md
+Resume file: None

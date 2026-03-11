@@ -26,9 +26,9 @@ Requirements for public launch. Each maps to roadmap phases.
 
 ### Map Search
 
-- [ ] **SRCH-01**: Yacht owner sees an interactive map with marina location pins on the search page
-- [ ] **SRCH-02**: Anyone can browse marinas without signing up (no auth requirement on search)
-- [ ] **SRCH-03**: Yacht owner can filter slips by vessel length and beam to match their boat
+- [x] **SRCH-01**: Yacht owner sees an interactive map with marina location pins on the search page
+- [x] **SRCH-02**: Anyone can browse marinas without signing up (no auth requirement on search)
+- [x] **SRCH-03**: Yacht owner can filter slips by vessel length and beam to match their boat
 
 ### Stripe Connect
 
@@ -97,9 +97,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | MARI-01 | Phase 2 | Complete |
 | MARI-02 | Phase 2 | Complete |
 | MARI-03 | Phase 2 | Complete |
-| SRCH-01 | Phase 3 | Pending |
-| SRCH-02 | Phase 3 | Pending |
-| SRCH-03 | Phase 3 | Pending |
+| SRCH-01 | Phase 3 | Complete |
+| SRCH-02 | Phase 3 | Complete |
+| SRCH-03 | Phase 3 | Complete |
 | PAY-01 | Phase 4 | Pending |
 | PAY-02 | Phase 4 | Pending |
 | PAY-03 | Phase 4 | Pending |
