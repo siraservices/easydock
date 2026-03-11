@@ -70,6 +70,21 @@ export async function POST(request: Request) {
       );
     }
 
+    // Check marina's Stripe Connect status before proceeding (must use adminClient — RLS may block these fields)
+    const adminClient = createAdminClient();
+    const { data: marinaConnectData } = await adminClient
+      .from("marinas")
+      .select("stripe_account_id, payouts_enabled")
+      .eq("id", marinaId)
+      .single();
+
+    if (!marinaConnectData?.stripe_account_id || !marinaConnectData?.payouts_enabled) {
+      return NextResponse.json(
+        { error: "This marina is not currently accepting online payments. Please try another marina." },
+        { status: 422 }
+      );
+    }
+
     // Server-side price computation — client-submitted totalPrice is never used
     const nights = calculateNights(checkIn, checkOut);
     const basePrice = slip.price_per_night * nights;
@@ -79,8 +94,12 @@ export async function POST(request: Request) {
     const totalChargedToCustomer = basePrice + yachtOwnerFee;
     const platformFeeAmount = Math.round(basePrice * serviceFeeRate * 100) / 100;
 
+    // Compute Connect fee amounts in cents with safety cap
+    const applicationFeeCents = Math.round(platformFeeAmount * 100);
+    const totalChargeCents = Math.round(totalChargedToCustomer * 100);
+    const safeFee = Math.min(applicationFeeCents, totalChargeCents - 1);
+
     // Create booking atomically via RPC (conflict check + insert in one transaction)
-    const adminClient = createAdminClient();
     const { data: rpcData, error: rpcError } = await adminClient.rpc(
       "create_booking_atomic",
       {
@@ -158,6 +177,12 @@ export async function POST(request: Request) {
         },
       ],
       mode: "payment",
+      payment_intent_data: {
+        application_fee_amount: safeFee,
+        transfer_data: {
+          destination: marinaConnectData.stripe_account_id,
+        },
+      },
       expires_at: Math.floor(Date.now() / 1000) + 30 * 60, // 30 minutes from now
       success_url: `${request.headers.get("origin")}/bookings/${bookingId}?success=true`,
       cancel_url: `${request.headers.get("origin")}/slips/${slipId}`,
