@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 04-stripe-connect-payouts 04-03-PLAN.md
-last_updated: "2026-03-11T21:58:53.651Z"
+stopped_at: Completed 04-stripe-connect-payouts 04-02-PLAN.md
+last_updated: "2026-03-11T21:59:28.169Z"
 last_activity: 2026-03-11 — Plan 03-02 completed (bi-directional hover sync + mobile layout)
 progress:
   total_phases: 5
@@ -79,6 +79,8 @@ Progress: [████████░░] 88%
 | Phase 04-stripe-connect-payouts P01 | 5m | 2 tasks | 8 files |
 | Phase 04-stripe-connect-payouts P02 | 5m | 2 tasks | 3 files |
 | Phase 04-stripe-connect-payouts P03 | 2min | 2 tasks | 5 files |
+| Phase 04-stripe-connect-payouts P02 | 2min | 2 tasks | 3 files |
+| Phase 04-stripe-connect-payouts P03 | 5min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -117,6 +119,11 @@ Recent decisions affecting current work:
 - [Phase 04-stripe-connect-payouts]: safeFee = min(applicationFeeCents, totalChargeCents - 1) prevents Stripe rejection when fee >= charge total
 - [Phase 04-stripe-connect-payouts]: event.account used as connected account ID for account.updated webhook (falls back to account.id)
 - [Phase 04-stripe-connect-payouts]: Webhook endpoint must be configured in Stripe Dashboard for 'Events on Connected accounts' to receive account.updated — dashboard config step, not code
+- [Phase 04-stripe-connect-payouts]: adminClient used to query marina Connect status — RLS may block stripe_account_id/payouts_enabled for user client
+- [Phase 04-stripe-connect-payouts]: safeFee = min(applicationFeeCents, totalChargeCents - 1) prevents application_fee_amount exceeding charge total
+- [Phase 04-stripe-connect-payouts]: 422 used for unbookable-marina gate; booking widget detects it explicitly for clear user messaging
+- [Phase 04-stripe-connect-payouts]: Login-link route guards on payouts_enabled=true — only fully connected accounts can access Express Dashboard
+- [Phase 04-stripe-connect-payouts]: Webhook uses event.account (Connect-specific property) as connected account ID, falls back to account.id
 
 ### Pending Todos
 
@@ -130,6 +137,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-11T21:58:53.648Z
-Stopped at: Completed 04-stripe-connect-payouts 04-03-PLAN.md
+Last session: 2026-03-11T21:59:28.166Z
+Stopped at: Completed 04-stripe-connect-payouts 04-02-PLAN.md
 Resume file: None
