@@ -15,8 +15,8 @@ Requirements for public launch. Each maps to roadmap phases.
 
 ### Landing Page
 
-- [ ] **LAND-01**: Existing landing page HTML integrated as Next.js home page with consistent branding
-- [ ] **LAND-02**: Lead capture form submits to Supabase marina_leads table with validation
+- [x] **LAND-01**: Existing landing page HTML integrated as Next.js home page with consistent branding
+- [x] **LAND-02**: Lead capture form submits to Supabase marina_leads table with validation
 
 ### Marina Onboarding
 
@@ -92,8 +92,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | HARD-01 | Phase 1 | Complete |
 | HARD-02 | Phase 1 | Complete |
 | HARD-03 | Phase 1 | Complete |
-| LAND-01 | Phase 2 | Pending |
-| LAND-02 | Phase 2 | Pending |
+| LAND-01 | Phase 2 | Complete |
+| LAND-02 | Phase 2 | Complete |
 | MARI-01 | Phase 2 | Complete |
 | MARI-02 | Phase 2 | Complete |
 | MARI-03 | Phase 2 | Pending |

@@ -13,7 +13,7 @@ Five phases to close the transaction loop: harden the existing booking flow befo
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Booking Hardening** - Fix price tampering, double-booking, and webhook gaps before anything is built on top (completed 2026-03-10)
-- [ ] **Phase 2: Landing Page and Marina Onboarding** - Integrate marketing home page and give marina owners photo uploads and geocoded listings
+- [x] **Phase 2: Landing Page and Marina Onboarding** - Integrate marketing home page and give marina owners photo uploads and geocoded listings (completed 2026-03-11)
 - [ ] **Phase 3: Map Search** - Replace text-based search with Mapbox map and allow unauthenticated browsing
 - [ ] **Phase 4: Stripe Connect Payouts** - Wire marketplace payments so marina owners can onboard and receive real money
 - [ ] **Phase 5: Booking Lifecycle and Notifications** - Booking inbox, cancellations with refunds, and email notifications for both parties
@@ -105,7 +105,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Booking Hardening | 2/2 | Complete   | 2026-03-10 |
-| 2. Landing Page and Marina Onboarding | 2/3 | In Progress|  |
+| 2. Landing Page and Marina Onboarding | 3/3 | Complete   | 2026-03-11 |
 | 3. Map Search | 0/2 | Not started | - |
 | 4. Stripe Connect Payouts | 0/3 | Not started | - |
 | 5. Booking Lifecycle and Notifications | 0/3 | Not started | - |
