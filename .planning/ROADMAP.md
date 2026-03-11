@@ -13,7 +13,7 @@ Five phases to close the transaction loop: harden the existing booking flow befo
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Booking Hardening** - Fix price tampering, double-booking, and webhook gaps before anything is built on top (completed 2026-03-10)
-- [x] **Phase 2: Landing Page and Marina Onboarding** - Integrate marketing home page and give marina owners photo uploads and geocoded listings (completed 2026-03-11)
+- [x] **Phase 2: Landing Page and Marina Onboarding** - Integrate marketing home page and give marina owners photo uploads and geocoded listings (completed 2026-03-11)
 - [ ] **Phase 3: Map Search** - Replace text-based search with Mapbox map and allow unauthenticated browsing
 - [ ] **Phase 4: Stripe Connect Payouts** - Wire marketplace payments so marina owners can onboard and receive real money
 - [ ] **Phase 5: Booking Lifecycle and Notifications** - Booking inbox, cancellations with refunds, and email notifications for both parties
@@ -59,11 +59,11 @@ Plans:
   1. A visitor who is not logged in can navigate to the search page, see a Mapbox map with marina location pins, and click a pin to view slip details
   2. A yacht owner enters their vessel length and beam into filter controls and the map and list both update to show only compatible slips
   3. The "Book Now" button on a slip requires authentication but browsing the map and viewing slip details does not
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 03-01: MapView component with marina pins and split map/list layout
-- [ ] 03-02: Vessel dimension filters and unauthenticated route access
+- [ ] 03-01-PLAN.md — Core map search: MapView component, split map/list layout, beam filter, unauthenticated access
+- [ ] 03-02-PLAN.md — Interactive polish: bi-directional hover sync, mobile responsive layout, geolocation, empty states
 
 ### Phase 4: Stripe Connect Payouts
 **Goal**: Marina owners can link their Stripe account, and the checkout routes the correct split — EasyDock platform fee plus transfer to the marina — for every completed booking
