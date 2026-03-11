@@ -1,4 +1,5 @@
-import type { SupabaseClient } from "@supabase/supabase-js";
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnySupabaseClient = any;
 import type { Database } from "@/types/database";
 
 type Marina = Database["public"]["Tables"]["marinas"]["Row"];
@@ -37,7 +38,7 @@ export function filterMarinasByViewport(
  * Does NOT filter by city — viewport filtering handles geographic scoping.
  */
 export function buildSlipQuery(
-  supabase: SupabaseClient<Database>,
+  supabase: AnySupabaseClient,
   filters: SearchFilters
 ) {
   let query = supabase

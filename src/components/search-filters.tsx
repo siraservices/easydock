@@ -1,12 +1,10 @@
 "use client";
 
-import { DEFAULT_CITY } from "@/lib/constants";
-
 export interface SearchFilters {
-  city: string;
   checkIn: string;
   checkOut: string;
   boatLength: string;
+  boatBeam: string;
 }
 
 interface SearchFiltersBarProps {
@@ -27,20 +25,8 @@ export default function SearchFiltersBar({
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border p-5 mb-6">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-        <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
-            City
-          </label>
-          <input
-            type="text"
-            value={filters.city}
-            onChange={(e) => update("city", e.target.value)}
-            placeholder={DEFAULT_CITY}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-          />
-        </div>
+    <div className="bg-white rounded-xl shadow-sm border p-5 mb-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div>
           <label className="block text-xs font-medium text-gray-600 mb-1">
             Check-in
@@ -74,17 +60,31 @@ export default function SearchFiltersBar({
             value={filters.boatLength}
             onChange={(e) => update("boatLength", e.target.value)}
             placeholder="Any"
+            min="0"
             className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
           />
         </div>
-        <div className="flex items-end">
-          <button
-            onClick={onSearch}
-            className="w-full bg-teal-600 text-white py-2 rounded-lg font-semibold hover:bg-teal-700 transition-colors text-sm"
-          >
-            Search
-          </button>
+        <div>
+          <label className="block text-xs font-medium text-gray-600 mb-1">
+            Boat Beam (ft)
+          </label>
+          <input
+            type="number"
+            value={filters.boatBeam}
+            onChange={(e) => update("boatBeam", e.target.value)}
+            placeholder="Any"
+            min="0"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+          />
         </div>
+      </div>
+      <div className="mt-3">
+        <button
+          onClick={onSearch}
+          className="bg-teal-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-teal-700 transition-colors text-sm"
+        >
+          Search
+        </button>
       </div>
     </div>
   );

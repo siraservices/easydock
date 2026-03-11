@@ -1,54 +1,47 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useEffect, useState, useMemo, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { useAuth } from "@/lib/auth-context";
-import ProtectedRoute from "@/components/protected-route";
 import SearchFiltersBar, {
   type SearchFilters,
 } from "@/components/search-filters";
 import SlipCard from "@/components/slip-card";
 import LoadingSpinner from "@/components/ui/loading-spinner";
-import { DEFAULT_CITY } from "@/lib/constants";
+import EmptyState from "@/components/ui/empty-state";
+import { buildSlipQuery } from "@/lib/hooks/use-map-filter";
 import type { Database } from "@/types/database";
 
 type Marina = Database["public"]["Tables"]["marinas"]["Row"];
 type Slip = Database["public"]["Tables"]["slips"]["Row"] & {
   marinas: Marina;
 };
-type Booking = Database["public"]["Tables"]["bookings"]["Row"];
+
+const MapView = dynamic(() => import("@/components/map-view"), {
+  ssr: false,
+  loading: () => <LoadingSpinner size="lg" message="Loading map..." />,
+});
 
 export default function SearchPage() {
-  const { user } = useAuth();
   const supabase = useMemo(() => createClient(), []);
 
   const [filters, setFilters] = useState<SearchFilters>({
-    city: "",
     checkIn: "",
     checkOut: "",
     boatLength: "",
+    boatBeam: "",
   });
   const [slips, setSlips] = useState<Slip[]>([]);
   const [loading, setLoading] = useState(false);
-  const [searched, setSearched] = useState(false);
+  const [visibleMarinaIds, setVisibleMarinaIds] = useState<Set<string>>(
+    new Set()
+  );
+  const [hoveredMarinaId, setHoveredMarinaId] = useState<string | null>(null);
 
-  const search = useCallback(async () => {
+  const fetchSlips = useCallback(async () => {
     setLoading(true);
-    setSearched(true);
 
-    let query = supabase
-      .from("slips")
-      .select("*, marinas!inner(*)")
-      .eq("is_available", true)
-      .eq("marinas.is_active", true);
-
-    const city = filters.city.trim() || DEFAULT_CITY;
-    query = query.ilike("marinas.city", `%${city}%`);
-
-    if (filters.boatLength) {
-      query = query.gte("length_ft", parseInt(filters.boatLength, 10));
-    }
-
+    const query = buildSlipQuery(supabase, filters);
     const { data: rawSlips } = (await query) as unknown as {
       data: Slip[] | null;
     };
@@ -72,10 +65,7 @@ export default function SearchPage() {
         data: { slip_id: string }[] | null;
       };
 
-      const conflictIds = new Set(
-        conflicts?.map((b) => b.slip_id) ?? []
-      );
-
+      const conflictIds = new Set(conflicts?.map((b) => b.slip_id) ?? []);
       setSlips(rawSlips.filter((s) => !conflictIds.has(s.id)));
     } else {
       setSlips(rawSlips);
@@ -84,50 +74,85 @@ export default function SearchPage() {
     setLoading(false);
   }, [supabase, filters]);
 
-  // Run initial search on mount
+  // Fetch slips on mount
   useEffect(() => {
-    search();
+    fetchSlips();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Derive unique marinas from all fetched slips
+  const marinas = useMemo(
+    () => [...new Map(slips.map((s) => [s.marinas.id, s.marinas])).values()],
+    [slips]
+  );
+
+  // Derive visible slips based on viewport
+  const visibleSlips = useMemo(
+    () => slips.filter((s) => visibleMarinaIds.has(s.marinas.id)),
+    [slips, visibleMarinaIds]
+  );
+
+  const handleSelectMarina = useCallback((id: string) => {
+    // Scroll the first slip for this marina into view
+    const el = document.getElementById(`marina-${id}`);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, []);
+
   return (
-    <ProtectedRoute allowedRoles={["boat_owner"]}>
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        <h1 className="text-2xl font-bold text-navy-800 mb-6">
-          Find a Slip
-        </h1>
-
-        <SearchFiltersBar
-          filters={filters}
-          onFiltersChange={setFilters}
-          onSearch={search}
-        />
-
+    <div className="flex h-[calc(100vh-4rem)]">
+      {/* Map — left side, sticky */}
+      <div className="w-[60%] h-full sticky top-16 flex-shrink-0">
         {loading ? (
-          <LoadingSpinner size="lg" message="Searching slips..." />
-        ) : slips.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {slips.map((slip) => (
-              <SlipCard
-                key={slip.id}
-                slip={slip}
-                checkIn={filters.checkIn}
-                checkOut={filters.checkOut}
-              />
-            ))}
+          <div className="flex items-center justify-center h-full bg-gray-50">
+            <LoadingSpinner size="lg" message="Loading map..." />
           </div>
-        ) : searched ? (
-          <div className="text-center py-16">
-            <p className="text-4xl mb-3">&#9875;</p>
-            <h3 className="text-lg font-semibold text-navy-800 mb-1">
-              No slips found
-            </h3>
-            <p className="text-gray-600">
-              Try adjusting your filters or searching a different city.
-            </p>
-          </div>
-        ) : null}
+        ) : (
+          <MapView
+            marinas={marinas}
+            onVisibleMarinaIdsChange={setVisibleMarinaIds}
+            hoveredMarinaId={hoveredMarinaId}
+            onHoverMarina={setHoveredMarinaId}
+            onSelectMarina={handleSelectMarina}
+          />
+        )}
       </div>
-    </ProtectedRoute>
+
+      {/* List — right side, scrollable */}
+      <div className="w-[40%] h-full overflow-y-auto flex-shrink-0">
+        <div className="p-4">
+          <SearchFiltersBar
+            filters={filters}
+            onFiltersChange={setFilters}
+            onSearch={fetchSlips}
+          />
+
+          {loading ? (
+            <div className="flex items-center justify-center py-16">
+              <LoadingSpinner size="lg" message="Searching slips..." />
+            </div>
+          ) : visibleSlips.length > 0 ? (
+            <div className="flex flex-col gap-4">
+              {visibleSlips.map((slip) => (
+                <div key={slip.id} id={`marina-${slip.marinas.id}`}>
+                  <SlipCard
+                    slip={slip}
+                    checkIn={filters.checkIn}
+                    checkOut={filters.checkOut}
+                  />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <EmptyState
+              icon={
+                <span className="text-5xl">&#9875;</span>
+              }
+              title="No slips found"
+              message="Try adjusting your filters or zooming out on the map."
+            />
+          )}
+        </div>
+      </div>
+    </div>
   );
 }
