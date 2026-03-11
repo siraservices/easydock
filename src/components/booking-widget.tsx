@@ -93,7 +93,12 @@ export default function BookingWidget({
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || "Something went wrong.");
+        if (res.status === 422) {
+          // Marina is not set up for online payments
+          setError(data.error || "This marina is not currently accepting online payments. Please try another marina.");
+        } else {
+          setError(data.error || "Something went wrong.");
+        }
         setSubmitting(false);
         return;
       }
