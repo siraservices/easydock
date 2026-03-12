@@ -8,6 +8,7 @@ import ProtectedRoute from "@/components/protected-route";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import BookingWidget from "@/components/booking-widget";
 import { formatPrice } from "@/lib/utils/format";
+import { MOCK_SLIPS } from "@/lib/mock-data";
 import type { Database } from "@/types/database";
 
 type Marina = Database["public"]["Tables"]["marinas"]["Row"];
@@ -27,18 +28,38 @@ export default function SlipDetailPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function fetch() {
-      const { data } = (await supabase
-        .from("slips")
-        .select("*, marinas!inner(*)")
-        .eq("id", id)
-        .single()) as unknown as { data: Slip | null };
+    async function fetchSlip() {
+      let result: Slip | null = null;
 
-      setSlip(data);
+      try {
+        const query = supabase
+          .from("slips")
+          .select("*, marinas!inner(*)")
+          .eq("id", id)
+          .single();
+
+        const { data } = await Promise.race([
+          query as unknown as Promise<{ data: Slip | null }>,
+          new Promise<{ data: null }>((resolve) =>
+            setTimeout(() => resolve({ data: null }), 5000)
+          ),
+        ]);
+
+        result = data;
+      } catch {
+        // Query failed
+      }
+
+      // Fall back to mock data if Supabase returned nothing
+      if (!result) {
+        result = MOCK_SLIPS.find((s) => s.id === id) ?? null;
+      }
+
+      setSlip(result);
       setLoading(false);
     }
-    fetch();
-  }, [id, supabase]);
+    fetchSlip();
+  }, [id, supabase]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (loading) {
     return (

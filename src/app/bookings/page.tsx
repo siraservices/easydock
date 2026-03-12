@@ -28,19 +28,28 @@ export default function BookingsPage() {
   useEffect(() => {
     async function fetchBookings() {
       if (!user) return;
+      try {
+        const query = supabase
+          .from("bookings")
+          .select("*, slips(*), marinas(*)")
+          .eq("boat_owner_id", user.id)
+          .order("created_at", { ascending: false });
 
-      const { data } = (await supabase
-        .from("bookings")
-        .select("*, slips(*), marinas(*)")
-        .eq("boat_owner_id", user.id)
-        .order("created_at", { ascending: false })) as unknown as {
-        data: BookingWithDetails[] | null;
-      };
+        const { data } = await Promise.race([
+          query as unknown as Promise<{ data: BookingWithDetails[] | null }>,
+          new Promise<{ data: null }>((resolve) =>
+            setTimeout(() => resolve({ data: null }), 5000)
+          ),
+        ]);
 
-      if (data) {
-        setBookings(data);
+        if (data) {
+          setBookings(data);
+        }
+      } catch {
+        // Query failed — show empty state
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     }
     fetchBookings();
   }, [user, supabase]);

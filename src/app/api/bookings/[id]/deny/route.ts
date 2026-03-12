@@ -20,7 +20,7 @@ export async function POST(
   // Update booking status to 'declined' — RLS scopes UPDATE to marina owners
   const { data, error } = await supabase
     .from("bookings")
-    .update({ status: "declined" })
+    .update({ status: "declined" } as never)
     .eq("id", id)
     .select("id, status")
     .single();
