@@ -1,7 +1,7 @@
--- Marina Leads - CRM table for tracking prospective marina partners
--- Separate from the marketplace `marinas` table to keep concerns clean
+-- Marina Prospects - CRM table for tracking prospective marina partners
+-- Renamed from marina_leads to avoid conflict with the website lead capture table
 
-CREATE TABLE marina_leads (
+CREATE TABLE marina_prospects (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name TEXT NOT NULL,
     address TEXT NOT NULL,
@@ -28,10 +28,10 @@ CREATE TABLE marina_leads (
 );
 
 -- Indexes
-CREATE INDEX idx_marina_leads_region ON marina_leads(region);
-CREATE INDEX idx_marina_leads_outreach_status ON marina_leads(outreach_status);
-CREATE INDEX idx_marina_leads_city_state ON marina_leads(city, state);
+CREATE INDEX idx_marina_prospects_region ON marina_prospects(region);
+CREATE INDEX idx_marina_prospects_outreach_status ON marina_prospects(outreach_status);
+CREATE INDEX idx_marina_prospects_city_state ON marina_prospects(city, state);
 
 -- Auto-update updated_at
-CREATE TRIGGER marina_leads_updated_at BEFORE UPDATE ON marina_leads
+CREATE TRIGGER marina_prospects_updated_at BEFORE UPDATE ON marina_prospects
     FOR EACH ROW EXECUTE FUNCTION update_updated_at();
