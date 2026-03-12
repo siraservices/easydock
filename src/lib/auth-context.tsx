@@ -64,9 +64,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   useEffect(() => {
+    // Safety timeout — if auth hangs (e.g. lock contention), show UI anyway
+    const timeout = setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+
     supabase.auth
       .getSession()
       .then(async ({ data: { session } }) => {
+        clearTimeout(timeout);
         if (session?.user) {
           setUser(session.user);
           const p = await fetchProfile(session.user.id);
@@ -75,6 +81,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setLoading(false);
       })
       .catch(() => {
+        clearTimeout(timeout);
         setLoading(false);
       });
 
@@ -92,7 +99,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      clearTimeout(timeout);
+      subscription.unsubscribe();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [supabase]);
 
