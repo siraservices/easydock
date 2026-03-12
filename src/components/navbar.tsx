@@ -9,8 +9,14 @@ export default function Navbar() {
   const router = useRouter();
 
   async function handleSignOut() {
-    await signOut();
+    try {
+      await signOut();
+    } catch (err) {
+      console.error("Sign out failed:", err);
+    }
+    // Always navigate even if signOut hangs or fails
     router.push("/");
+    router.refresh();
   }
 
   return (

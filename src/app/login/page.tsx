@@ -17,8 +17,10 @@ export default function LoginPage() {
 
   // Redirect if already logged in
   useEffect(() => {
-    if (!loading && user && profile) {
-      router.push(profile.role === "marina_owner" ? "/dashboard" : "/search");
+    if (!loading && user) {
+      const dest = profile?.role === "marina_owner" ? "/dashboard" : "/search";
+      router.push(dest);
+      router.refresh();
     }
   }, [loading, user, profile, router]);
 
@@ -27,27 +29,41 @@ export default function LoginPage() {
     setError(null);
     setIsSubmitting(true);
 
-    const result = await signIn(email, password);
+    try {
+      const result = await Promise.race([
+        signIn(email, password),
+        new Promise<{ error: string | null; role?: string }>((resolve) =>
+          setTimeout(() => resolve({ error: null }), 5000)
+        ),
+      ]);
 
-    if (result.error) {
-      // Friendly error messages
-      if (result.error === "Invalid login credentials") {
-        setError("Invalid email or password. Please try again.");
-      } else {
-        setError(result.error);
+      if (result.error) {
+        if (result.error === "Invalid login credentials") {
+          setError("Invalid email or password. Please try again.");
+        } else {
+          setError(result.error);
+        }
+        setIsSubmitting(false);
+        return;
       }
-      setIsSubmitting(false);
-      return;
-    }
 
-    router.push(result.role === "marina_owner" ? "/dashboard" : "/search");
+      // If signIn returned a role, use it; otherwise the useEffect redirect will handle it
+      if (result.role) {
+        const dest = result.role === "marina_owner" ? "/dashboard" : "/search";
+        router.push(dest);
+        router.refresh();
+      }
+    } catch {
+      // If signIn throws or times out, the useEffect redirect handles navigation
+      setIsSubmitting(false);
+    }
   }
 
   if (loading) {
     return <LoadingSpinner size="lg" message="Loading..." />;
   }
 
-  if (user && profile) {
+  if (user) {
     return <LoadingSpinner size="lg" message="Redirecting..." />;
   }
 

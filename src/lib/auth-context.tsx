@@ -49,18 +49,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const supabase = useMemo(() => createClient(), []);
 
-  async function fetchProfile(userId: string): Promise<Profile | null> {
-    const { data, error } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", userId)
-      .single();
+  async function fetchProfile(userId: string, retries = 3): Promise<Profile | null> {
+    for (let i = 0; i < retries; i++) {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", userId)
+        .single();
 
-    if (error) {
-      console.error("Error fetching profile:", error.message);
-      return null;
+      if (data) return data;
+
+      if (error) {
+        console.error(`Error fetching profile (attempt ${i + 1}/${retries}):`, error.message);
+      }
+
+      // Wait before retrying (200ms, 400ms, 800ms)
+      if (i < retries - 1) {
+        await new Promise((r) => setTimeout(r, 200 * Math.pow(2, i)));
+      }
     }
-    return data;
+    return null;
   }
 
   useEffect(() => {
@@ -77,6 +85,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setUser(session.user);
           const p = await fetchProfile(session.user.id);
           setProfile(p);
+          // If profile is still null, the onAuthStateChange listener will retry
         }
         setLoading(false);
       })
@@ -166,7 +175,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   async function signOut(): Promise<void> {
-    await supabase.auth.signOut();
+    try {
+      await Promise.race([
+        supabase.auth.signOut(),
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error("signOut timeout")), 3000)
+        ),
+      ]);
+    } catch {
+      // Force clear local state even if Supabase call hangs
+    }
+    setUser(null);
+    setProfile(null);
   }
 
   const value: AuthContextType = {
