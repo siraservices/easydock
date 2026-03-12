@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { sendBookingEmail, fetchBookingEmailParams } from "@/lib/email/send";
 
 export async function POST(
   _request: Request,
@@ -30,6 +32,15 @@ export async function POST(
       { error: "Not found or not authorized" },
       { status: 404 }
     );
+  }
+
+  // Send booking denied email notification (non-fatal)
+  try {
+    const adminClient = createAdminClient();
+    const emailParams = await fetchBookingEmailParams(adminClient, id);
+    await sendBookingEmail("denied", emailParams);
+  } catch (emailErr) {
+    console.error("Email notification failed:", emailErr);
   }
 
   return NextResponse.json({ success: true, booking: data });

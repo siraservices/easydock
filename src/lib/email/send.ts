@@ -4,7 +4,15 @@ import BookingApprovedEmail from '@/emails/booking-approved';
 import BookingDeniedEmail from '@/emails/booking-denied';
 import BookingCancelledEmail from '@/emails/booking-cancelled';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Lazy initialization — Resend throws if API key is missing at constructor time,
+// so we instantiate only when actually sending (not at module load).
+let _resend: Resend | null = null;
+function getResend(): Resend {
+  if (!_resend) {
+    _resend = new Resend(process.env.RESEND_API_KEY);
+  }
+  return _resend;
+}
 
 export interface BookingEmailParams {
   bookingId: string;
@@ -71,7 +79,7 @@ export async function sendBookingEmail(
     const subject = getSubject(trigger, params.marinaName);
     const react = getTemplate(trigger, params);
 
-    const { error } = await resend.emails.send({
+    const { error } = await getResend().emails.send({
       from: 'EasyDock <bookings@easydock.com>',
       to: recipients,
       subject,

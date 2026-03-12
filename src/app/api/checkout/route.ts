@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { calculateNights } from "@/lib/utils/format";
+import { sendBookingEmail, fetchBookingEmailParams } from "@/lib/email/send";
 import Stripe from "stripe";
 import type { Database } from "@/types/database";
 
@@ -190,6 +191,14 @@ export async function POST(request: Request) {
         booking_id: bookingId,
       },
     });
+
+    // Send booking created email notification (non-fatal)
+    try {
+      const emailParams = await fetchBookingEmailParams(adminClient, bookingId);
+      await sendBookingEmail("created", emailParams);
+    } catch (emailErr) {
+      console.error("Email notification failed:", emailErr);
+    }
 
     return NextResponse.json({ url: session.url, bookingId });
   } catch (err) {

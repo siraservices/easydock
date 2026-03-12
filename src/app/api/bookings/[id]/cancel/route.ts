@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { sendBookingEmail, fetchBookingEmailParams } from "@/lib/email/send";
 import Stripe from "stripe";
 
 export async function POST(
@@ -83,6 +84,14 @@ export async function POST(
         reverse_transfer: true,
         refund_application_fee: true,
       });
+    }
+
+    // Send booking cancelled email notification (non-fatal)
+    try {
+      const emailParams = await fetchBookingEmailParams(adminClient, id);
+      await sendBookingEmail("cancelled", emailParams);
+    } catch (emailErr) {
+      console.error("Email notification failed:", emailErr);
     }
 
     return NextResponse.json({ success: true, refunded: hasPaymentIntent });

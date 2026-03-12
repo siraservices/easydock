@@ -1,5 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
+// --- Mock: @/lib/email/send (non-fatal email sends should not affect route behavior) ---
+
+vi.mock('@/lib/email/send', () => ({
+  sendBookingEmail: vi.fn().mockResolvedValue(undefined),
+  fetchBookingEmailParams: vi.fn().mockResolvedValue({}),
+}));
+
 // --- Controllable mock state ---
 
 const mockState = {
