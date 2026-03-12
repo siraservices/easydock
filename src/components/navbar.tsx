@@ -26,6 +26,12 @@ export default function Navbar() {
           ) : !user ? (
             <>
               <Link
+                href="/search"
+                className="text-navy-200 hover:text-white transition-colors"
+              >
+                Browse Marinas
+              </Link>
+              <Link
                 href="/login"
                 className="border border-navy-400 text-navy-200 hover:text-white hover:border-white px-4 py-2 rounded-lg transition-colors"
               >
