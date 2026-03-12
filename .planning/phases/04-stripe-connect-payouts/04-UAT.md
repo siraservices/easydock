@@ -1,9 +1,9 @@
 ---
-status: diagnosed
+status: complete
 phase: 04-stripe-connect-payouts
-source: [04-01-SUMMARY.md, 04-02-SUMMARY.md, 04-03-SUMMARY.md]
-started: 2026-03-11T22:30:00Z
-updated: 2026-03-11T22:50:00Z
+source: [04-00-SUMMARY.md, 04-01-SUMMARY.md, 04-02-SUMMARY.md, 04-03-SUMMARY.md]
+started: 2026-03-11T23:15:00Z
+updated: 2026-03-12T00:00:00Z
 ---
 
 ## Current Test
@@ -13,103 +13,99 @@ updated: 2026-03-11T22:50:00Z
 ## Tests
 
 ### 1. Cold Start Smoke Test
-expected: Kill any running dev server. Run `npm run dev` from scratch. Server boots without errors at localhost:3000. Homepage loads with marina listings visible.
+expected: Kill any running dev server. Run `npm run dev` from scratch. Server boots without errors at localhost:3000. Homepage loads without console errors.
+result: pass
+
+### 2. Auth Buttons Visible in Nav
+expected: On the homepage (localhost:3000), the navbar shows "Log In" and "Sign Up" buttons within a few seconds. No stuck loading state — buttons appear promptly.
+result: pass
+
+### 3. Public Browse Marinas Link
+expected: As an unauthenticated visitor on the homepage, the navbar shows a "Search" or "Browse Marinas" link that navigates to /search. The /search page loads and displays marina listings without requiring login.
+result: pass
+
+### 4. Dashboard Loads for Marina Owner
+expected: Log in as a marina owner. Navigate to /dashboard. The page loads without lock timeout errors — no "Acquiring an exclusive Navigator LockManager lock" error. Marina cards are visible with slip counts.
 result: issue
-reported: "It looks like the homepage isn't loading marina listings."
+reported: "Dashboard loads without lock errors but profile not fetched — navbar shows boat_owner links (Search/My Bookings/Log Out) instead of marina_owner links (Dashboard/Log Out). Login redirects marina_owner to /search instead of /dashboard. Had to navigate to /dashboard manually. No marinas shown because this account has none."
 severity: major
 
-### 2. Connect Stripe Button (Unconnected Marina)
-expected: Navigate to /dashboard as a marina owner. Each marina card that hasn't connected Stripe shows an amber banner with a "Connect Stripe" button. Clicking it should POST to /api/connect/onboard and redirect you to a Stripe Express onboarding page.
-result: issue
-reported: "Runtime Error: Acquiring an exclusive Navigator LockManager lock 'lock:sb-ompeoptbtfszxedbamxz-auth-token' timed out waiting 10000ms. Dashboard fails to load."
-severity: blocker
+### 5. Connect Stripe Button (Unconnected Marina)
+expected: On /dashboard as a marina owner, each marina card that hasn't connected Stripe shows an amber banner with a "Connect Stripe" button. Clicking it should POST to /api/connect/onboard and redirect to a Stripe Express onboarding page.
+result: skipped
+reason: Marina owner account has no marinas — cannot test Connect banner
 
-### 3. Return from Stripe Onboarding
-expected: After completing (or partially completing) Stripe Express onboarding, you're redirected back to /dashboard with a query param like ?stripeStatus=connected or ?stripeStatus=pending. A success (green) or pending (blue) banner briefly appears, then the query param is cleared from the URL.
-result: issue
-reported: "No sign-up or login button on the home page to access the dashboard. Auth buttons missing from nav."
-severity: blocker
+### 6. Return from Stripe Onboarding
+expected: After Stripe onboarding completes, you're redirected back to /dashboard with a query param like ?stripeStatus=connected or ?stripeStatus=pending. A success (green) or pending (blue) banner briefly appears, then the query param clears from the URL.
+result: skipped
+reason: Marina owner account has no marinas — cannot test onboarding return
 
-### 4. Continue Setup (Incomplete Onboarding)
+### 7. Continue Setup (Incomplete Onboarding)
 expected: If a marina started onboarding but didn't finish, the amber banner shows "Continue Setup" instead of "Connect Stripe". Clicking it generates a new onboarding link (reuses the existing Stripe account) and redirects to Stripe.
 result: skipped
-reason: Blocked by test 3 — no auth buttons to reach dashboard
+reason: Marina owner account has no marinas — cannot test Continue Setup
 
-### 5. Stripe Connected Badge & Payouts Button
-expected: For a marina with completed Connect onboarding, the dashboard card shows a green dot with "Stripe Connected" text and an outlined "View Payouts" button. No amber banner is shown.
+### 8. Stripe Connected Badge & View Payouts
+expected: For a marina with completed Connect onboarding (payouts_enabled=true), the dashboard card shows a green dot with "Stripe Connected" text and an outlined "View Payouts" button. No amber banner is shown.
 result: skipped
-reason: Blocked by test 3 — no auth buttons to reach dashboard
+reason: Marina owner account has no marinas — cannot test connected badge
 
-### 6. View Payouts (Express Dashboard)
-expected: Clicking "View Payouts" on a connected marina opens the Stripe Express Dashboard in a new browser tab via a login link.
+### 9. Checkout with Connected Marina
+expected: Book a slip at a marina that has completed Stripe Connect. The checkout session should be created successfully (redirecting to Stripe Checkout). The charge includes a 15% platform fee.
 result: skipped
-reason: Blocked by test 3 — no auth buttons to reach dashboard
+reason: Mock slip data not in Supabase — checkout API queries real DB and returns "Slip not available" for mock-slip-001
 
-### 7. Checkout with Connected Marina
-expected: Book a slip at a marina that has completed Stripe Connect. The checkout session should be created successfully (redirecting to Stripe Checkout). The charge should include a 15% platform fee split — visible in Stripe Dashboard as application_fee_amount with transfer_data.destination set to the marina's connected account.
-result: skipped
-reason: Blocked by test 3 — requires auth to book
-
-### 8. Checkout Blocked for Unconnected Marina
+### 10. Checkout Blocked for Unconnected Marina
 expected: Attempt to book a slip at a marina that hasn't connected Stripe. The booking widget shows an error message like "not currently accepting online payments" instead of proceeding to checkout.
 result: skipped
-reason: Blocked by test 3 — requires auth to book
+reason: Mock slip data not in Supabase — checkout API queries real DB and returns "Slip not available" before reaching Connect check
 
 ## Summary
 
-total: 8
-passed: 0
-issues: 3
+total: 10
+passed: 3
+issues: 1
 pending: 0
-skipped: 5
+skipped: 6
 
 ## Gaps
 
-- truth: "Homepage loads with marina listings visible after cold start"
+- truth: "Marina owner profile loads correctly — navbar shows Dashboard link, login redirects to /dashboard"
   status: failed
-  reason: "User reported: It looks like the homepage isn't loading marina listings."
+  reason: "User reported: Dashboard loads without lock errors but profile not fetched — navbar shows boat_owner links instead of marina_owner links. Login redirects marina_owner to /search instead of /dashboard. Had to navigate manually."
   severity: major
-  test: 1
-  root_cause: "Homepage is intentionally a pre-launch marketing/waitlist page. Marina listings live at /search which is fully implemented but not linked from the nav for unauthenticated users."
-  artifacts:
-    - path: "src/app/page.tsx"
-      issue: "Static marketing page — no data fetching, no marina listings by design"
-    - path: "src/components/navbar.tsx"
-      issue: "Search link only rendered for logged-in boat_owner users — unauthenticated visitors have no path to /search"
-  missing:
-    - "Add a public 'Browse Marinas' or 'Find a Slip' link in navbar for unauthenticated users pointing to /search"
+  test: 4
+  root_cause: ""
+  artifacts: []
+  missing: []
   debug_session: ""
-- truth: "Navigate to /dashboard as marina owner, see amber Connect Stripe banner, click to start Express onboarding"
+- truth: "Log Out button works on first click"
   status: failed
-  reason: "User reported: Runtime Error: Acquiring an exclusive Navigator LockManager lock 'lock:sb-ompeoptbtfszxedbamxz-auth-token' timed out waiting 10000ms. Dashboard fails to load."
-  severity: blocker
+  reason: "User reported: Clicking Log Out does nothing. Fixed during session by adding timeout to signOut and forcing state clear."
+  severity: major
   test: 2
-  root_cause: "Multiple independent createBrowserClient() instances (AuthProvider + dashboard page + 8+ other components) compete for the same exclusive Navigator Lock. @supabase/ssr 0.5.x assumes a single browser client per page."
-  artifacts:
-    - path: "src/lib/supabase/client.ts"
-      issue: "createClient() creates a new createBrowserClient() on every call — no singleton guard"
-    - path: "src/lib/auth-context.tsx"
-      issue: "Line 50: creates client instance A; line 67: getSession().then() with no .catch() — lock timeout leaves loading=true forever"
-    - path: "src/app/dashboard/page.tsx"
-      issue: "Line 124: creates client instance B — directly contends for same lock as AuthProvider"
-  missing:
-    - "Make createClient() a module-level singleton — cache the first createBrowserClient() result and return it on subsequent calls"
-    - "Remove independent createClient() call in dashboard/page.tsx — use shared instance from AuthContext instead"
-    - "Add .catch() to getSession() in auth-context.tsx so loading always resolves even on lock timeout"
-    - "Add middleware.ts to refresh session cookie server-side (reduces client-side lock hold time)"
-  debug_session: ".planning/debug/missing-nav-auth-buttons.md"
-- truth: "Auth buttons (Log In / Sign Up) visible in nav to access dashboard and authenticated features"
-  status: failed
-  reason: "User reported: No sign-up or login button on the home page to access the dashboard. Auth buttons missing from nav."
-  severity: blocker
-  test: 3
-  root_cause: "Same root cause as gap 2 — getSession().then() has no .catch(). When the lock timeout rejects, setLoading(false) never fires. Navbar stays in loading=true branch, rendering an invisible placeholder div instead of Log In / Sign Up buttons."
+  root_cause: "supabase.auth.signOut() hangs due to lock contention. No timeout or state clearing on failure."
   artifacts:
     - path: "src/lib/auth-context.tsx"
-      issue: "Lines 67-74: getSession().then(...) with no .catch() — rejection leaves loading permanently true"
+      issue: "signOut had no timeout or error handling"
     - path: "src/components/navbar.tsx"
-      issue: "loading=true branch renders <div class='h-5 w-24' /> — invisible placeholder instead of auth buttons"
+      issue: "handleSignOut awaited signOut with no fallback"
   missing:
-    - "Add .catch(() => setLoading(false)) to getSession() in auth-context.tsx"
-    - "Fix the singleton client issue (gap 2) to prevent the lock timeout from occurring in the first place"
-  debug_session: ".planning/debug/missing-nav-auth-buttons.md"
+    - "signOut timeout with forced state clear (applied during session)"
+    - "router.refresh() after navigation (applied during session)"
+  debug_session: ""
+- truth: "Login form redirects to appropriate page after successful sign-in"
+  status: failed
+  reason: "User reported: Login button gets stuck on 'Logging in...' — page never redirects. Fixed during session by adding timeout and user-only redirect check."
+  severity: major
+  test: 4
+  root_cause: "signIn function hangs on fetchProfile after signInWithPassword succeeds. Login page required both user AND profile to redirect, but profile is null."
+  artifacts:
+    - path: "src/app/login/page.tsx"
+      issue: "Redirect required user && profile, but profile fetch fails/hangs"
+    - path: "src/lib/auth-context.tsx"
+      issue: "signIn calls fetchProfile which can hang indefinitely"
+  missing:
+    - "Login redirect based on user alone, not user+profile (applied during session)"
+    - "Timeout on signIn to prevent infinite hang (applied during session)"
+  debug_session: ""
