@@ -79,7 +79,7 @@ export async function POST(
     if (hasPaymentIntent) {
       const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
       await stripe.refunds.create({
-        payment_intent: booking.stripe_payment_intent_id,
+        payment_intent: booking.stripe_payment_intent_id as string,
         reverse_transfer: true,
         refund_application_fee: true,
       });

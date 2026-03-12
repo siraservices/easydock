@@ -11,6 +11,8 @@ import StatusBadge from "@/components/ui/status-badge";
 import { formatPrice, formatDate, calculateNights } from "@/lib/utils/format";
 import type { Database } from "@/types/database";
 
+const CANCELLABLE_STATUSES = ["pending", "approved", "confirmed"];
+
 type Booking = Database["public"]["Tables"]["bookings"]["Row"];
 type Slip = Database["public"]["Tables"]["slips"]["Row"];
 type Marina = Database["public"]["Tables"]["marinas"]["Row"];
@@ -32,6 +34,10 @@ export default function BookingDetailPage() {
   const [loading, setLoading] = useState(true);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
+  const [showCancelDialog, setShowCancelDialog] = useState(false);
+  const [cancelling, setCancelling] = useState(false);
+  const [cancelError, setCancelError] = useState<string | null>(null);
+
   async function fetchBooking() {
     const { data } = (await supabase
       .from("bookings")
@@ -44,6 +50,28 @@ export default function BookingDetailPage() {
     }
     setLoading(false);
     return data;
+  }
+
+  async function handleCancelBooking() {
+    if (!booking) return;
+    setCancelling(true);
+    setCancelError(null);
+    try {
+      const res = await fetch(`/api/bookings/${booking.id}/cancel`, {
+        method: "POST",
+      });
+      if (!res.ok) {
+        const body = await res.json();
+        setCancelError(body.error ?? "Failed to cancel booking");
+        return;
+      }
+      setShowCancelDialog(false);
+      await fetchBooking();
+    } catch {
+      setCancelError("Network error — please try again");
+    } finally {
+      setCancelling(false);
+    }
   }
 
   useEffect(() => {
@@ -263,6 +291,20 @@ export default function BookingDetailPage() {
                 {formatPrice(booking.total_price)}
               </span>
             </div>
+
+            {/* Cancel button — only for active bookings before check-in */}
+            {CANCELLABLE_STATUSES.includes(booking.status) &&
+              booking.check_in > new Date().toISOString().split("T")[0] && (
+                <button
+                  onClick={() => {
+                    setCancelError(null);
+                    setShowCancelDialog(true);
+                  }}
+                  className="border border-red-500 text-red-600 hover:bg-red-50 rounded-lg px-4 py-2 font-semibold text-sm w-full mt-4"
+                >
+                  Cancel Booking
+                </button>
+              )}
           </div>
         </div>
 
@@ -275,6 +317,45 @@ export default function BookingDetailPage() {
           </Link>
         </div>
       </div>
+
+      {/* Cancel confirmation dialog */}
+      {showCancelDialog && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
+          <div className="bg-white rounded-xl p-6 max-w-sm mx-4 w-full">
+            <h2 className="text-lg font-bold text-navy-800 mb-2">
+              Cancel this booking?
+            </h2>
+            <p className="text-sm text-gray-600 mb-4">
+              You will receive a full refund of{" "}
+              <span className="font-semibold">
+                {formatPrice(booking.total_price)}
+              </span>
+              .
+            </p>
+
+            {cancelError && (
+              <p className="text-sm text-red-600 mb-3">{cancelError}</p>
+            )}
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowCancelDialog(false)}
+                disabled={cancelling}
+                className="flex-1 border border-gray-300 text-gray-700 hover:bg-gray-50 rounded-lg px-4 py-2 font-semibold text-sm"
+              >
+                Keep Booking
+              </button>
+              <button
+                onClick={handleCancelBooking}
+                disabled={cancelling}
+                className="flex-1 bg-red-600 hover:bg-red-700 text-white rounded-lg px-4 py-2 font-semibold text-sm disabled:opacity-60"
+              >
+                {cancelling ? "Cancelling..." : "Cancel Booking"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </ProtectedRoute>
   );
 }
