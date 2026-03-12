@@ -91,12 +91,12 @@ Plans:
   2. A yacht owner can view their full booking history with current status (pending, approved, confirmed, cancelled) from their account
   3. Either party can cancel a booking and the yacht owner receives a Stripe refund that correctly reverses both the platform fee and the marina transfer
   4. Both parties receive an email when a booking is created, and again when booking status changes to approved, denied, or cancelled
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 05-01: Booking inbox for marina owners and booking history for yacht owners
-- [ ] 05-02: Cancellation with Stripe refund reversal
-- [ ] 05-03: Email notifications via Resend for all booking events
+- [ ] 05-01-PLAN.md — Marina booking inbox on dashboard (approve/deny) and booking detail status banner
+- [ ] 05-02-PLAN.md — Cancellation with Stripe refund reversal and cancel UI on detail page
+- [ ] 05-03-PLAN.md — Email notifications via Resend with React Email templates for all booking events
 
 ## Progress
 
