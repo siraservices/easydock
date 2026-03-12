@@ -38,8 +38,8 @@ Requirements for public launch. Each maps to roadmap phases.
 
 ### Booking Management
 
-- [ ] **BOOK-01**: Marina owner sees an inbox of incoming bookings and can approve or deny each one
-- [ ] **BOOK-02**: Yacht owner can view their booking history and current booking status
+- [x] **BOOK-01**: Marina owner sees an inbox of incoming bookings and can approve or deny each one
+- [x] **BOOK-02**: Yacht owner can view their booking history and current booking status
 - [ ] **BOOK-03**: Either party can cancel a booking with appropriate refund logic
 
 ### Email Notifications
@@ -103,8 +103,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAY-01 | Phase 4 | Complete |
 | PAY-02 | Phase 4 | Complete |
 | PAY-03 | Phase 4 | Complete |
-| BOOK-01 | Phase 5 | Pending |
-| BOOK-02 | Phase 5 | Pending |
+| BOOK-01 | Phase 5 | Complete |
+| BOOK-02 | Phase 5 | Complete |
 | BOOK-03 | Phase 5 | Pending |
 | EMAL-01 | Phase 5 | Pending |
 | EMAL-02 | Phase 5 | Pending |

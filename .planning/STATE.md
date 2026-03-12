@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Phase 5 context gathered
-last_updated: "2026-03-12T04:32:38.657Z"
+stopped_at: Completed 05-booking-lifecycle-and-notifications 05-01-PLAN.md
+last_updated: "2026-03-12T15:10:49.943Z"
 last_activity: 2026-03-11 — Plan 03-02 completed (bi-directional hover sync + mobile layout)
 progress:
   total_phases: 5
   completed_phases: 4
-  total_plans: 11
-  completed_plans: 11
+  total_plans: 14
+  completed_plans: 12
   percent: 82
 ---
 
@@ -81,6 +81,7 @@ Progress: [████████░░] 88%
 | Phase 04-stripe-connect-payouts P03 | 2min | 2 tasks | 5 files |
 | Phase 04-stripe-connect-payouts P02 | 2min | 2 tasks | 3 files |
 | Phase 04-stripe-connect-payouts P03 | 5min | 2 tasks | 5 files |
+| Phase 05-booking-lifecycle-and-notifications P01 | 7min | 3 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -124,6 +125,8 @@ Recent decisions affecting current work:
 - [Phase 04-stripe-connect-payouts]: 422 used for unbookable-marina gate; booking widget detects it explicitly for clear user messaging
 - [Phase 04-stripe-connect-payouts]: Login-link route guards on payouts_enabled=true — only fully connected accounts can access Express Dashboard
 - [Phase 04-stripe-connect-payouts]: Webhook uses event.account (Connect-specific property) as connected account ID, falls back to account.id
+- [Phase 05-booking-lifecycle-and-notifications]: Approve/deny use user Supabase client (not admin) — RLS on bookings table scopes UPDATE to marina owners, so unauthorized updates return 404
+- [Phase 05-booking-lifecycle-and-notifications]: Status banner on booking detail hidden when ?success=true to avoid competing with Stripe success flow messages
 
 ### Pending Todos
 
@@ -137,6 +140,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-12T04:32:38.653Z
-Stopped at: Phase 5 context gathered
-Resume file: .planning/phases/05-booking-lifecycle-and-notifications/05-CONTEXT.md
+Last session: 2026-03-12T15:10:49.939Z
+Stopped at: Completed 05-booking-lifecycle-and-notifications 05-01-PLAN.md
+Resume file: None
