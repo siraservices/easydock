@@ -101,10 +101,75 @@ export default function BookingDetailPage() {
 
   const nights = calculateNights(booking.check_in, booking.check_out);
 
+  // Colored status banner config
+  const statusBannerConfig: Record<
+    string,
+    { bg: string; border: string; text: string; label: string; subtitle: string }
+  > = {
+    pending: {
+      bg: "bg-yellow-50",
+      border: "border-yellow-200",
+      text: "text-yellow-800",
+      label: "Pending",
+      subtitle: "Awaiting marina approval",
+    },
+    approved: {
+      bg: "bg-blue-50",
+      border: "border-blue-200",
+      text: "text-blue-800",
+      label: "Approved",
+      subtitle: "Approved — awaiting payment confirmation",
+    },
+    confirmed: {
+      bg: "bg-green-50",
+      border: "border-green-200",
+      text: "text-green-800",
+      label: "Confirmed",
+      subtitle: "Confirmed and paid",
+    },
+    cancelled: {
+      bg: "bg-red-50",
+      border: "border-red-200",
+      text: "text-red-800",
+      label: "Cancelled",
+      subtitle: "This booking has been cancelled",
+    },
+    declined: {
+      bg: "bg-red-50",
+      border: "border-red-200",
+      text: "text-red-800",
+      label: "Declined",
+      subtitle: "This booking was declined by the marina",
+    },
+    completed: {
+      bg: "bg-gray-50",
+      border: "border-gray-200",
+      text: "text-gray-800",
+      label: "Completed",
+      subtitle: "Completed",
+    },
+  };
+
+  const bannerConfig = statusBannerConfig[booking.status];
+
   return (
     <ProtectedRoute allowedRoles={["boat_owner"]}>
       <div className="max-w-3xl mx-auto px-6 py-8">
-        {/* Success banner */}
+        {/* Colored status banner */}
+        {bannerConfig && !isSuccess && (
+          <div
+            className={`${bannerConfig.bg} border ${bannerConfig.border} rounded-xl p-4 mb-6`}
+          >
+            <p className={`font-bold ${bannerConfig.text}`}>
+              {bannerConfig.label}
+            </p>
+            <p className={`text-sm ${bannerConfig.text} mt-0.5`}>
+              {bannerConfig.subtitle}
+            </p>
+          </div>
+        )}
+
+        {/* Success banner — only shown when ?success=true */}
         {isSuccess && booking.status === "confirmed" && (
           <div className="bg-green-50 border border-green-200 rounded-xl p-4 mb-6 text-center">
             <p className="text-green-800 font-semibold">
