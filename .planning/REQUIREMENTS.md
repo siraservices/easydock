@@ -44,8 +44,8 @@ Requirements for public launch. Each maps to roadmap phases.
 
 ### Email Notifications
 
-- [ ] **EMAL-01**: Both parties receive email confirmation when a booking is created
-- [ ] **EMAL-02**: Both parties receive email when booking status changes (approved, denied, cancelled)
+- [x] **EMAL-01**: Both parties receive email confirmation when a booking is created
+- [x] **EMAL-02**: Both parties receive email when booking status changes (approved, denied, cancelled)
 
 ## v2 Requirements
 
@@ -106,8 +106,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | BOOK-01 | Phase 5 | Complete |
 | BOOK-02 | Phase 5 | Complete |
 | BOOK-03 | Phase 5 | Complete |
-| EMAL-01 | Phase 5 | Pending |
-| EMAL-02 | Phase 5 | Pending |
+| EMAL-01 | Phase 5 | Complete |
+| EMAL-02 | Phase 5 | Complete |
 
 **Coverage:**
 - v1 requirements: 19 total

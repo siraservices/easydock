@@ -16,7 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: Landing Page and Marina Onboarding** - Integrate marketing home page and give marina owners photo uploads and geocoded listings (completed 2026-03-11)
 - [x] **Phase 3: Map Search** - Replace text-based search with Mapbox map and allow unauthenticated browsing (completed 2026-03-11)
 - [x] **Phase 4: Stripe Connect Payouts** - Wire marketplace payments so marina owners can onboard and receive real money (completed 2026-03-11)
-- [ ] **Phase 5: Booking Lifecycle and Notifications** - Booking inbox, cancellations with refunds, and email notifications for both parties
+- [x] **Phase 5: Booking Lifecycle and Notifications** - Booking inbox, cancellations with refunds, and email notifications for both parties (completed 2026-03-12)
 
 ## Phase Details
 
@@ -109,4 +109,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 2. Landing Page and Marina Onboarding | 3/3 | Complete   | 2026-03-11 |
 | 3. Map Search | 2/2 | Complete   | 2026-03-11 |
 | 4. Stripe Connect Payouts | 4/4 | Complete   | 2026-03-11 |
-| 5. Booking Lifecycle and Notifications | 2/3 | In Progress|  |
+| 5. Booking Lifecycle and Notifications | 3/3 | Complete   | 2026-03-12 |

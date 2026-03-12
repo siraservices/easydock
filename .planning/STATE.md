@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 05-booking-lifecycle-and-notifications 05-02-PLAN.md
-last_updated: "2026-03-12T15:17:33.946Z"
+stopped_at: Completed 05-booking-lifecycle-and-notifications 05-03-PLAN.md
+last_updated: "2026-03-12T15:27:12.173Z"
 last_activity: 2026-03-11 — Plan 03-02 completed (bi-directional hover sync + mobile layout)
 progress:
   total_phases: 5
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 14
-  completed_plans: 13
+  completed_plans: 14
   percent: 82
 ---
 
@@ -83,6 +83,7 @@ Progress: [████████░░] 88%
 | Phase 04-stripe-connect-payouts P03 | 5min | 2 tasks | 5 files |
 | Phase 05-booking-lifecycle-and-notifications P01 | 7min | 3 tasks | 8 files |
 | Phase 05-booking-lifecycle-and-notifications P02 | 4min | 2 tasks | 3 files |
+| Phase 05-booking-lifecycle-and-notifications P03 | 7min | 2 tasks | 14 files |
 
 ## Accumulated Context
 
@@ -131,6 +132,8 @@ Recent decisions affecting current work:
 - [Phase 05-booking-lifecycle-and-notifications]: adminClient used for cancel route — boat owners have no UPDATE RLS policy on bookings
 - [Phase 05-booking-lifecycle-and-notifications]: DB-first update before Stripe refund in cancel route — booking correctly cancelled even if Stripe fails
 - [Phase 05-booking-lifecycle-and-notifications]: Cancel button shown on detail page only (not list page); confirmation dialog shows refund amount per user decision
+- [Phase 05-booking-lifecycle-and-notifications]: Lazy-initialize Resend client to avoid constructor throw at Next.js build time when RESEND_API_KEY is absent
+- [Phase 05-booking-lifecycle-and-notifications]: fetchBookingEmailParams uses adminClient to bypass RLS for cross-user profile email lookups
 
 ### Pending Todos
 
@@ -144,6 +147,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-12T15:17:33.942Z
-Stopped at: Completed 05-booking-lifecycle-and-notifications 05-02-PLAN.md
+Last session: 2026-03-12T15:27:12.168Z
+Stopped at: Completed 05-booking-lifecycle-and-notifications 05-03-PLAN.md
 Resume file: None
