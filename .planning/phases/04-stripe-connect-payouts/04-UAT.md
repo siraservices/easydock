@@ -1,9 +1,9 @@
 ---
-status: complete
+status: diagnosed
 phase: 04-stripe-connect-payouts
 source: [04-01-SUMMARY.md, 04-02-SUMMARY.md, 04-03-SUMMARY.md]
 started: 2026-03-11T22:30:00Z
-updated: 2026-03-11T22:42:00Z
+updated: 2026-03-11T22:50:00Z
 ---
 
 ## Current Test
@@ -70,25 +70,46 @@ skipped: 5
   reason: "User reported: It looks like the homepage isn't loading marina listings."
   severity: major
   test: 1
-  root_cause: ""
-  artifacts: []
-  missing: []
+  root_cause: "Homepage is intentionally a pre-launch marketing/waitlist page. Marina listings live at /search which is fully implemented but not linked from the nav for unauthenticated users."
+  artifacts:
+    - path: "src/app/page.tsx"
+      issue: "Static marketing page — no data fetching, no marina listings by design"
+    - path: "src/components/navbar.tsx"
+      issue: "Search link only rendered for logged-in boat_owner users — unauthenticated visitors have no path to /search"
+  missing:
+    - "Add a public 'Browse Marinas' or 'Find a Slip' link in navbar for unauthenticated users pointing to /search"
   debug_session: ""
 - truth: "Navigate to /dashboard as marina owner, see amber Connect Stripe banner, click to start Express onboarding"
   status: failed
   reason: "User reported: Runtime Error: Acquiring an exclusive Navigator LockManager lock 'lock:sb-ompeoptbtfszxedbamxz-auth-token' timed out waiting 10000ms. Dashboard fails to load."
   severity: blocker
   test: 2
-  root_cause: ""
-  artifacts: []
-  missing: []
-  debug_session: ""
+  root_cause: "Multiple independent createBrowserClient() instances (AuthProvider + dashboard page + 8+ other components) compete for the same exclusive Navigator Lock. @supabase/ssr 0.5.x assumes a single browser client per page."
+  artifacts:
+    - path: "src/lib/supabase/client.ts"
+      issue: "createClient() creates a new createBrowserClient() on every call — no singleton guard"
+    - path: "src/lib/auth-context.tsx"
+      issue: "Line 50: creates client instance A; line 67: getSession().then() with no .catch() — lock timeout leaves loading=true forever"
+    - path: "src/app/dashboard/page.tsx"
+      issue: "Line 124: creates client instance B — directly contends for same lock as AuthProvider"
+  missing:
+    - "Make createClient() a module-level singleton — cache the first createBrowserClient() result and return it on subsequent calls"
+    - "Remove independent createClient() call in dashboard/page.tsx — use shared instance from AuthContext instead"
+    - "Add .catch() to getSession() in auth-context.tsx so loading always resolves even on lock timeout"
+    - "Add middleware.ts to refresh session cookie server-side (reduces client-side lock hold time)"
+  debug_session: ".planning/debug/missing-nav-auth-buttons.md"
 - truth: "Auth buttons (Log In / Sign Up) visible in nav to access dashboard and authenticated features"
   status: failed
   reason: "User reported: No sign-up or login button on the home page to access the dashboard. Auth buttons missing from nav."
   severity: blocker
   test: 3
-  root_cause: ""
-  artifacts: []
-  missing: []
-  debug_session: ""
+  root_cause: "Same root cause as gap 2 — getSession().then() has no .catch(). When the lock timeout rejects, setLoading(false) never fires. Navbar stays in loading=true branch, rendering an invisible placeholder div instead of Log In / Sign Up buttons."
+  artifacts:
+    - path: "src/lib/auth-context.tsx"
+      issue: "Lines 67-74: getSession().then(...) with no .catch() — rejection leaves loading permanently true"
+    - path: "src/components/navbar.tsx"
+      issue: "loading=true branch renders <div class='h-5 w-24' /> — invisible placeholder instead of auth buttons"
+  missing:
+    - "Add .catch(() => setLoading(false)) to getSession() in auth-context.tsx"
+    - "Fix the singleton client issue (gap 2) to prevent the lock timeout from occurring in the first place"
+  debug_session: ".planning/debug/missing-nav-auth-buttons.md"
