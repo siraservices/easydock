@@ -31,16 +31,16 @@ None — focused migration milestone.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| HOST-01 | — | Pending |
-| HOST-02 | — | Pending |
-| HOST-03 | — | Pending |
-| HOST-04 | — | Pending |
+| HOST-01 | Phase 6 | Pending |
+| HOST-02 | Phase 6 | Pending |
+| HOST-03 | Phase 6 | Pending |
+| HOST-04 | Phase 6 | Pending |
 
 **Coverage:**
 - v1.1 requirements: 4 total
-- Mapped to phases: 0
-- Unmapped: 4 ⚠️
+- Mapped to phases: 4
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-03-13*
-*Last updated: 2026-03-13 after initial definition*
+*Last updated: 2026-03-13 after Phase 6 roadmap created*

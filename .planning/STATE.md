@@ -5,9 +5,9 @@ milestone_name: Vercel Deploy
 status: active
 stopped_at: null
 last_updated: "2026-03-13"
-last_activity: 2026-03-13 — Milestone v1.1 started
+last_activity: 2026-03-13 — Roadmap created, Phase 6 defined
 progress:
-  total_phases: 0
+  total_phases: 1
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -21,24 +21,49 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-13)
 
 **Core value:** A yacht owner can find an available slip, book it, and pay — and a marina owner receives that booking and gets paid.
-**Current focus:** v1.1 Vercel Deploy — migrate hosting from Netlify to Vercel
+**Current focus:** Phase 6 — Vercel Migration
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-03-13 — Milestone v1.1 started
+Phase: 6 of 6 (Vercel Migration)
+Plan: — of TBD
+Status: Ready to plan
+Last activity: 2026-03-13 — Roadmap created, Phase 6 ready for planning
 
 Progress: [░░░░░░░░░░] 0%
+
+## Performance Metrics
+
+**Velocity:**
+- Total plans completed: 0 (v1.1)
+- Average duration: — min
+- Total execution time: — hours
+
+**By Phase:**
+
+| Phase | Plans | Total | Avg/Plan |
+|-------|-------|-------|----------|
+| 6. Vercel Migration | TBD | - | - |
+
+## Accumulated Context
+
+### Decisions
+
+Decisions are logged in PROJECT.md Key Decisions table.
+Recent decisions affecting current work:
+
+- v1.1 start: Migrate from Netlify to Vercel (standard Node.js runtime, no edge conversion needed)
+
+### Pending Todos
+
+None yet.
+
+### Blockers/Concerns
+
+- v1.0 tech debt (not blocking v1.1): 1 failing test (buildSlipQuery null-coordinate guards), mock data blocks demo booking flow, dead client-side price calc in booking-widget.tsx
 
 ## Session Continuity
 
 Last session: 2026-03-13
-Stopped at: Milestone v1.1 initialized
+Stopped at: Roadmap created — Phase 6 defined and ready to plan
 Resume file: None
-
-## Accumulated Context
-
-- v1.0 shipped with Netlify hosting (netlify.toml + @netlify/plugin-nextjs)
-- Known tech debt: 1 failing test, mock data issues, dead client-side price calc
