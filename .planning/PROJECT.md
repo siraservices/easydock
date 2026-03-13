@@ -40,7 +40,15 @@ A yacht owner can find an available slip, book it, and pay — and a marina owne
 
 ### Active
 
-<!-- Next milestone scope — to be defined via /gsd:new-milestone -->
+## Current Milestone: v1.1 Vercel Deploy
+
+**Goal:** Migrate hosting from Netlify to Vercel for production deployment
+
+**Target features:**
+- Remove Netlify configuration and dependencies
+- Vercel-compatible Next.js configuration
+- Environment variable documentation for Vercel dashboard
+- Clean deployment on Vercel
 
 ### Out of Scope
 
@@ -93,4 +101,4 @@ EasyDock shipped v1.0 MVP with 10,093 lines of TypeScript/TSX across 5 phases in
 | adminClient for cross-user operations | RLS blocks cross-user email lookups and Connect status | ✓ Good — used in cancel, email, checkout |
 
 ---
-*Last updated: 2026-03-12 after v1.0 milestone*
+*Last updated: 2026-03-13 after v1.1 milestone started*
