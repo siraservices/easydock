@@ -72,3 +72,4 @@ test-*.csv
 
 # Claude Code local settings
 .claude/
+tsconfig.tsbuildinfo
