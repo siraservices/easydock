@@ -309,6 +309,45 @@ export interface Database {
         };
         Relationships: [];
       };
+      boat_owner_leads: {
+        Row: {
+          id: string;
+          name: string;
+          email: string;
+          phone: string | null;
+          boat_length: string;
+          boat_beam: string | null;
+          preferred_area: string;
+          timeline: string | null;
+          status: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          email: string;
+          phone?: string | null;
+          boat_length: string;
+          boat_beam?: string | null;
+          preferred_area: string;
+          timeline?: string | null;
+          status?: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          email?: string;
+          phone?: string | null;
+          boat_length?: string;
+          boat_beam?: string | null;
+          preferred_area?: string;
+          timeline?: string | null;
+          status?: string;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       stripe_processed_events: {
         Row: {
           id: string;              // Stripe event ID (e.g., evt_xxx)

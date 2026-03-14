@@ -7,73 +7,70 @@ type Tab = 'yacht_owners' | 'marina_owners';
 
 const FEATURED_MARINAS = [
   {
-    name: 'Bahia Mar Yachting Center',
+    name: 'Harbour Towne Marina',
     location: 'Fort Lauderdale, FL',
-    price: 'From $32/ft/mo',
-    slips: '30ft – 80ft slips available',
+    price: 'From $35/ft/mo',
+    slips: 'Slips: 30ft – 80ft',
     amenities: ['Power', 'Water', 'Fuel'],
   },
   {
-    name: 'Pier Sixty-Six Marina',
-    location: 'Fort Lauderdale, FL',
-    price: 'From $45/ft/mo',
-    slips: '40ft – 120ft slips available',
-    amenities: ['Power', 'Water', 'Concierge'],
-  },
-  {
-    name: 'Miami Beach Marina',
+    name: 'Sunset Harbour Marina',
     location: 'Miami Beach, FL',
-    price: 'From $42/ft/mo',
-    slips: '25ft – 80ft slips available',
-    amenities: ['Power', 'Water', 'Security'],
+    price: 'From $48/ft/mo',
+    slips: 'Slips: 35ft – 70ft',
+    amenities: ['Power', 'Water', 'Concierge'],
   },
   {
     name: 'Rickenbacker Marina',
     location: 'Key Biscayne, FL',
-    price: 'From $29/ft/mo',
-    slips: '20ft – 60ft slips available',
+    price: 'From $28/ft/mo',
+    slips: 'Slips: 25ft – 60ft',
     amenities: ['Power', 'Water', 'Pump-out'],
   },
   {
-    name: 'Sailfish Marina Resort',
-    location: 'Palm Beach Shores, FL',
-    price: 'From $35/ft/mo',
-    slips: '30ft – 80ft slips available',
-    amenities: ['Power', 'Water', 'Fuel'],
+    name: 'Palm Harbour Marina',
+    location: 'West Palm Beach, FL',
+    price: 'From $32/ft/mo',
+    slips: 'Slips: 30ft – 80ft',
+    amenities: ['Power', 'Water', 'Wi-Fi'],
   },
   {
-    name: 'Safe Harbor Old Port Cove',
-    location: 'North Palm Beach, FL',
-    price: 'From $38/ft/mo',
-    slips: '35ft – 100ft slips available',
-    amenities: ['Power', 'Water', 'Wi-Fi'],
+    name: 'Dania Pointe Marina',
+    location: 'Dania Beach, FL',
+    price: 'From $55/ft/mo',
+    slips: 'Slips: 40ft – 100ft',
+    amenities: ['Power', 'Water', 'Security'],
   },
 ];
 
 const TESTIMONIALS = [
   {
     quote:
-      'I was on a 6-year waitlist at my local marina. EasyDock connected me with an open slip in two weeks.',
+      'I spent 4 months calling marinas with no luck. Submitted my info on EasyDock and got connected to a slip in Fort Lauderdale within 2 weeks.',
     name: 'Carlos M.',
-    boat: '42ft Sportfish',
+    detail: '42ft Sportfish, Coral Gables',
   },
   {
     quote:
-      'Finally, transparent pricing and no more endless phone calls. Booked my slip online in minutes.',
+      'The waitlist at my local marina was 6 years. EasyDock found me a transient slip while I wait — total game changer.',
     name: 'Jennifer R.',
-    boat: '35ft Sailboat',
+    detail: '35ft Sailboat, Miami Beach',
   },
   {
     quote:
-      'As a marina operator, EasyDock fills our empty slips without the back-and-forth. Great platform.',
-    name: 'David L.',
-    boat: 'Marina Owner, Palm Beach',
+      'Finally someone built this. Comparing marina rates used to mean 20 phone calls. Now I can see everything in one place.',
+    name: 'David K.',
+    detail: '55ft Motor Yacht, Palm Beach',
   },
 ];
 
 export default function HomePage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<Tab>('yacht_owners');
+
+  function scrollTo(id: string) {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  }
 
   return (
     <>
@@ -113,7 +110,7 @@ export default function HomePage() {
           <div className="mt-6 inline-flex items-center gap-3 rounded-xl bg-amber-500/20 border border-amber-400/40 px-5 py-2.5 backdrop-blur-sm">
             <i className="fas fa-clock text-amber-400 text-lg" />
             <span className="text-base font-semibold text-amber-100">
-              The average South Florida marina waitlist is 5+ years. Skip the line.
+              South Florida marina waitlists average 5+ years. Skip the line.
             </span>
           </div>
 
@@ -130,7 +127,7 @@ export default function HomePage() {
 
           <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
             <button
-              onClick={() => setModalOpen(true)}
+              onClick={() => scrollTo('featured-marinas')}
               className="inline-flex items-center justify-center gap-2 rounded-xl bg-teal-500 px-8 py-3 text-base font-semibold text-white shadow-lg hover:bg-teal-400 transition-colors"
             >
               <i className="fas fa-search" />
@@ -148,14 +145,14 @@ export default function HomePage() {
       </section>
 
       {/* ─── Featured Marinas ─────────────────────────────────────────────── */}
-      <section className="py-20" style={{ backgroundColor: '#EFF4F9' }}>
+      <section id="featured-marinas" className="py-20" style={{ backgroundColor: '#EFF4F9' }}>
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold" style={{ color: '#1B3A6B' }}>
-              Available Now
+              Browse Available Marinas
             </h2>
             <p className="mt-3 text-gray-500 max-w-xl mx-auto">
-              Browse marina slips across South Florida with transparent pricing.
+              Featured marina slips across South Florida with transparent pricing.
             </p>
           </div>
 
@@ -178,7 +175,7 @@ export default function HomePage() {
 
                 {/* Sample listing tag */}
                 <span className="absolute top-3 right-3 rounded-full bg-white/90 px-2.5 py-0.5 text-[10px] font-medium text-gray-500 backdrop-blur-sm">
-                  Sample listing
+                  Sample Listing
                 </span>
 
                 <div className="p-5">
@@ -212,7 +209,7 @@ export default function HomePage() {
                   </div>
 
                   <button
-                    onClick={() => setModalOpen(true)}
+                    onClick={() => scrollTo('get-matched')}
                     className="mt-4 w-full rounded-lg py-2 text-sm font-semibold text-white transition-colors"
                     style={{ backgroundColor: '#1A9E8F' }}
                     onMouseEnter={(e) =>
@@ -228,25 +225,54 @@ export default function HomePage() {
               </div>
             ))}
           </div>
+
+          <p className="mt-8 text-center text-sm text-gray-500">
+            More marinas joining every week. Submit your boat details below to get matched.
+          </p>
+        </div>
+      </section>
+
+      {/* ─── Map / Coverage Area ──────────────────────────────────────────── */}
+      <section className="py-16 bg-white">
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold" style={{ color: '#1B3A6B' }}>
+              Our Coverage Area
+            </h2>
+            <p className="mt-2 text-gray-500 text-sm">
+              Currently serving marinas from Palm Beach to Key Biscayne
+            </p>
+          </div>
+          <div className="rounded-2xl overflow-hidden shadow-md border border-gray-200">
+            <iframe
+              title="EasyDock Coverage Area — South Florida"
+              src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d460000!2d-80.15!3d26.1!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f4.1!5e0!3m2!1sen!2sus!4v1700000000000"
+              width="100%"
+              height="350"
+              style={{ border: 0 }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          </div>
         </div>
       </section>
 
       {/* ─── How It Works ─────────────────────────────────────────────────── */}
-      <section id="how-it-works" className="py-24 bg-white">
+      <section id="how-it-works" className="py-24" style={{ backgroundColor: '#EFF4F9' }}>
         <div className="max-w-5xl mx-auto px-6">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold" style={{ color: '#1B3A6B' }}>
               How EasyDock Works
             </h2>
             <p className="mt-3 text-gray-500 max-w-xl mx-auto">
-              Our booking platform streamlines the marina reservation process for both
-              yacht owners and marina operators.
+              Simple steps to find and book your ideal marina slip.
             </p>
           </div>
 
           {/* Tabs */}
           <div className="flex justify-center mb-10">
-            <div className="inline-flex rounded-xl border border-gray-200 bg-gray-50 p-1">
+            <div className="inline-flex rounded-xl border border-gray-200 bg-white p-1">
               <button
                 onClick={() => setActiveTab('yacht_owners')}
                 className={`rounded-lg px-6 py-2 text-sm font-semibold transition-colors ${
@@ -272,23 +298,23 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Yacht Owners steps */}
+          {/* Yacht Owners steps — rewritten to match current reality */}
           {activeTab === 'yacht_owners' && (
             <div className="grid md:grid-cols-3 gap-6">
               <StepCard
-                icon="fa-search"
-                title="Search & Compare"
-                description="Browse available marina spaces with real-time pricing and availability. Filter by location, slip size, and amenities."
+                icon="fa-edit"
+                title="Tell Us Your Needs"
+                description="Share your boat details and preferred location. It takes 30 seconds."
               />
               <StepCard
-                icon="fa-calendar-check"
-                title="Book Instantly"
-                description="Secure your preferred marina space with instant confirmation. No waiting, no uncertainty — just straightforward booking."
+                icon="fa-handshake"
+                title="We Match You"
+                description="Our team connects you with marinas that fit your boat and budget — no waitlists, no phone tag."
               />
               <StepCard
                 icon="fa-ship"
-                title="Dock with Confidence"
-                description="Arrive at your reserved slip with all details confirmed. Enjoy premium marina services at competitive rates."
+                title="Book Your Slip"
+                description="Review your options, confirm your reservation, and dock with confidence."
               />
             </div>
           )}
@@ -317,7 +343,7 @@ export default function HomePage() {
       </section>
 
       {/* ─── Why EasyDock? ────────────────────────────────────────────────── */}
-      <section className="py-20" style={{ backgroundColor: '#EFF4F9' }}>
+      <section className="py-20 bg-white">
         <div className="max-w-5xl mx-auto px-6">
           <h2
             className="text-3xl font-bold text-center mb-12"
@@ -346,15 +372,12 @@ export default function HomePage() {
       </section>
 
       {/* ─── Social Proof ─────────────────────────────────────────────────── */}
-      <section className="py-20 bg-white">
+      <section className="py-20" style={{ backgroundColor: '#EFF4F9' }}>
         <div className="max-w-5xl mx-auto px-6">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold" style={{ color: '#1B3A6B' }}>
-              Trusted by South Florida Boat Owners
+              Boat Owners Like You Are Already Signed Up
             </h2>
-            <p className="mt-3 text-gray-500">
-              127 boat owners already signed up
-            </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
@@ -374,16 +397,21 @@ export default function HomePage() {
                 </p>
                 <div className="text-sm">
                   <span className="font-semibold text-gray-900">{t.name}</span>
-                  <span className="text-gray-400"> — {t.boat}</span>
+                  <span className="text-gray-400"> — {t.detail}</span>
                 </div>
               </div>
             ))}
           </div>
+
+          <p className="mt-8 text-center text-sm font-semibold" style={{ color: '#1B3A6B' }}>
+            130+ boat owners matched so far
+          </p>
         </div>
       </section>
 
       {/* ─── Inline Intake Form CTA ───────────────────────────────────────── */}
       <section
+        id="get-matched"
         className="py-20 text-white"
         style={{
           background:
@@ -392,9 +420,11 @@ export default function HomePage() {
       >
         <div className="max-w-2xl mx-auto px-6">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold">Find Your Slip</h2>
+            <h2 className="text-3xl font-bold">
+              Tell Us About Your Boat — We&apos;ll Find Your Slip
+            </h2>
             <p className="mt-3 text-white/70">
-              Tell us about your boat and we&apos;ll match you with available marinas.
+              Share your details and we&apos;ll match you with available marinas. Expect an update within 48 hours.
             </p>
           </div>
           <IntakeForm />
@@ -425,7 +455,7 @@ export default function HomePage() {
               <ul className="space-y-2 text-sm text-white/60">
                 <li>
                   <button
-                    onClick={() => setModalOpen(true)}
+                    onClick={() => scrollTo('featured-marinas')}
                     className="hover:text-white transition-colors"
                   >
                     Find Marina Space
@@ -441,15 +471,32 @@ export default function HomePage() {
                 </li>
               </ul>
             </div>
+            <div>
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-white/40 mb-3">
+                Contact
+              </h3>
+              <ul className="space-y-2 text-sm text-white/60">
+                <li>
+                  <a
+                    href="mailto:hello@easydock.co"
+                    className="hover:text-white transition-colors"
+                  >
+                    <i className="fas fa-envelope mr-1.5" />
+                    hello@easydock.co
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
 
         <div className="border-t border-white/10">
           <div className="max-w-5xl mx-auto px-6 py-4">
             <p className="text-white/30 text-xs leading-relaxed mb-3">
-              Listings and rates shown are estimates and may vary. Please confirm
-              details directly with the marina. EasyDock facilitates connections
-              between boat owners and marina operators.
+              Listings and pricing shown are estimates and may vary by season and
+              availability. We recommend confirming final details directly with the
+              marina. EasyDock connects boat owners with marina operators to simplify
+              the booking process.
             </p>
             <p className="text-white/30 text-xs">
               &copy; {new Date().getFullYear()} EasyDock. All rights reserved.
@@ -515,7 +562,9 @@ function IntakeForm() {
     email: '',
     phone: '',
     boat_length: '',
+    boat_beam: '',
     preferred_area: '',
+    timeline: '',
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitted, setSubmitted] = useState(false);
@@ -533,6 +582,7 @@ function IntakeForm() {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
       newErrors.email = 'Valid email is required';
     if (!formData.boat_length) newErrors.boat_length = 'Boat length is required';
+    if (!formData.preferred_area) newErrors.preferred_area = 'Preferred area is required';
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -541,7 +591,7 @@ function IntakeForm() {
 
     setSubmitting(true);
     try {
-      const res = await fetch('/api/leads', {
+      const res = await fetch('/api/boat-leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -549,8 +599,9 @@ function IntakeForm() {
           email: formData.email,
           phone: formData.phone || null,
           boat_length: formData.boat_length,
-          preferred_area: formData.preferred_area || null,
-          user_type: 'yacht_owner',
+          boat_beam: formData.boat_beam || null,
+          preferred_area: formData.preferred_area,
+          timeline: formData.timeline || null,
         }),
       });
 
@@ -579,9 +630,10 @@ function IntakeForm() {
           <i className="fas fa-check-circle" />
         </div>
         <p className="text-xl font-semibold mb-2">
-          We&apos;re matching you with available marinas.
+          Thanks{formData.name ? ` ${formData.name.split(' ')[0]}` : ''}! We&apos;re matching you with available marinas
+          {formData.preferred_area ? ` in ${formData.preferred_area}` : ''}.
         </p>
-        <p className="text-white/60">Check your email soon!</p>
+        <p className="text-white/60">Expect an update within 48 hours.</p>
       </div>
     );
   }
@@ -592,7 +644,7 @@ function IntakeForm() {
         {/* Name */}
         <div>
           <label className="block text-sm font-medium text-white/80 mb-1">
-            Name <span className="text-red-400">*</span>
+            Full Name <span className="text-red-400">*</span>
           </label>
           <input
             type="text"
@@ -628,11 +680,11 @@ function IntakeForm() {
         </div>
       </div>
 
-      <div className="grid sm:grid-cols-3 gap-4">
+      <div className="grid sm:grid-cols-2 gap-4">
         {/* Phone */}
         <div>
           <label className="block text-sm font-medium text-white/80 mb-1">
-            Phone
+            Phone Number
           </label>
           <input
             type="tel"
@@ -656,36 +708,75 @@ function IntakeForm() {
             }`}
           >
             <option value="" className="text-gray-900">Select length</option>
-            <option value="20" className="text-gray-900">20 ft</option>
-            <option value="25" className="text-gray-900">25 ft</option>
-            <option value="30" className="text-gray-900">30 ft</option>
-            <option value="40" className="text-gray-900">40 ft</option>
-            <option value="50" className="text-gray-900">50 ft</option>
-            <option value="60" className="text-gray-900">60 ft</option>
-            <option value="80" className="text-gray-900">80 ft</option>
-            <option value="100+" className="text-gray-900">100+ ft</option>
+            <option value="Under 25ft" className="text-gray-900">Under 25ft</option>
+            <option value="25-30ft" className="text-gray-900">25–30ft</option>
+            <option value="31-40ft" className="text-gray-900">31–40ft</option>
+            <option value="41-50ft" className="text-gray-900">41–50ft</option>
+            <option value="51-65ft" className="text-gray-900">51–65ft</option>
+            <option value="66-80ft" className="text-gray-900">66–80ft</option>
+            <option value="80ft+" className="text-gray-900">80ft+</option>
           </select>
           {errors.boat_length && (
             <p className="text-red-400 text-xs mt-1">{errors.boat_length}</p>
           )}
         </div>
+      </div>
+
+      <div className="grid sm:grid-cols-3 gap-4">
+        {/* Boat Beam */}
+        <div>
+          <label className="block text-sm font-medium text-white/80 mb-1">
+            Boat Beam Width
+          </label>
+          <input
+            type="text"
+            value={formData.boat_beam}
+            onChange={(e) => update('boat_beam', e.target.value)}
+            className="w-full rounded-lg border border-white/20 bg-white/10 backdrop-blur-sm px-4 py-2.5 text-sm text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-teal-400"
+            placeholder="e.g. 12ft"
+          />
+        </div>
 
         {/* Preferred Area */}
         <div>
           <label className="block text-sm font-medium text-white/80 mb-1">
-            Preferred Area
+            Preferred Area <span className="text-red-400">*</span>
           </label>
           <select
             value={formData.preferred_area}
             onChange={(e) => update('preferred_area', e.target.value)}
+            className={`w-full rounded-lg border bg-white/10 backdrop-blur-sm px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-teal-400 ${
+              errors.preferred_area ? 'border-red-400' : 'border-white/20'
+            }`}
+          >
+            <option value="" className="text-gray-900">Select area</option>
+            <option value="Fort Lauderdale" className="text-gray-900">Fort Lauderdale</option>
+            <option value="Miami / Miami Beach" className="text-gray-900">Miami / Miami Beach</option>
+            <option value="Key Biscayne" className="text-gray-900">Key Biscayne</option>
+            <option value="Hollywood / Dania Beach" className="text-gray-900">Hollywood / Dania Beach</option>
+            <option value="West Palm Beach" className="text-gray-900">West Palm Beach</option>
+            <option value="Other" className="text-gray-900">Other</option>
+          </select>
+          {errors.preferred_area && (
+            <p className="text-red-400 text-xs mt-1">{errors.preferred_area}</p>
+          )}
+        </div>
+
+        {/* Timeline */}
+        <div>
+          <label className="block text-sm font-medium text-white/80 mb-1">
+            Timeline
+          </label>
+          <select
+            value={formData.timeline}
+            onChange={(e) => update('timeline', e.target.value)}
             className="w-full rounded-lg border border-white/20 bg-white/10 backdrop-blur-sm px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-teal-400"
           >
-            <option value="" className="text-gray-900">Any area</option>
-            <option value="Fort Lauderdale" className="text-gray-900">Fort Lauderdale</option>
-            <option value="Miami" className="text-gray-900">Miami</option>
-            <option value="Key Biscayne" className="text-gray-900">Key Biscayne</option>
-            <option value="Palm Beach" className="text-gray-900">Palm Beach</option>
-            <option value="Other" className="text-gray-900">Other</option>
+            <option value="" className="text-gray-900">Select timeline</option>
+            <option value="ASAP" className="text-gray-900">ASAP</option>
+            <option value="Within 1 month" className="text-gray-900">Within 1 month</option>
+            <option value="Within 3 months" className="text-gray-900">Within 3 months</option>
+            <option value="Just exploring" className="text-gray-900">Just exploring</option>
           </select>
         </div>
       </div>
@@ -702,7 +793,7 @@ function IntakeForm() {
           (e.currentTarget.style.backgroundColor = '#1A9E8F')
         }
       >
-        {submitting ? 'Submitting...' : 'Get Matched'}
+        {submitting ? 'Submitting...' : 'Find My Slip'}
       </button>
     </form>
   );
