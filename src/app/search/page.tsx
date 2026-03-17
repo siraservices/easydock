@@ -182,6 +182,14 @@ export default function SearchPage() {
     [slips, visibleMarinaIds]
   );
 
+  // Marinas visible on map that have no slips
+  const marinasWithoutSlips = useMemo(() => {
+    const marinaIdsWithSlips = new Set(slips.map((s) => s.marinas.id));
+    return marinas.filter(
+      (m) => visibleMarinaIds.has(m.id) && !marinaIdsWithSlips.has(m.id)
+    );
+  }, [marinas, slips, visibleMarinaIds]);
+
   const handleSelectMarina = useCallback((id: string) => {
     // Scroll the first slip for this marina into view
     const el = document.getElementById(`marina-${id}`);
@@ -232,7 +240,7 @@ export default function SearchPage() {
           <div className="flex items-center justify-center py-16">
             <LoadingSpinner size="lg" message="Searching slips..." />
           </div>
-        ) : visibleSlips.length > 0 ? (
+        ) : visibleSlips.length > 0 || marinasWithoutSlips.length > 0 ? (
           <div className="flex flex-col gap-4">
             {visibleSlips.map((slip) => (
               <div key={slip.id} id={`marina-${slip.marinas.id}`}>
@@ -243,6 +251,39 @@ export default function SearchPage() {
                   isHighlighted={hoveredMarinaId === slip.marinas.id}
                   onHover={handleHoverMarinaFromList}
                 />
+              </div>
+            ))}
+            {marinasWithoutSlips.map((marina) => (
+              <div
+                key={marina.id}
+                id={`marina-${marina.id}`}
+                data-marina-id={marina.id}
+                onMouseEnter={() => handleHoverMarinaFromList(marina.id)}
+                onMouseLeave={() => handleHoverMarinaFromList(null)}
+                className={`bg-white rounded-xl shadow-sm border overflow-hidden hover:shadow-md transition-shadow ${
+                  hoveredMarinaId === marina.id ? "ring-2 ring-teal-500 shadow-lg" : ""
+                }`}
+              >
+                <div className="h-40 bg-gradient-to-br from-navy-100 to-teal-50 relative">
+                  {marina.photos?.[0] ? (
+                    <img
+                      src={marina.photos[0]}
+                      alt={marina.name}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="flex items-center justify-center h-full text-navy-300 text-4xl">
+                      &#9875;
+                    </div>
+                  )}
+                </div>
+                <div className="p-4">
+                  <h3 className="font-semibold text-navy-800 mb-1">{marina.name}</h3>
+                  <p className="text-sm text-gray-500 mb-3">
+                    {marina.city}, {marina.state}
+                  </p>
+                  <p className="text-xs text-gray-400 italic">No slips listed yet</p>
+                </div>
               </div>
             ))}
           </div>
