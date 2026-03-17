@@ -39,11 +39,32 @@ export default function SearchPage() {
   );
   const [hoveredMarinaId, setHoveredMarinaId] = useState<string | null>(null);
   const [showMobileMap, setShowMobileMap] = useState(false);
+  const [allMarinas, setAllMarinas] = useState<Marina[]>([]);
   const [initialCenter, setInitialCenter] = useState<
     { longitude: number; latitude: number } | undefined
   >(undefined);
   const hoverSourceRef = useRef<"map" | "list" | null>(null);
   const listRef = useRef<HTMLDivElement>(null);
+
+  // Fetch ALL active marinas with coordinates (independent of slip query)
+  useEffect(() => {
+    async function fetchAllMarinas() {
+      const { data, error } = await supabase
+        .from("marinas")
+        .select("*")
+        .eq("is_active", true)
+        .not("lat", "is", null)
+        .not("lng", "is", null);
+      if (error) {
+        console.warn("Error fetching all marinas:", error.message);
+        return;
+      }
+      if (data) {
+        setAllMarinas(data);
+      }
+    }
+    fetchAllMarinas();
+  }, [supabase]);
 
   // Request geolocation on mount; on success fly map to user location
   useEffect(() => {
@@ -83,48 +104,58 @@ export default function SearchPage() {
   const fetchSlips = useCallback(async () => {
     setLoading(true);
 
-    // Try Supabase first, fall back to mock data
-    const query = buildSlipQuery(supabase, filters);
-    const { data: rawSlips, error } = (await query) as unknown as {
-      data: Slip[] | null;
-      error: { message: string } | null;
-    };
+    try {
+      // Try Supabase first, fall back to mock data
+      // Race against timeout — Supabase can hang if auth session is locked
+      const query = buildSlipQuery(supabase, filters);
+      const result = await Promise.race([
+        query as Promise<{ data: Slip[] | null; error: { message: string } | null }>,
+        new Promise<{ data: null; error: { message: string } }>((resolve) =>
+          setTimeout(() => resolve({ data: null, error: { message: "Query timed out" } }), 5000)
+        ),
+      ]);
+      const { data: rawSlips, error } = result;
 
-    let resultSlips: Slip[];
+      let resultSlips: Slip[];
 
-    if (error || !rawSlips || rawSlips.length === 0) {
-      if (error) {
-        console.warn("Supabase unavailable, using demo data:", error.message);
+      if (error || !rawSlips || rawSlips.length === 0) {
+        if (error) {
+          console.warn("Supabase unavailable, using demo data:", error.message);
+        }
+        // Fall back to mock data with client-side filtering
+        resultSlips = MOCK_SLIPS.filter((slip) => {
+          if (filters.boatLength && slip.length_ft < parseInt(filters.boatLength, 10)) return false;
+          if (filters.boatBeam && slip.width_ft !== null && slip.width_ft < parseInt(filters.boatBeam, 10)) return false;
+          return true;
+        });
+      } else {
+        resultSlips = rawSlips;
+
+        // If dates selected, filter out slips with conflicting bookings
+        if (filters.checkIn && filters.checkOut) {
+          const slipIds = resultSlips.map((s) => s.id);
+          const { data: conflicts } = (await supabase
+            .from("bookings")
+            .select("slip_id")
+            .in("slip_id", slipIds)
+            .in("status", ["pending", "approved", "confirmed"])
+            .lt("check_in", filters.checkOut)
+            .gt("check_out", filters.checkIn)) as unknown as {
+            data: { slip_id: string }[] | null;
+          };
+
+          const conflictIds = new Set(conflicts?.map((b) => b.slip_id) ?? []);
+          resultSlips = resultSlips.filter((s) => !conflictIds.has(s.id));
+        }
       }
-      // Fall back to mock data with client-side filtering
-      resultSlips = MOCK_SLIPS.filter((slip) => {
-        if (filters.boatLength && slip.length_ft < parseInt(filters.boatLength, 10)) return false;
-        if (filters.boatBeam && slip.width_ft !== null && slip.width_ft < parseInt(filters.boatBeam, 10)) return false;
-        return true;
-      });
-    } else {
-      resultSlips = rawSlips;
 
-      // If dates selected, filter out slips with conflicting bookings
-      if (filters.checkIn && filters.checkOut) {
-        const slipIds = resultSlips.map((s) => s.id);
-        const { data: conflicts } = (await supabase
-          .from("bookings")
-          .select("slip_id")
-          .in("slip_id", slipIds)
-          .in("status", ["pending", "approved", "confirmed"])
-          .lt("check_in", filters.checkOut)
-          .gt("check_out", filters.checkIn)) as unknown as {
-          data: { slip_id: string }[] | null;
-        };
-
-        const conflictIds = new Set(conflicts?.map((b) => b.slip_id) ?? []);
-        resultSlips = resultSlips.filter((s) => !conflictIds.has(s.id));
-      }
+      setSlips(resultSlips);
+    } catch (err) {
+      console.warn("Search failed, using demo data:", err);
+      setSlips(MOCK_SLIPS);
+    } finally {
+      setLoading(false);
     }
-
-    setSlips(resultSlips);
-    setLoading(false);
   }, [supabase, filters]);
 
   // Fetch slips on mount
@@ -133,11 +164,17 @@ export default function SearchPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Derive unique marinas from all fetched slips
-  const marinas = useMemo(
-    () => [...new Map(slips.map((s) => [s.marinas.id, s.marinas])).values()],
-    [slips]
-  );
+  // Merge all marinas with slip-derived marinas (slip data overlays fresher info)
+  const marinas = useMemo(() => {
+    const marinaMap = new Map<string, Marina>();
+    for (const m of allMarinas) {
+      marinaMap.set(m.id, m);
+    }
+    for (const s of slips) {
+      marinaMap.set(s.marinas.id, s.marinas);
+    }
+    return [...marinaMap.values()];
+  }, [allMarinas, slips]);
 
   // Derive visible slips based on viewport
   const visibleSlips = useMemo(
@@ -168,7 +205,7 @@ export default function SearchPage() {
             initialCenter={initialCenter}
           />
           {/* Empty state overlay — shown when no marinas match filters */}
-          {slips.length === 0 && !loading && (
+          {marinas.length === 0 && !loading && (
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
               <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 text-center shadow-lg pointer-events-auto">
                 <span className="text-4xl block mb-2">&#9875;</span>
