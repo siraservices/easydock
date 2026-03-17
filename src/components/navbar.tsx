@@ -22,22 +22,31 @@ export default function Navbar() {
 
   return (
     <nav className="bg-navy-800 text-white px-6 py-4">
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
+      <div className="max-w-7xl mx-auto flex items-center justify-between relative">
         <Link href="/" className="flex items-center gap-2">
           <Image src="/logo.jpg" alt="EasyDock" width={140} height={25} priority />
         </Link>
+
+        <div className="absolute left-1/2 -translate-x-1/2 flex items-center space-x-6 text-sm">
+          <Link
+            href="/search"
+            className="text-navy-200 hover:text-white transition-colors"
+          >
+            Browse Marinas
+          </Link>
+          <Link
+            href="/pricing"
+            className="text-navy-200 hover:text-white transition-colors"
+          >
+            Pricing
+          </Link>
+        </div>
 
         <div className="flex items-center space-x-4 text-sm">
           {loading ? (
             <div className="h-5 w-24" />
           ) : !user ? (
             <>
-              <Link
-                href="/search"
-                className="text-navy-200 hover:text-white transition-colors"
-              >
-                Browse Marinas
-              </Link>
               <Link
                 href="/login"
                 className="border border-navy-400 text-navy-200 hover:text-white hover:border-white px-4 py-2 rounded-lg transition-colors"
@@ -68,12 +77,6 @@ export default function Navbar() {
             </>
           ) : (
             <>
-              <Link
-                href="/search"
-                className="text-navy-200 hover:text-white transition-colors"
-              >
-                Search
-              </Link>
               <Link
                 href="/bookings"
                 className="text-navy-200 hover:text-white transition-colors"
