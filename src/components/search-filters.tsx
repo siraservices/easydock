@@ -1,5 +1,7 @@
 "use client";
 
+import { SHORE_POWER_TYPES } from "@/lib/constants";
+
 export interface SearchFilters {
   checkIn: string;
   checkOut: string;
@@ -102,7 +104,11 @@ export default function SearchFiltersBar({
             className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-white"
           >
             <option value="">Any</option>
-            <option value="yes">Yes</option>
+            {SHORE_POWER_TYPES.map((type) => (
+              <option key={type.value} value={type.value}>
+                {type.label}
+              </option>
+            ))}
           </select>
         </div>
       </div>

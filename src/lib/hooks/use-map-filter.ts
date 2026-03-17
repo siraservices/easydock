@@ -63,8 +63,12 @@ export function buildSlipQuery(
     query = query.gte("depth_ft", parseInt(filters.boatDraft, 10));
   }
 
-  if (filters.shorePower === "yes") {
-    query = query.eq("has_power", true);
+  if (filters.shorePower) {
+    if (filters.shorePower === "no_power") {
+      query = query.is("shore_power_type", null);
+    } else {
+      query = query.eq("shore_power_type", filters.shorePower);
+    }
   }
 
   return query;

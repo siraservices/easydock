@@ -129,7 +129,13 @@ export default function SearchPage() {
           if (filters.boatLength && slip.length_ft < parseInt(filters.boatLength, 10)) return false;
           if (filters.boatBeam && slip.width_ft !== null && slip.width_ft < parseInt(filters.boatBeam, 10)) return false;
           if (filters.boatDraft && slip.depth_ft !== null && slip.depth_ft < parseInt(filters.boatDraft, 10)) return false;
-          if (filters.shorePower === "yes" && !slip.has_power) return false;
+          if (filters.shorePower) {
+            if (filters.shorePower === "no_power") {
+              if (slip.shore_power_type) return false;
+            } else if (slip.shore_power_type !== filters.shorePower) {
+              return false;
+            }
+          }
           return true;
         });
       } else {

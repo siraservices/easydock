@@ -284,7 +284,7 @@ function makeSlip(
 ): Slip {
   return {
     id, marina_id: marina.id, name, length_ft: length, width_ft: width,
-    depth_ft: depth, has_power: true, has_water: true,
+    depth_ft: depth, has_power: true, has_water: true, shore_power_type: "single_30",
     price_per_night: priceNight, price_per_week: priceWeek, price_per_month: priceMonth,
     is_available: true, notes, created_at: now, updated_at: now, marinas: marina,
   };

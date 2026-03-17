@@ -137,6 +137,7 @@ export interface Database {
           depth_ft: number | null;
           has_power: boolean;
           has_water: boolean;
+          shore_power_type: string | null;
           price_per_night: number;
           price_per_week: number | null;
           price_per_month: number | null;
@@ -154,6 +155,7 @@ export interface Database {
           depth_ft?: number | null;
           has_power?: boolean;
           has_water?: boolean;
+          shore_power_type?: string | null;
           price_per_night: number;
           price_per_week?: number | null;
           price_per_month?: number | null;
@@ -170,6 +172,7 @@ export interface Database {
           depth_ft?: number | null;
           has_power?: boolean;
           has_water?: boolean;
+          shore_power_type?: string | null;
           price_per_night?: number;
           price_per_week?: number | null;
           price_per_month?: number | null;
