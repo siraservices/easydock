@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
@@ -22,8 +23,8 @@ export default function Navbar() {
   return (
     <nav className="bg-navy-800 text-white px-6 py-4">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
-        <Link href="/" className="text-xl font-bold tracking-tight">
-          EasyDock
+        <Link href="/" className="flex items-center gap-2">
+          <Image src="/logo.jpg" alt="EasyDock" width={140} height={25} priority />
         </Link>
 
         <div className="flex items-center space-x-4 text-sm">

@@ -406,53 +406,94 @@ export default function HomePage() {
         className="text-white"
         style={{ backgroundColor: '#0a1628' }}
       >
-        <div className="max-w-5xl mx-auto px-6 py-12">
-          <div className="flex flex-col md:flex-row justify-between gap-8">
-            <div className="max-w-xs">
-              <div className="flex items-center gap-2 text-xl font-bold mb-3">
-                <i className="fas fa-anchor text-teal-400" />
-                EasyDock
-              </div>
-              <p className="text-white/60 text-sm leading-relaxed">
-                South Florida&apos;s marina booking marketplace connecting yacht owners
-                with available dock slips.
-              </p>
-            </div>
+        <div className="max-w-6xl mx-auto px-6 py-14">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+            {/* Brand */}
             <div>
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-white/40 mb-3">
-                Get Started
-              </h3>
-              <ul className="space-y-2 text-sm text-white/60">
-                <li>
-                  <button
-                    onClick={() => setModalOpen(true)}
-                    className="hover:text-white transition-colors"
+              <h3 className="text-lg font-bold mb-3">EasyDock</h3>
+              <p className="text-white/50 text-sm leading-relaxed mb-5">
+                Professional marina booking platform connecting yacht owners
+                with premium docking spaces nationwide.
+              </p>
+              <div className="flex gap-3">
+                {["facebook-f", "twitter", "linkedin-in", "instagram"].map((icon) => (
+                  <span
+                    key={icon}
+                    className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white/60 hover:bg-white/20 hover:text-white transition-colors cursor-pointer text-sm"
                   >
-                    Find Marina Space
-                  </button>
-                </li>
-                <li>
-                  <button
-                    onClick={() => setModalOpen(true)}
-                    className="hover:text-white transition-colors"
-                  >
-                    List Your Marina
-                  </button>
-                </li>
+                    <i className={`fab fa-${icon}`} />
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Services */}
+            <div>
+              <h3 className="text-lg font-bold mb-3">Services</h3>
+              <ul className="space-y-2 text-sm text-white/50">
+                <li><a href="/search" className="hover:text-white transition-colors">Marina Booking</a></li>
+                <li><a href="/search" className="hover:text-white transition-colors">Booking Platform</a></li>
+                <li><button onClick={() => setModalOpen(true)} className="hover:text-white transition-colors">Affiliate Program</button></li>
+                <li><button onClick={() => setModalOpen(true)} className="hover:text-white transition-colors">Marina Partnerships</button></li>
               </ul>
+            </div>
+
+            {/* Company */}
+            <div>
+              <h3 className="text-lg font-bold mb-3">Company</h3>
+              <ul className="space-y-2 text-sm text-white/50">
+                <li><a href="#" className="hover:text-white transition-colors">About Us</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Careers</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Press</a></li>
+              </ul>
+            </div>
+
+            {/* Newsletter */}
+            <div>
+              <h3 className="text-lg font-bold mb-3">Newsletter</h3>
+              <p className="text-white/50 text-sm leading-relaxed mb-4">
+                Stay updated with the latest marina availability and booking opportunities.
+              </p>
+              <form onSubmit={(e) => e.preventDefault()} className="flex gap-2">
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  className="flex-1 rounded-lg border border-white/20 bg-white/5 px-4 py-2 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-teal-400"
+                />
+                <button
+                  type="submit"
+                  className="rounded-lg bg-teal-600 hover:bg-teal-700 px-5 py-2 text-sm font-semibold text-white transition-colors whitespace-nowrap"
+                >
+                  Subscribe
+                </button>
+              </form>
             </div>
           </div>
         </div>
 
+        {/* Disclaimer */}
         <div className="border-t border-white/10">
-          <div className="max-w-5xl mx-auto px-6 py-4">
-            <p className="text-white/30 text-xs leading-relaxed mb-3">
-              Listings and rates shown are estimates and may vary. Please confirm
-              details directly with the marina. EasyDock facilitates connections
-              between boat owners and marina operators.
+          <div className="max-w-6xl mx-auto px-6 py-5">
+            <p className="text-white/30 text-xs leading-relaxed text-center">
+              The information on easydock.com is for research and educational purposes only.
+              All listings, rates, and availability are illustrative and not guaranteed.
+              Users must verify all details directly with the marina before making any commitments.
+              Easydock.com is not a party to any transaction and assumes no liability for inaccuracies,
+              errors, or omissions. Information provided should not be taken literally.
             </p>
-            <p className="text-white/30 text-xs">
+          </div>
+        </div>
+
+        {/* Copyright */}
+        <div className="border-t border-white/10">
+          <div className="max-w-6xl mx-auto px-6 py-4">
+            <p className="text-white/30 text-xs text-center">
               &copy; {new Date().getFullYear()} EasyDock. All rights reserved.
+              {" | "}
+              <a href="#" className="text-teal-400 hover:text-teal-300 transition-colors">Privacy Policy</a>
+              {" | "}
+              <a href="#" className="text-teal-400 hover:text-teal-300 transition-colors">Terms of Service</a>
             </p>
           </div>
         </div>
