@@ -9,6 +9,8 @@ export interface SearchFilters {
   checkOut: string;
   boatLength: string;
   boatBeam: string;
+  boatDraft: string;
+  shorePower: string;
 }
 
 /**
@@ -55,6 +57,14 @@ export function buildSlipQuery(
 
   if (filters.boatBeam) {
     query = query.gte("width_ft", parseInt(filters.boatBeam, 10));
+  }
+
+  if (filters.boatDraft) {
+    query = query.gte("depth_ft", parseInt(filters.boatDraft, 10));
+  }
+
+  if (filters.shorePower === "yes") {
+    query = query.eq("has_power", true);
   }
 
   return query;

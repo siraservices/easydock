@@ -31,6 +31,8 @@ export default function SearchPage() {
     checkOut: "",
     boatLength: "",
     boatBeam: "",
+    boatDraft: "",
+    shorePower: "",
   });
   const [slips, setSlips] = useState<Slip[]>([]);
   const [loading, setLoading] = useState(false);
@@ -126,6 +128,8 @@ export default function SearchPage() {
         resultSlips = MOCK_SLIPS.filter((slip) => {
           if (filters.boatLength && slip.length_ft < parseInt(filters.boatLength, 10)) return false;
           if (filters.boatBeam && slip.width_ft !== null && slip.width_ft < parseInt(filters.boatBeam, 10)) return false;
+          if (filters.boatDraft && slip.depth_ft !== null && slip.depth_ft < parseInt(filters.boatDraft, 10)) return false;
+          if (filters.shorePower === "yes" && !slip.has_power) return false;
           return true;
         });
       } else {

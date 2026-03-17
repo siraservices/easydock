@@ -5,6 +5,8 @@ export interface SearchFilters {
   checkOut: string;
   boatLength: string;
   boatBeam: string;
+  boatDraft: string;
+  shorePower: string;
 }
 
 interface SearchFiltersBarProps {
@@ -26,7 +28,7 @@ export default function SearchFiltersBar({
 
   return (
     <div className="bg-white rounded-xl shadow-sm border p-5 mb-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
         <div>
           <label className="block text-xs font-medium text-gray-600 mb-1">
             Check-in
@@ -76,6 +78,32 @@ export default function SearchFiltersBar({
             min="0"
             className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
           />
+        </div>
+        <div>
+          <label className="block text-xs font-medium text-gray-600 mb-1">
+            Draft (ft)
+          </label>
+          <input
+            type="number"
+            value={filters.boatDraft}
+            onChange={(e) => update("boatDraft", e.target.value)}
+            placeholder="Any"
+            min="0"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+          />
+        </div>
+        <div>
+          <label className="block text-xs font-medium text-gray-600 mb-1">
+            Shore Power
+          </label>
+          <select
+            value={filters.shorePower}
+            onChange={(e) => update("shorePower", e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-white"
+          >
+            <option value="">Any</option>
+            <option value="yes">Yes</option>
+          </select>
         </div>
       </div>
       <div className="mt-3">
