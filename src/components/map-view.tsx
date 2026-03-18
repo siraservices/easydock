@@ -110,6 +110,18 @@ export default function MapView({
     (m) => m.lat !== null && m.lng !== null
   );
 
+  if (!process.env.NEXT_PUBLIC_MAPBOX_TOKEN) {
+    return (
+      <div className="flex items-center justify-center h-full bg-gray-100 text-center p-6">
+        <div>
+          <span className="text-4xl block mb-2">&#128506;</span>
+          <p className="font-semibold text-navy-800">Map unavailable</p>
+          <p className="text-sm text-gray-500 mt-1">Map configuration is missing. Browse marinas from the list.</p>
+        </div>
+      </div>
+    );
+  }
+
   if (budgetExceeded) {
     return (
       <div className="flex items-center justify-center h-full bg-gray-100 text-center p-6">

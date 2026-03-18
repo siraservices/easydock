@@ -312,6 +312,33 @@ export interface Database {
         };
         Relationships: [];
       };
+      waitlist_signups: {
+        Row: {
+          id: string;
+          email: string;
+          region: string;
+          boat_length: string | null;
+          created_at: string;
+          source: string | null;
+        };
+        Insert: {
+          id?: string;
+          email: string;
+          region: string;
+          boat_length?: string | null;
+          created_at?: string;
+          source?: string | null;
+        };
+        Update: {
+          id?: string;
+          email?: string;
+          region?: string;
+          boat_length?: string | null;
+          created_at?: string;
+          source?: string | null;
+        };
+        Relationships: [];
+      };
       stripe_processed_events: {
         Row: {
           id: string;              // Stripe event ID (e.g., evt_xxx)

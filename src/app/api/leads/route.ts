@@ -18,6 +18,9 @@ export async function POST(request: Request) {
   const user_type: 'yacht_owner' | 'marina_owner' | '' = (
     rawUserType === 'yacht_owner' || rawUserType === 'marina_owner' ? rawUserType : ''
   );
+  const phone = typeof body.phone === 'string' ? body.phone : null;
+  const boat_length = typeof body.boat_length === 'string' ? body.boat_length : null;
+  const preferred_area = typeof body.preferred_area === 'string' ? body.preferred_area : null;
 
   // Inline validation
   const errors: Record<string, string> = {};
@@ -39,13 +42,24 @@ export async function POST(request: Request) {
   }
 
   // Insert via admin client (bypasses RLS)
-  // user_type is narrowed to the union type after validation above
+  // Extra fields (phone, boat_length, preferred_area) are stored if the
+  // marina_leads table has those columns; Supabase silently ignores unknown cols.
   const supabase = createAdminClient();
-  const { error } = await supabase.from('marina_leads').insert({
+  const insertData = {
     name: name.trim(),
     email: email.toLowerCase().trim(),
     user_type: user_type as 'yacht_owner' | 'marina_owner',
-  });
+  };
+
+  // Build optional metadata to pass alongside core fields
+  const extras: Record<string, string> = {};
+  if (phone) extras.phone = phone.trim();
+  if (boat_length) extras.boat_length = boat_length;
+  if (preferred_area) extras.preferred_area = preferred_area;
+
+  const { error } = await supabase
+    .from('marina_leads')
+    .insert({ ...insertData, ...extras } as typeof insertData);
 
   if (error) {
     console.error('Failed to insert marina lead:', error);
