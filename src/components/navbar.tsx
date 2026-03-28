@@ -24,7 +24,7 @@ export default function Navbar() {
     <nav className="bg-navy-800 text-white px-6 py-4">
       <div className="max-w-7xl mx-auto flex items-center justify-between relative">
         <Link href="/" className="flex items-center gap-2">
-          <Image src="/logo.jpg" alt="EasyDock" width={140} height={25} priority />
+          <Image src="/logo.png" alt="EasyDock" width={140} height={25} priority />
         </Link>
 
         <div className="absolute left-1/2 -translate-x-1/2 flex items-center space-x-6 text-sm">
@@ -39,6 +39,12 @@ export default function Navbar() {
             className="text-navy-200 hover:text-white transition-colors"
           >
             Pricing
+          </Link>
+          <Link
+            href="/calculator"
+            className="text-navy-200 hover:text-white transition-colors"
+          >
+            Calculator
           </Link>
         </div>
 

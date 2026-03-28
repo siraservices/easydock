@@ -57,9 +57,10 @@ export default function SignUpPage() {
 
   if (needsConfirmation) {
     return (
-      <div className="max-w-lg mx-auto px-6 py-16">
-        <div className="bg-white rounded-xl shadow-sm border p-8 text-center">
-          <div className="text-teal-600 text-5xl mb-4">&#9993;</div>
+      <div className="min-h-[calc(100vh-64px)] bg-navy-900 flex items-center justify-center px-4 py-16">
+        <div className="w-full max-w-lg">
+        <div className="bg-white rounded-2xl shadow-2xl p-8 text-center">
+          <div className="text-teal-500 text-5xl mb-4">&#9993;</div>
           <h1 className="text-2xl font-bold text-navy-800 mb-3">
             Check your email
           </h1>
@@ -69,24 +70,26 @@ export default function SignUpPage() {
           </p>
           <Link
             href="/login"
-            className="text-teal-600 hover:text-teal-700 font-medium"
+            className="text-teal-500 hover:text-teal-600 font-medium"
           >
             Go to login
           </Link>
+        </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-lg mx-auto px-6 py-16">
-      <div className="bg-white rounded-xl shadow-sm border p-8">
-        <h1 className="text-2xl font-bold text-navy-800 mb-2">
-          Create your account
-        </h1>
-        <p className="text-gray-600 mb-6">
-          Join EasyDock to book slips or list your marina.
-        </p>
+    <div className="min-h-[calc(100vh-64px)] bg-navy-900 flex items-center justify-center px-4 py-16">
+      <div className="w-full max-w-lg">
+        <div className="text-center mb-8">
+          <p className="text-teal-400 text-sm font-semibold tracking-widest uppercase mb-2">EasyDock</p>
+          <h1 className="text-3xl font-bold text-white">Create your account</h1>
+          <p className="text-navy-300 mt-2 text-sm">Join EasyDock to book slips or list your marina.</p>
+        </div>
+      <div className="bg-white rounded-2xl shadow-2xl p-8">
+        <h2 className="sr-only">Sign up form</h2>
 
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 text-sm">
@@ -106,7 +109,7 @@ export default function SignUpPage() {
                 onClick={() => setRole("boat_owner")}
                 className={`flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-colors cursor-pointer ${
                   role === "boat_owner"
-                    ? "border-teal-500 bg-teal-50 text-teal-700"
+                    ? "border-teal-500 bg-teal-50 text-teal-600"
                     : "border-gray-200 hover:border-gray-300 text-gray-600"
                 }`}
               >
@@ -135,7 +138,7 @@ export default function SignUpPage() {
                 onClick={() => setRole("marina_owner")}
                 className={`flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-colors cursor-pointer ${
                   role === "marina_owner"
-                    ? "border-teal-500 bg-teal-50 text-teal-700"
+                    ? "border-teal-500 bg-teal-50 text-teal-600"
                     : "border-gray-200 hover:border-gray-300 text-gray-600"
                 }`}
               >
@@ -262,7 +265,7 @@ export default function SignUpPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-teal-600 text-white py-3 rounded-lg font-semibold hover:bg-teal-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-teal-500 text-white py-3 rounded-lg font-semibold hover:bg-teal-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSubmitting ? "Creating account..." : "Create Account"}
           </button>
@@ -272,11 +275,12 @@ export default function SignUpPage() {
           Already have an account?{" "}
           <Link
             href="/login"
-            className="text-teal-600 hover:text-teal-700 font-medium"
+            className="text-teal-500 hover:text-teal-600 font-medium"
           >
             Log in
           </Link>
         </p>
+      </div>
       </div>
     </div>
   );

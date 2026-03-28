@@ -60,10 +60,7 @@ export default function TermsPage() {
   return (
     <div className="bg-white min-h-screen">
       <div className="max-w-[720px] mx-auto px-6 pt-20 pb-16">
-        <h1
-          className="text-[32px] font-bold mb-2"
-          style={{ color: '#1B3A6B' }}
-        >
+        <h1 className="text-[32px] font-bold mb-2 text-navy-800">
           Terms of Service
         </h1>
         <p className="text-sm text-gray-500 mb-12">
@@ -72,16 +69,10 @@ export default function TermsPage() {
 
         {sections.map((section) => (
           <div key={section.title} className="mb-0">
-            <h2
-              className="text-xl font-semibold mt-10 mb-3"
-              style={{ color: '#1B3A6B' }}
-            >
+            <h2 className="text-xl font-semibold mt-10 mb-3 text-navy-800">
               {section.title}
             </h2>
-            <p
-              className="text-[15px] leading-[1.8]"
-              style={{ color: '#4B5563' }}
-            >
+            <p className="text-[15px] leading-[1.8] text-gray-600">
               {section.body}
             </p>
           </div>

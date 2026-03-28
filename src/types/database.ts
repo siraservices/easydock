@@ -339,6 +339,51 @@ export interface Database {
         };
         Relationships: [];
       };
+      calculator_leads: {
+        Row: {
+          id: string;
+          created_at: string;
+          marina_name: string | null;
+          email: string;
+          phone: string | null;
+          role: string | null;
+          region: string | null;
+          total_slips: number | null;
+          vacant_slips: number | null;
+          avg_monthly_rate: number | null;
+          avg_vacancy_months: number | null;
+          annual_loss: number | null;
+        };
+        Insert: {
+          id?: string;
+          created_at?: string;
+          marina_name?: string | null;
+          email: string;
+          phone?: string | null;
+          role?: string | null;
+          region?: string | null;
+          total_slips?: number | null;
+          vacant_slips?: number | null;
+          avg_monthly_rate?: number | null;
+          avg_vacancy_months?: number | null;
+          annual_loss?: number | null;
+        };
+        Update: {
+          id?: string;
+          created_at?: string;
+          marina_name?: string | null;
+          email?: string;
+          phone?: string | null;
+          role?: string | null;
+          region?: string | null;
+          total_slips?: number | null;
+          vacant_slips?: number | null;
+          avg_monthly_rate?: number | null;
+          avg_vacancy_months?: number | null;
+          annual_loss?: number | null;
+        };
+        Relationships: [];
+      };
       stripe_processed_events: {
         Row: {
           id: string;              // Stripe event ID (e.g., evt_xxx)

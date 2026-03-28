@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { sendLeadConfirmationEmail } from '@/lib/email/send';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -65,6 +66,13 @@ export async function POST(request: Request) {
     console.error('Failed to insert marina lead:', error);
     return NextResponse.json({ error: 'Failed to save' }, { status: 500 });
   }
+
+  // Send confirmation email — non-blocking, failure won't affect response
+  await sendLeadConfirmationEmail(
+    insertData.email,
+    insertData.name,
+    insertData.user_type
+  );
 
   return NextResponse.json({ success: true }, { status: 201 });
 }

@@ -3,6 +3,7 @@ import BookingCreatedEmail from '@/emails/booking-created';
 import BookingApprovedEmail from '@/emails/booking-approved';
 import BookingDeniedEmail from '@/emails/booking-denied';
 import BookingCancelledEmail from '@/emails/booking-cancelled';
+import LeadConfirmationEmail from '@/emails/lead-confirmation';
 
 // Lazy initialization — Resend throws if API key is missing at constructor time,
 // so we instantiate only when actually sending (not at module load).
@@ -91,6 +92,34 @@ export async function sendBookingEmail(
     }
   } catch (err) {
     console.error('sendBookingEmail failed:', err);
+  }
+}
+
+/**
+ * Sends a confirmation email to a new lead. Non-fatal — catches all errors.
+ */
+export async function sendLeadConfirmationEmail(
+  toEmail: string,
+  name: string,
+  userType: 'yacht_owner' | 'marina_owner'
+): Promise<void> {
+  try {
+    const subject = userType === 'yacht_owner'
+      ? 'We\'re on it — EasyDock'
+      : 'Thanks for your interest in EasyDock';
+
+    const { error } = await getResend().emails.send({
+      from: 'EasyDock <hello@easydock.co>',
+      to: [toEmail],
+      subject,
+      react: LeadConfirmationEmail({ name, userType }),
+    });
+
+    if (error) {
+      console.error('Resend lead email error:', error);
+    }
+  } catch (err) {
+    console.error('sendLeadConfirmationEmail failed:', err);
   }
 }
 

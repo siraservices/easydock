@@ -68,12 +68,15 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="max-w-md mx-auto px-6 py-16">
-      <div className="bg-white rounded-xl shadow-sm border p-8">
-        <h1 className="text-2xl font-bold text-navy-800 mb-2">Welcome back</h1>
-        <p className="text-gray-600 mb-6">
-          Log in to your EasyDock account.
-        </p>
+    <div className="min-h-[calc(100vh-64px)] bg-navy-900 flex items-center justify-center px-4 py-16">
+      <div className="w-full max-w-md">
+        <div className="text-center mb-8">
+          <p className="text-teal-400 text-sm font-semibold tracking-widest uppercase mb-2">EasyDock</p>
+          <h1 className="text-3xl font-bold text-white">Welcome back</h1>
+          <p className="text-navy-300 mt-2 text-sm">Log in to your EasyDock account.</p>
+        </div>
+      <div className="bg-white rounded-2xl shadow-2xl p-8">
+        <h1 className="sr-only">Login</h1>
 
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 text-sm">
@@ -124,7 +127,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-teal-600 text-white py-3 rounded-lg font-semibold hover:bg-teal-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-teal-500 text-white py-3 rounded-lg font-semibold hover:bg-teal-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSubmitting ? "Logging in..." : "Log In"}
           </button>
@@ -134,11 +137,12 @@ export default function LoginPage() {
           Don&apos;t have an account?{" "}
           <Link
             href="/signup"
-            className="text-teal-600 hover:text-teal-700 font-medium"
+            className="text-teal-500 hover:text-teal-600 font-medium"
           >
             Sign up
           </Link>
         </p>
+      </div>
       </div>
     </div>
   );

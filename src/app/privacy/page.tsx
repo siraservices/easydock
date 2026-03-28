@@ -52,10 +52,7 @@ export default function PrivacyPage() {
   return (
     <div className="bg-white min-h-screen">
       <div className="max-w-[720px] mx-auto px-6 pt-20 pb-16">
-        <h1
-          className="text-[32px] font-bold mb-2"
-          style={{ color: '#1B3A6B' }}
-        >
+        <h1 className="text-[32px] font-bold mb-2 text-navy-800">
           Privacy Policy
         </h1>
         <p className="text-sm text-gray-500 mb-12">
@@ -66,16 +63,14 @@ export default function PrivacyPage() {
           <div key={section.title} className="mb-0">
             <h2
               id={section.id}
-              className="text-xl font-semibold mt-10 mb-3"
-              style={{ color: '#1B3A6B' }}
+              className="text-xl font-semibold mt-10 mb-3 text-navy-800"
             >
               {section.title}
             </h2>
             {section.body.split('\n\n').map((paragraph, i) => (
               <p
                 key={i}
-                className="text-[15px] leading-[1.8] mt-3 first:mt-0"
-                style={{ color: '#4B5563' }}
+                className="text-[15px] leading-[1.8] mt-3 first:mt-0 text-gray-600"
               >
                 {paragraph}
               </p>

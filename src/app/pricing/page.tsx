@@ -136,8 +136,6 @@ export default function PricingPage() {
       color: BRAND.gray800,
       overflowX: "hidden",
     }}>
-      <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-
       <style>{`
         @keyframes fadeUp {
           from { opacity: 0; transform: translateY(24px); }
