@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 
@@ -16,12 +16,13 @@ export default function ProtectedRoute({
 }: ProtectedRouteProps) {
   const { user, profile, loading } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     if (loading) return;
 
     if (!user) {
-      router.push("/login");
+      router.push(`/login?next=${encodeURIComponent(pathname)}`);
       return;
     }
 

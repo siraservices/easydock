@@ -1,27 +1,42 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 
 export default function LoginPage() {
+  return (
+    <Suspense fallback={<LoadingSpinner size="lg" message="Loading..." />}>
+      <LoginContent />
+    </Suspense>
+  );
+}
+
+function LoginContent() {
   const { user, profile, loading, signIn } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const next = searchParams.get("next");
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  function getRedirectDest(role?: string) {
+    if (next) return next;
+    return role === "marina_owner" ? "/dashboard" : "/search";
+  }
+
   // Redirect if already logged in
   useEffect(() => {
     if (!loading && user) {
-      const dest = profile?.role === "marina_owner" ? "/dashboard" : "/search";
-      router.push(dest);
+      router.push(getRedirectDest(profile?.role));
       router.refresh();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, user, profile, router]);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -49,8 +64,7 @@ export default function LoginPage() {
 
       // If signIn returned a role, use it; otherwise the useEffect redirect will handle it
       if (result.role) {
-        const dest = result.role === "marina_owner" ? "/dashboard" : "/search";
-        router.push(dest);
+        router.push(getRedirectDest(result.role));
         router.refresh();
       }
     } catch {
