@@ -149,7 +149,7 @@ export default function HomePage() {
       <section id="how-it-works" className="py-24 bg-white">
         <div className="max-w-5xl mx-auto px-6">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold" style={{ color: '#1B3A6B' }}>
+            <h2 className="text-3xl font-bold text-navy-800">
               How EasyDock Works
             </h2>
             <p className="mt-3 text-gray-500 max-w-xl mx-auto">
@@ -168,7 +168,7 @@ export default function HomePage() {
                     ? 'bg-navy-800 text-white shadow'
                     : 'text-gray-600 hover:text-gray-900'
                 }`}
-                style={activeTab === 'yacht_owners' ? { backgroundColor: '#0d2444' } : {}}
+                
               >
                 For Yacht Owners
               </button>
@@ -179,7 +179,7 @@ export default function HomePage() {
                     ? 'bg-navy-800 text-white shadow'
                     : 'text-gray-600 hover:text-gray-900'
                 }`}
-                style={activeTab === 'marina_owners' ? { backgroundColor: '#0d2444' } : {}}
+                
               >
                 For Marina Owners
               </button>
@@ -231,12 +231,9 @@ export default function HomePage() {
       </section>
 
       {/* ─── Why EasyDock? ────────────────────────────────────────────────── */}
-      <section id="why-easydock" className="py-20" style={{ backgroundColor: '#EFF4F9' }}>
+      <section id="why-easydock" className="py-20 bg-[--color-surface-light]">
         <div className="max-w-5xl mx-auto px-6">
-          <h2
-            className="text-3xl font-bold text-center mb-12"
-            style={{ color: '#1B3A6B' }}
-          >
+          <h2 className="text-3xl font-bold text-center mb-12 text-navy-800">
             Why EasyDock?
           </h2>
           <div className="grid md:grid-cols-3 gap-8">
@@ -263,7 +260,7 @@ export default function HomePage() {
       <section className="py-20 bg-white">
         <div className="max-w-5xl mx-auto px-6">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold" style={{ color: '#1B3A6B' }}>
+            <h2 className="text-3xl font-bold text-navy-800">
               Trusted by South Florida Boat Owners
             </h2>
             <p className="mt-3 text-gray-500">
@@ -297,7 +294,7 @@ export default function HomePage() {
       </section>
 
       {/* ─── Don't See Your Area CTA ──────────────────────────────────────── */}
-      <section id="get-matched" className="py-20" style={{ backgroundColor: '#EFF4F9' }}>
+      <section id="get-matched" className="py-20 bg-[--color-surface-light]">
         <div className="max-w-xl mx-auto px-6">
           <RequestAreaCTA />
         </div>
@@ -322,7 +319,7 @@ function StepCard({
     <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
       <div
         className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl text-white text-xl"
-        style={{ backgroundColor: '#0d6e8a' }}
+        className="bg-teal-700"
       >
         <i className={`fas ${icon}`} />
       </div>
@@ -345,7 +342,7 @@ function WhyCard({
     <div className="text-center">
       <div
         className="mx-auto mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl text-white text-xl"
-        style={{ backgroundColor: '#1A9E8F' }}
+        className="bg-teal-600"
       >
         <i className={`fas ${icon}`} />
       </div>

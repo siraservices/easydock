@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 const footerLinks = {
   boatOwners: [
@@ -58,8 +59,8 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10">
           {/* Brand column */}
           <div className="lg:col-span-4">
-            <Link href="/" className="text-white text-lg font-bold">
-              EasyDock
+            <Link href="/" className="flex items-center">
+              <Image src="/logo.png" alt="EasyDock" width={120} height={22} className="brightness-0 invert" />
             </Link>
             <p className="mt-3 text-[13px] leading-[1.7] max-w-[280px] text-white/55">
               South Florida&apos;s marina booking marketplace. We connect boat owners

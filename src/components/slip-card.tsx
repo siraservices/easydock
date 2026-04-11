@@ -91,7 +91,7 @@ export default function SlipCard({
           </div>
           <Link
             href={`/slips/${slip.id}${query}`}
-            className="bg-teal-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-teal-700 transition-colors"
+            className="bg-teal-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-teal-400 transition-colors"
           >
             Book Now
           </Link>
