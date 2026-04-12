@@ -1,6 +1,6 @@
-# EasyDock Marina Arbitrage Landing Page
+# EasyDock Marina Landing Page
 
-A professional, single-page landing page for EasyDock - a marina arbitrage platform connecting yacht owners with available docking spaces.
+A professional, single-page landing page for EasyDock - a marina booking marketplace connecting yacht owners with available docking spaces.
 
 ## Features
 
@@ -118,5 +118,5 @@ For technical support or customization requests, contact the development team.
 
 ---
 
-**EasyDock** - Premium Marina Arbitrage Platform
+**EasyDock** - Premium Marina Booking Platform
 *Connecting yacht owners with available docking spaces nationwide*
