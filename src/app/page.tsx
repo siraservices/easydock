@@ -317,10 +317,7 @@ function StepCard({
 }) {
   return (
     <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
-      <div
-        className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl text-white text-xl"
-        className="bg-teal-700"
-      >
+      <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-teal-700 text-white text-xl">
         <i className={`fas ${icon}`} />
       </div>
       <h3 className="mb-2 text-base font-semibold text-gray-900">{title}</h3>
@@ -340,10 +337,7 @@ function WhyCard({
 }) {
   return (
     <div className="text-center">
-      <div
-        className="mx-auto mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl text-white text-xl"
-        className="bg-teal-600"
-      >
+      <div className="mx-auto mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-teal-600 text-white text-xl">
         <i className={`fas ${icon}`} />
       </div>
       <h3 className="text-lg font-semibold text-gray-900 mb-2">{title}</h3>

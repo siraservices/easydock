@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { sendLeadConfirmationEmail } from '@/lib/email/send';
+import { subscribeToMailchimp } from '@/lib/email/mailchimp';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -73,6 +74,19 @@ export async function POST(request: Request) {
     insertData.name,
     insertData.user_type
   );
+
+  // Subscribe to Mailchimp welcome sequence — non-blocking
+  void subscribeToMailchimp(insertData.email, insertData.name, insertData.user_type);
+
+  // Forward to Formspree if configured — non-blocking
+  const formspreeId = process.env.FORMSPREE_FORM_ID;
+  if (formspreeId) {
+    fetch(`https://formspree.io/f/${formspreeId}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({ name: insertData.name, email: insertData.email, user_type: insertData.user_type }),
+    }).catch((err) => console.error('Formspree forwarding failed:', err));
+  }
 
   return NextResponse.json({ success: true }, { status: 201 });
 }

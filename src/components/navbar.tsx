@@ -46,6 +46,12 @@ export default function Navbar() {
           >
             Calculator
           </Link>
+          <Link
+            href="/about"
+            className="text-navy-200 hover:text-white transition-colors"
+          >
+            About
+          </Link>
         </div>
 
         <div className="flex items-center space-x-4 text-sm">

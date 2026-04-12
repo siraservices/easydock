@@ -111,20 +111,23 @@ export default function LeadModal({ isOpen, onClose }: LeadModalProps) {
 
         {submitted ? (
           <div className="text-center py-8">
-            <div className="mb-4 text-5xl text-teal-500">
+            <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-teal-50 text-teal-500 text-3xl">
               <i className="fas fa-check-circle" />
             </div>
-            <p className="text-lg font-semibold text-navy-800 mb-2">
-              Thanks! We&apos;ll be in touch soon.
+            <p className="text-xl font-bold text-navy-800 mb-2">
+              You&apos;re on the list!
             </p>
-            <p className="text-gray-500 text-sm">
-              We&apos;ll reach out to you at <strong>{email}</strong> as EasyDock launches in South Florida.
+            <p className="text-gray-500 text-sm leading-relaxed mb-1">
+              We&apos;ll email you at <strong>{email}</strong> when EasyDock launches in your area.
+            </p>
+            <p className="text-gray-400 text-xs">
+              No spam — just your slip notification.
             </p>
             <button
               onClick={onClose}
-              className="mt-6 px-6 py-2 rounded-lg bg-teal-600 text-white font-semibold hover:bg-teal-700 transition-colors"
+              className="mt-6 w-full rounded-xl bg-teal-500 px-6 py-2.5 text-sm font-semibold text-white hover:bg-teal-400 transition-colors"
             >
-              Close
+              Done
             </button>
           </div>
         ) : (
