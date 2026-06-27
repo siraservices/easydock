@@ -9,8 +9,8 @@ export interface SearchFilters {
   checkOut: string;
   boatLength: string;
   boatBeam: string;
-  boatDraft: string;
-  shorePower: string;
+  boatDraft?: string;
+  shorePower?: string;
 }
 
 /**

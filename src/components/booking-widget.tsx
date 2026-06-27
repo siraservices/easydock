@@ -43,18 +43,9 @@ export default function BookingWidget({
   const nights =
     checkIn && checkOut ? calculateNights(checkIn, checkOut) : 0;
 
-  function calculateTotal(): number {
-    if (!nights) return 0;
-    // Use weekly rate if >= 7 nights and weekly rate exists
-    if (nights >= 7 && slip.price_per_week) {
-      const weeks = Math.floor(nights / 7);
-      const remainingNights = nights % 7;
-      return weeks * slip.price_per_week + remainingNights * slip.price_per_night;
-    }
-    return nights * slip.price_per_night;
-  }
-
-  const total = calculateTotal();
+  const basePrice = nights * slip.price_per_night;
+  const serviceFee = Math.round(basePrice * 0.10 * 100) / 100;
+  const total = basePrice + serviceFee;
 
   async function handleBooking() {
     if (!user) {
@@ -84,7 +75,6 @@ export default function BookingWidget({
           marinaId,
           checkIn,
           checkOut,
-          totalPrice: total,
           vesselName: vesselName || null,
           vesselLength: vesselLength ? parseInt(vesselLength, 10) : null,
           vesselType: vesselType || null,
@@ -249,15 +239,13 @@ export default function BookingWidget({
                 {nights > 1 ? "s" : ""}
               </span>
               <span className="text-gray-800">
-                {formatPrice(nights * slip.price_per_night)}
+                {formatPrice(basePrice)}
               </span>
             </div>
-            {nights >= 7 && slip.price_per_week && (
-              <div className="flex justify-between text-teal-700">
-                <span>Weekly rate applied</span>
-                <span>-{formatPrice(nights * slip.price_per_night - total)}</span>
-              </div>
-            )}
+            <div className="flex justify-between text-gray-600">
+              <span>EasyDock service fee</span>
+              <span>{formatPrice(serviceFee)}</span>
+            </div>
             <div className="flex justify-between font-semibold border-t pt-2">
               <span>Total</span>
               <span className="text-navy-800">{formatPrice(total)}</span>
