@@ -17,6 +17,7 @@ interface BookingWidgetProps {
   marinaId: string;
   initialCheckIn?: string;
   initialCheckOut?: string;
+  isDemo?: boolean;
 }
 
 export default function BookingWidget({
@@ -24,6 +25,7 @@ export default function BookingWidget({
   marinaId,
   initialCheckIn,
   initialCheckOut,
+  isDemo = false,
 }: BookingWidgetProps) {
   const { user } = useAuth();
   const router = useRouter();
@@ -113,6 +115,35 @@ export default function BookingWidget({
       setError("Network error. Please try again.");
       setSubmitting(false);
     }
+  }
+
+  if (isDemo) {
+    const marina = (slip as unknown as { marinas: { phone?: string | null; email?: string | null; website?: string | null } }).marinas;
+    return (
+      <div className="bg-white rounded-xl shadow-sm border p-6">
+        <h3 className="text-lg font-semibold text-navy-800 mb-4">Book This Slip</h3>
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm">
+          <p className="font-semibold text-amber-800 mb-1">Demo listing</p>
+          <p className="text-amber-700">
+            This marina hasn&rsquo;t set up online booking yet. Contact them directly to reserve this slip.
+          </p>
+          {(marina?.phone || marina?.email || marina?.website) && (
+            <div className="mt-3 space-y-1 text-amber-700">
+              {marina.phone && <p>Phone: {marina.phone}</p>}
+              {marina.email && <p>Email: {marina.email}</p>}
+              {marina.website && (
+                <p>
+                  Web:{" "}
+                  <a href={marina.website} target="_blank" rel="noopener noreferrer" className="underline">
+                    {marina.website}
+                  </a>
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    );
   }
 
   return (

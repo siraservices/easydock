@@ -260,6 +260,7 @@ export default function SlipDetailPage() {
                 marinaId={marina.id}
                 initialCheckIn={checkIn}
                 initialCheckOut={checkOut}
+                isDemo={marina.id.startsWith("csv-marina-")}
               />
             </div>
           </div>

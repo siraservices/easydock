@@ -37,6 +37,7 @@ export default function BookingDetailPage() {
   const [showCancelDialog, setShowCancelDialog] = useState(false);
   const [cancelling, setCancelling] = useState(false);
   const [cancelError, setCancelError] = useState<string | null>(null);
+  const [pollTimedOut, setPollTimedOut] = useState(false);
 
   async function fetchBooking() {
     const { data } = (await supabase
@@ -88,12 +89,13 @@ export default function BookingDetailPage() {
 
     pollRef.current = setInterval(async () => {
       const updated = await fetchBooking();
-      if (
-        !updated ||
-        updated.status !== "pending" ||
-        Date.now() - startTime > 60000
-      ) {
+      const elapsed = Date.now() - startTime;
+      const timedOut = elapsed > 60000;
+      if (!updated || updated.status !== "pending" || timedOut) {
         if (pollRef.current) clearInterval(pollRef.current);
+        if (timedOut && updated?.status === "pending") {
+          setPollTimedOut(true);
+        }
       }
     }, 3000);
 
@@ -206,10 +208,19 @@ export default function BookingDetailPage() {
           </div>
         )}
 
-        {isSuccess && booking.status === "pending" && (
+        {isSuccess && booking.status === "pending" && !pollTimedOut && (
           <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-6 text-center">
             <p className="text-yellow-800 font-semibold">
               Processing payment... This may take a moment.
+            </p>
+          </div>
+        )}
+
+        {isSuccess && booking.status === "pending" && pollTimedOut && (
+          <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6 text-center">
+            <p className="text-blue-800 font-semibold">Payment submitted.</p>
+            <p className="text-blue-700 text-sm mt-1">
+              Your booking will confirm automatically. Check your email or refresh this page in a few minutes.
             </p>
           </div>
         )}
