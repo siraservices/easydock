@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Vercel Deploy
-status: active
+status: complete
 stopped_at: null
-last_updated: "2026-03-13"
-last_activity: 2026-03-13 — Roadmap created, Phase 6 defined
+last_updated: "2026-06-27"
+last_activity: 2026-06-27 — Phase 6 complete; all 5 success criteria met
 progress:
   total_phases: 1
-  completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
-  percent: 0
+  completed_phases: 1
+  total_plans: 1
+  completed_plans: 1
+  percent: 100
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-13)
 
 **Core value:** A yacht owner can find an available slip, book it, and pay — and a marina owner receives that booking and gets paid.
-**Current focus:** Phase 6 — Vercel Migration
+**Current focus:** v1.1 COMPLETE — all phases shipped
 
 ## Current Position
 
-Phase: 6 of 6 (Vercel Migration)
-Plan: — of TBD
-Status: Ready to plan
-Last activity: 2026-03-13 — Roadmap created, Phase 6 ready for planning
+Phase: 6 of 6 (Vercel Migration) — **COMPLETE**
+Plan: 1 of 1
+Status: Complete
+Last activity: 2026-06-27 — netlify.toml removed, security headers added to next.config.ts, deployed
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -56,14 +56,14 @@ Recent decisions affecting current work:
 
 ### Pending Todos
 
-None yet.
+None — v1.1 is complete.
 
 ### Blockers/Concerns
 
-- v1.0 tech debt (not blocking v1.1): 1 failing test (buildSlipQuery null-coordinate guards), mock data blocks demo booking flow, dead client-side price calc in booking-widget.tsx
+- v1.0 tech debt (carry-forward): 1 failing test (buildSlipQuery null-coordinate guards), mock data blocks demo booking flow, dead client-side price calc in booking-widget.tsx
 
 ## Session Continuity
 
-Last session: 2026-03-13
-Stopped at: Roadmap created — Phase 6 defined and ready to plan
+Last session: 2026-06-27
+Stopped at: Phase 6 complete, v1.1 milestone shipped. Ready for v1.2 planning.
 Resume file: None

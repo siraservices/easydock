@@ -20,13 +20,13 @@ Full details: `.planning/milestones/v1.0-ROADMAP.md`
 
 </details>
 
-### 🚧 v1.1 Vercel Deploy (In Progress)
+### ✅ v1.1 Vercel Deploy (Complete — 2026-06-27)
 
 **Milestone Goal:** Migrate hosting from Netlify to Vercel — remove Netlify artifacts, clean the Next.js config, preserve security headers, add Vercel Analytics, and confirm a clean production deployment.
 
 #### Phase 6: Vercel Migration
 
-- [ ] **Phase 6: Vercel Migration** - Remove Netlify, configure Vercel, add analytics, and ship a clean production deploy
+- [x] **Phase 6: Vercel Migration** - Remove Netlify, configure Vercel, add analytics, and ship a clean production deploy — completed 2026-06-27
 
 ## Phase Details
 
