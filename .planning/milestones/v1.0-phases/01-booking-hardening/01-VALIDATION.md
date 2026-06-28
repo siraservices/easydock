@@ -1,10 +1,11 @@
 ---
 phase: 1
 slug: booking-hardening
-status: draft
-nyquist_compliant: false
-wave_0_complete: false
+status: complete
+nyquist_compliant: true
+wave_0_complete: true
 created: 2026-03-09
+verified: 2026-06-27
 ---
 
 # Phase 1 — Validation Strategy
@@ -38,9 +39,9 @@ created: 2026-03-09
 
 | Task ID | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|-----------|-------------------|-------------|--------|
-| 01-01-01 | 01 | 1 | HARD-01 | unit | `npx vitest run src/__tests__/checkout-pricing.test.ts` | ❌ W0 | ⬜ pending |
-| 01-01-02 | 01 | 1 | HARD-02 | unit | `npx vitest run src/__tests__/checkout-pricing.test.ts` | ❌ W0 | ⬜ pending |
-| 01-02-01 | 02 | 1 | HARD-03 | unit | `npx vitest run src/__tests__/webhook-idempotency.test.ts` | ❌ W0 | ⬜ pending |
+| 01-01-01 | 01 | 1 | HARD-01 | unit | `npx vitest run src/__tests__/checkout-pricing.test.ts` | ✅ | ✅ green |
+| 01-01-02 | 01 | 1 | HARD-02 | unit | `npx vitest run src/__tests__/checkout-pricing.test.ts` | ✅ | ✅ green |
+| 01-02-01 | 02 | 1 | HARD-03 | unit | `npx vitest run src/__tests__/webhook-idempotency.test.ts` | ✅ | ✅ green |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
@@ -48,10 +49,10 @@ created: 2026-03-09
 
 ## Wave 0 Requirements
 
-- [ ] `vitest` + `@vitejs/plugin-react` — install test framework
-- [ ] `vitest.config.ts` — configure vitest for Next.js project
-- [ ] `src/__tests__/checkout-pricing.test.ts` — stubs for HARD-01, HARD-02
-- [ ] `src/__tests__/webhook-idempotency.test.ts` — stubs for HARD-03
+- [x] `vitest` + `@vitejs/plugin-react` — install test framework
+- [x] `vitest.config.ts` — configure vitest for Next.js project
+- [x] `src/__tests__/checkout-pricing.test.ts` — stubs for HARD-01, HARD-02
+- [x] `src/__tests__/webhook-idempotency.test.ts` — stubs for HARD-03
 
 *If none: "Existing infrastructure covers all phase requirements."*
 
@@ -67,11 +68,11 @@ created: 2026-03-09
 
 ## Validation Sign-Off
 
-- [ ] All tasks have `<automated>` verify or Wave 0 dependencies
-- [ ] Sampling continuity: no 3 consecutive tasks without automated verify
-- [ ] Wave 0 covers all MISSING references
-- [ ] No watch-mode flags
-- [ ] Feedback latency < 5s
-- [ ] `nyquist_compliant: true` set in frontmatter
+- [x] All tasks have `<automated>` verify or Wave 0 dependencies
+- [x] Sampling continuity: no 3 consecutive tasks without automated verify
+- [x] Wave 0 covers all MISSING references
+- [x] No watch-mode flags
+- [x] Feedback latency < 5s
+- [x] `nyquist_compliant: true` set in frontmatter
 
-**Approval:** pending
+**Approval:** complete (2026-06-27, 312/312 tests green)

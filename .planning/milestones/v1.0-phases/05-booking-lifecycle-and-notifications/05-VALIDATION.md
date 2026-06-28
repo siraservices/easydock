@@ -1,10 +1,11 @@
 ---
 phase: 5
 slug: booking-lifecycle-and-notifications
-status: draft
-nyquist_compliant: false
-wave_0_complete: false
+status: complete
+nyquist_compliant: true
+wave_0_complete: true
 created: 2026-03-12
+verified: 2026-06-27
 ---
 
 # Phase 5 — Validation Strategy
@@ -38,11 +39,11 @@ created: 2026-03-12
 
 | Task ID | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|-----------|-------------------|-------------|--------|
-| 05-01-01 | 01 | 1 | BOOK-01 | unit | `npx vitest run src/__tests__/booking-approve.test.ts` | ❌ W0 | ⬜ pending |
-| 05-01-02 | 01 | 1 | BOOK-01 | unit | `npx vitest run src/__tests__/booking-deny.test.ts` | ❌ W0 | ⬜ pending |
-| 05-02-01 | 02 | 1 | BOOK-03 | unit | `npx vitest run src/__tests__/booking-cancel.test.ts` | ❌ W0 | ⬜ pending |
-| 05-03-01 | 03 | 2 | EMAL-01 | unit | `npx vitest run src/__tests__/email-send.test.ts` | ❌ W0 | ⬜ pending |
-| 05-03-02 | 03 | 2 | EMAL-02 | unit | included in approve/deny/cancel tests | ❌ W0 | ⬜ pending |
+| 05-01-01 | 01 | 1 | BOOK-01 | unit | `npx vitest run src/__tests__/booking-approve.test.ts` | ✅ | ✅ green |
+| 05-01-02 | 01 | 1 | BOOK-01 | unit | `npx vitest run src/__tests__/booking-deny.test.ts` | ✅ | ✅ green |
+| 05-02-01 | 02 | 1 | BOOK-03 | unit | `npx vitest run src/__tests__/booking-cancel.test.ts` | ✅ | ✅ green |
+| 05-03-01 | 03 | 2 | EMAL-01 | unit | `npx vitest run src/__tests__/email-send.test.ts` | ✅ | ✅ green |
+| 05-03-02 | 03 | 2 | EMAL-02 | unit | included in approve/deny/cancel tests | ✅ | ✅ green |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
@@ -50,10 +51,10 @@ created: 2026-03-12
 
 ## Wave 0 Requirements
 
-- [ ] `src/__tests__/booking-approve.test.ts` — stubs for BOOK-01 approve
-- [ ] `src/__tests__/booking-deny.test.ts` — stubs for BOOK-01 deny
-- [ ] `src/__tests__/booking-cancel.test.ts` — stubs for BOOK-03 cancel + Stripe params
-- [ ] `src/__tests__/email-send.test.ts` — stubs for EMAL-01 / EMAL-02
+- [x] `src/__tests__/booking-approve.test.ts` — stubs for BOOK-01 approve
+- [x] `src/__tests__/booking-deny.test.ts` — stubs for BOOK-01 deny
+- [x] `src/__tests__/booking-cancel.test.ts` — stubs for BOOK-03 cancel + Stripe params
+- [x] `src/__tests__/email-send.test.ts` — stubs for EMAL-01 / EMAL-02
 
 *Existing infrastructure (Vitest) covers framework needs.*
 
@@ -72,11 +73,11 @@ created: 2026-03-12
 
 ## Validation Sign-Off
 
-- [ ] All tasks have `<automated>` verify or Wave 0 dependencies
-- [ ] Sampling continuity: no 3 consecutive tasks without automated verify
-- [ ] Wave 0 covers all MISSING references
-- [ ] No watch-mode flags
-- [ ] Feedback latency < 5s
-- [ ] `nyquist_compliant: true` set in frontmatter
+- [x] All tasks have `<automated>` verify or Wave 0 dependencies
+- [x] Sampling continuity: no 3 consecutive tasks without automated verify
+- [x] Wave 0 covers all MISSING references
+- [x] No watch-mode flags
+- [x] Feedback latency < 5s
+- [x] `nyquist_compliant: true` set in frontmatter
 
-**Approval:** pending
+**Approval:** complete (2026-06-27, 312/312 tests green)

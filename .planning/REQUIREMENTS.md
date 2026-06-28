@@ -9,11 +9,11 @@ Requirements for Vercel deployment migration. Each maps to roadmap phases.
 
 ### Hosting Migration
 
-- [ ] **HOST-01**: Netlify configuration removed (netlify.toml deleted)
-- [ ] **HOST-02**: next.config.ts cleaned of Netlify-specific settings
-- [ ] **HOST-03**: Security headers (X-Frame-Options, XSS protection, etc.) preserved via Next.js config
-- [ ] **HOST-04**: App builds and deploys successfully on Vercel
-- [ ] **HOST-05**: Vercel Analytics installed and `<Analytics />` component added to root layout
+- [x] **HOST-01**: Netlify configuration removed (netlify.toml deleted) — complete 2026-06-27
+- [x] **HOST-02**: next.config.ts cleaned of Netlify-specific settings — complete 2026-06-27
+- [x] **HOST-03**: Security headers (X-Frame-Options, XSS protection, etc.) preserved via Next.js config — complete 2026-06-27
+- [x] **HOST-04**: App builds and deploys successfully on Vercel — complete 2026-06-27
+- [x] **HOST-05**: Vercel Analytics installed and `<Analytics />` component added to root layout — complete 2026-06-27
 
 ## Future Requirements
 
@@ -31,11 +31,11 @@ None — focused migration milestone.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| HOST-01 | Phase 6 | Pending |
-| HOST-02 | Phase 6 | Pending |
-| HOST-03 | Phase 6 | Pending |
-| HOST-04 | Phase 6 | Pending |
-| HOST-05 | Phase 6 | Pending |
+| HOST-01 | Phase 6 | Complete (2026-06-27) |
+| HOST-02 | Phase 6 | Complete (2026-06-27) |
+| HOST-03 | Phase 6 | Complete (2026-06-27) |
+| HOST-04 | Phase 6 | Complete (2026-06-27) |
+| HOST-05 | Phase 6 | Complete (2026-06-27) |
 
 **Coverage:**
 - v1.1 requirements: 5 total

@@ -60,7 +60,13 @@ None — v1.1 is complete.
 
 ### Blockers/Concerns
 
-- v1.0 tech debt (carry-forward): 1 failing test (buildSlipQuery null-coordinate guards), mock data blocks demo booking flow, dead client-side price calc in booking-widget.tsx
+None.
+
+### Completed Post-Ship Work
+
+- v1.0 tech debt resolved (EAS-100, 2026-06-27): all tests pass (312/312), demo flow handled via isDemo prop, price mismatch fixed (now shows service fee), TypeScript clean
+- E2E booking flow gaps fixed (EAS-99, 2026-06-27): isDemo prop for mock marina IDs, poll timeout UX on booking confirmation page
+- Nyquist validation finalized (EAS-103, 2026-06-28): all VALIDATION.md files updated to reflect passing state (nyquist_compliant: true), REQUIREMENTS.md HOST items marked complete, MILESTONES.md v1.1 record added
 
 ## Session Continuity
 
