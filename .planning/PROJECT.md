@@ -18,7 +18,7 @@ A yacht owner can find an available slip, book it, and pay — and a marina owne
 - ✓ Protected routes with role-based guards — existing
 - ✓ Marina owner dashboard with marina CRUD and slip management — existing
 - ✓ Booking checkout API with Stripe session creation — existing
-- ✓ Netlify deployment configuration — existing
+- ✓ Netlify deployment configuration — existing (migrated to Vercel in v1.1)
 - ✓ Server calculates total price from slip rate and dates (HARD-01) — v1.0
 - ✓ Booking creation uses DB transaction to prevent double-booking (HARD-02) — v1.0
 - ✓ Stripe webhook verifies DB write before returning 200 (HARD-03) — v1.0
@@ -40,15 +40,9 @@ A yacht owner can find an available slip, book it, and pay — and a marina owne
 
 ### Active
 
-## Current Milestone: v1.1 Vercel Deploy
+## Current Milestone: v1.2 (TBD)
 
-**Goal:** Migrate hosting from Netlify to Vercel for production deployment
-
-**Target features:**
-- Remove Netlify configuration and dependencies
-- Vercel-compatible Next.js configuration
-- Environment variable documentation for Vercel dashboard
-- Clean deployment on Vercel
+**Goal:** Not yet defined — v1.1 shipped 2026-06-27, awaiting board direction on next milestone
 
 ### Out of Scope
 
@@ -64,12 +58,9 @@ A yacht owner can find an available slip, book it, and pay — and a marina owne
 
 EasyDock shipped v1.0 MVP with 10,093 lines of TypeScript/TSX across 5 phases in 3 days. The full transaction loop is complete: yacht owners can search a Mapbox map, filter by vessel dimensions, book a slip, and pay via Stripe. Marina owners onboard with Stripe Connect, manage bookings through a dashboard inbox (approve/deny/cancel), and receive payouts. Both parties get email notifications on every booking event via Resend.
 
-**Tech stack:** Next.js 15, React 19, TypeScript, Tailwind CSS 4, Supabase (PostgreSQL + Auth + Storage + RLS), Stripe Connect, Mapbox GL JS, Resend + React Email, Vitest (97 tests)
+**Tech stack:** Next.js 15, React 19, TypeScript, Tailwind CSS 4, Supabase (PostgreSQL + Auth + Storage + RLS), Stripe Connect, Mapbox GL JS, Resend + React Email, Vitest (312 tests)
 
-**Known tech debt:**
-- 1 failing test in Phase 3 (buildSlipQuery missing null-coordinate guards — 2-line fix)
-- Mock data fallback blocks demo booking flow (mock marinas have no Stripe Connect)
-- Client-side price calculation in booking widget is dead code (server always recomputes)
+**Known tech debt:** None — all v1.0 debt resolved post-ship (EAS-99, EAS-100, 2026-06-27)
 
 **External setup required for production:**
 - SQL migrations run in Supabase (database/001-008)
@@ -80,7 +71,7 @@ EasyDock shipped v1.0 MVP with 10,093 lines of TypeScript/TSX across 5 phases in
 ## Constraints
 
 - **Tech stack**: Next.js 15, React 19, Supabase, Stripe Connect, Tailwind CSS — established
-- **Hosting**: Netlify with @netlify/plugin-nextjs for SSR
+- **Hosting**: Vercel (migrated from Netlify in v1.1)
 - **Geography**: South Florida marinas only for MVP
 - **Revenue model**: 15% platform fee (10% yacht owner surcharge + 5% marina deduction)
 - **Auth**: Supabase Auth with email/password, RLS on all tables
@@ -101,4 +92,4 @@ EasyDock shipped v1.0 MVP with 10,093 lines of TypeScript/TSX across 5 phases in
 | adminClient for cross-user operations | RLS blocks cross-user email lookups and Connect status | ✓ Good — used in cancel, email, checkout |
 
 ---
-*Last updated: 2026-03-13 after v1.1 milestone started*
+*Last updated: 2026-06-28 after v1.1 milestone complete*
