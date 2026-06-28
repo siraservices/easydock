@@ -7,6 +7,7 @@ import SearchFiltersBar, {
   type SearchFilters,
 } from "@/components/search-filters";
 import SlipCard from "@/components/slip-card";
+import UnclaimedMarinaCard from "@/components/unclaimed-marina-card";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import EmptyState from "@/components/ui/empty-state";
 import { buildSlipQuery } from "@/lib/hooks/use-map-filter";
@@ -264,36 +265,14 @@ export default function SearchPage() {
               </div>
             ))}
             {marinasWithoutSlips.map((marina) => (
-              <div
-                key={marina.id}
-                id={`marina-${marina.id}`}
-                data-marina-id={marina.id}
-                onMouseEnter={() => handleHoverMarinaFromList(marina.id)}
-                onMouseLeave={() => handleHoverMarinaFromList(null)}
-                className={`bg-white rounded-xl shadow-sm border overflow-hidden hover:shadow-md transition-shadow ${
-                  hoveredMarinaId === marina.id ? "ring-2 ring-teal-500 shadow-lg" : ""
-                }`}
-              >
-                <div className="h-40 bg-gradient-to-br from-navy-100 to-teal-50 relative">
-                  {marina.photos?.[0] ? (
-                    <img
-                      src={marina.photos[0]}
-                      alt={marina.name}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="flex items-center justify-center h-full text-navy-300 text-4xl">
-                      &#9875;
-                    </div>
-                  )}
-                </div>
-                <div className="p-4">
-                  <h3 className="font-semibold text-navy-800 mb-1">{marina.name}</h3>
-                  <p className="text-sm text-gray-500 mb-3">
-                    {marina.city}, {marina.state}
-                  </p>
-                  <p className="text-xs text-gray-400 italic">No slips listed yet</p>
-                </div>
+              <div key={marina.id} id={`marina-${marina.id}`}>
+                <UnclaimedMarinaCard
+                  marina={marina}
+                  checkIn={filters.checkIn}
+                  checkOut={filters.checkOut}
+                  isHighlighted={hoveredMarinaId === marina.id}
+                  onHover={handleHoverMarinaFromList}
+                />
               </div>
             ))}
           </div>

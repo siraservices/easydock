@@ -318,6 +318,50 @@ export interface Database {
         };
         Relationships: [];
       };
+      marina_spot_requests: {
+        Row: {
+          id: string;
+          marina_id: string;
+          name: string;
+          email: string;
+          check_in: string | null;
+          check_out: string | null;
+          vessel_length_ft: number | null;
+          message: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          marina_id: string;
+          name: string;
+          email: string;
+          check_in?: string | null;
+          check_out?: string | null;
+          vessel_length_ft?: number | null;
+          message?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          marina_id?: string;
+          name?: string;
+          email?: string;
+          check_in?: string | null;
+          check_out?: string | null;
+          vessel_length_ft?: number | null;
+          message?: string | null;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "marina_spot_requests_marina_id_fkey";
+            columns: ["marina_id"];
+            isOneToOne: false;
+            referencedRelation: "marinas";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
       waitlist_signups: {
         Row: {
           id: string;

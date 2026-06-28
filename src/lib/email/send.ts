@@ -4,6 +4,8 @@ import BookingApprovedEmail from '@/emails/booking-approved';
 import BookingDeniedEmail from '@/emails/booking-denied';
 import BookingCancelledEmail from '@/emails/booking-cancelled';
 import LeadConfirmationEmail from '@/emails/lead-confirmation';
+import MarinaLeadConfirmation from '@/emails/marina-lead-confirmation';
+import MarinaActivationNudge from '@/emails/marina-activation-nudge';
 
 // Lazy initialization — Resend throws if API key is missing at constructor time,
 // so we instantiate only when actually sending (not at module load).
@@ -120,6 +122,52 @@ export async function sendLeadConfirmationEmail(
     }
   } catch (err) {
     console.error('sendLeadConfirmationEmail failed:', err);
+  }
+}
+
+export interface MarinaLeadEmailParams {
+  requesterName: string;
+  requesterEmail: string;
+  marinaName: string;
+  marinaCity: string;
+  marinaState: string;
+  marinaPhone?: string | null;
+  marinaWebsite?: string | null;
+  checkIn?: string;
+  checkOut?: string;
+  vesselLengthFt?: number;
+  message?: string;
+}
+
+const ADMIN_EMAIL = 'aira4development@gmail.com';
+
+/**
+ * Sends boat owner confirmation + admin activation nudge for an unclaimed marina lead.
+ * Non-fatal — email failures never block the API response.
+ */
+export async function sendMarinaLeadEmails(params: MarinaLeadEmailParams): Promise<void> {
+  try {
+    await Promise.all([
+      getResend().emails.send({
+        from: 'EasyDock <hello@easydock.co>',
+        to: [params.requesterEmail],
+        subject: `Your spot request at ${params.marinaName} — EasyDock`,
+        react: MarinaLeadConfirmation({
+          name: params.requesterName,
+          marinaName: params.marinaName,
+          checkIn: params.checkIn,
+          checkOut: params.checkOut,
+        }),
+      }),
+      getResend().emails.send({
+        from: 'EasyDock Leads <leads@easydock.co>',
+        to: [ADMIN_EMAIL],
+        subject: `New lead: ${params.marinaName} (unclaimed)`,
+        react: MarinaActivationNudge(params),
+      }),
+    ]);
+  } catch (err) {
+    console.error('sendMarinaLeadEmails failed:', err);
   }
 }
 
