@@ -24,7 +24,7 @@ function makeMarina(
     id, owner_id, name, description: null, address, city, state, zip, lat, lng,
     amenities: [], photos: [], phone, email: null, website,
     is_active: true, stripe_account_id: null, stripe_onboarding_complete: false,
-    payouts_enabled: false, created_at: now, updated_at: now,
+    payouts_enabled: false, source: 'manual', claimed_at: null, created_at: now, updated_at: now,
   };
 }
 

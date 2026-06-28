@@ -338,11 +338,28 @@ function DashboardContent() {
             {loading ? (
               <LoadingSpinner size="lg" message="Loading your marinas..." />
             ) : marinas.length === 0 ? (
-              <EmptyState
-                title="You haven't listed a marina yet"
-                message="Get started by adding your first marina. You can then add individual slips and start receiving bookings."
-                action={{ label: "Add Your Marina", href: "/dashboard/marinas/new" }}
-              />
+              <div className="text-center py-16">
+                <h3 className="text-lg font-semibold text-navy-800 mb-2">
+                  You haven&apos;t listed a marina yet
+                </h3>
+                <p className="text-gray-600 mb-8 max-w-md mx-auto">
+                  Already in our database? Claim your existing listing. Otherwise, add your marina from scratch.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                  <Link
+                    href="/claim"
+                    className="inline-block bg-teal-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-teal-700 transition-colors text-sm"
+                  >
+                    Claim Existing Marina
+                  </Link>
+                  <Link
+                    href="/dashboard/marinas/new"
+                    className="inline-block border border-teal-600 text-teal-700 px-6 py-3 rounded-lg font-semibold hover:bg-teal-50 transition-colors text-sm"
+                  >
+                    Add Marina Manually
+                  </Link>
+                </div>
+              </div>
             ) : (
               <div className="grid gap-4 sm:grid-cols-2">
                 {marinas.map((marina) => (

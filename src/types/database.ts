@@ -52,7 +52,7 @@ export interface Database {
       marinas: {
         Row: {
           id: string;
-          owner_id: string;
+          owner_id: string | null;
           name: string;
           description: string | null;
           address: string;
@@ -67,6 +67,8 @@ export interface Database {
           email: string | null;
           website: string | null;
           is_active: boolean;
+          source: string;
+          claimed_at: string | null;
           stripe_account_id: string | null;
           stripe_onboarding_complete: boolean;
           payouts_enabled: boolean;
@@ -75,7 +77,7 @@ export interface Database {
         };
         Insert: {
           id?: string;
-          owner_id: string;
+          owner_id?: string | null;
           name: string;
           description?: string | null;
           address: string;
@@ -90,6 +92,8 @@ export interface Database {
           email?: string | null;
           website?: string | null;
           is_active?: boolean;
+          source?: string;
+          claimed_at?: string | null;
           stripe_account_id?: string | null;
           stripe_onboarding_complete?: boolean;
           payouts_enabled?: boolean;
@@ -97,7 +101,7 @@ export interface Database {
           updated_at?: string;
         };
         Update: {
-          owner_id?: string;
+          owner_id?: string | null;
           name?: string;
           description?: string | null;
           address?: string;
@@ -112,6 +116,8 @@ export interface Database {
           email?: string | null;
           website?: string | null;
           is_active?: boolean;
+          source?: string;
+          claimed_at?: string | null;
           stripe_account_id?: string | null;
           stripe_onboarding_complete?: boolean;
           payouts_enabled?: boolean;
