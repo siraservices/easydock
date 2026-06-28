@@ -35,7 +35,7 @@ Full details: `.planning/milestones/v1.0-ROADMAP.md`
 
 #### Phase 7: Marina Claim Flow
 
-- [ ] **Phase 7: Marina Claim Flow** - /claim page where marina owners search and claim their CSV listing, linking their account to an existing marina record and unlocking the dashboard for real slip management
+- [x] **Phase 7: Marina Claim Flow** - /claim page where marina owners search and claim their CSV listing, linking their account to an existing marina record and unlocking the dashboard for real slip management — completed 2026-06-28
 
 #### Phase 8: Demo Slip + Lead Capture
 
@@ -69,6 +69,6 @@ Full details: `.planning/milestones/v1.0-ROADMAP.md`
 | 4. Stripe Connect Payouts | v1.0 | 4/4 | Complete | 2026-03-11 |
 | 5. Booking Lifecycle and Notifications | v1.0 | 3/3 | Complete | 2026-03-12 |
 | 6. Vercel Migration | v1.1 | 1/1 | Complete | 2026-06-27 |
-| 7. Marina Claim Flow | v1.2 | 0/TBD | Pending approval | - |
+| 7. Marina Claim Flow | v1.2 | 1/1 | Complete | 2026-06-28 |
 | 8. Demo Slip + Lead Capture | v1.2 | 0/TBD | Pending approval | - |
 | 9. Marina Activation Emails | v1.2 | 0/TBD | Pending approval | - |
