@@ -38,6 +38,7 @@ next-env.d.ts
 dist/
 build/
 *.log
+tsconfig.tsbuildinfo
 
 # Netlify
 .netlify/
@@ -72,3 +73,6 @@ test-*.csv
 
 # Claude Code local settings
 .claude/
+
+# GSD debug sessions
+.planning/debug/
