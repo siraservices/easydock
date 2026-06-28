@@ -3,7 +3,8 @@
 ## Milestones
 
 - ✅ **v1.0 MVP** — Phases 1-5 (shipped 2026-03-12)
-- 🚧 **v1.1 Vercel Deploy** — Phase 6 (in progress)
+- ✅ **v1.1 Vercel Deploy** — Phase 6 (shipped 2026-06-27)
+- 🚧 **v1.2 Marina Activation** — Phases 7-9 (pending board approval)
 
 ## Phases
 
@@ -28,6 +29,22 @@ Full details: `.planning/milestones/v1.0-ROADMAP.md`
 
 - [x] **Phase 6: Vercel Migration** - Remove Netlify, configure Vercel, add analytics, and ship a clean production deploy — completed 2026-06-27
 
+### 🚧 v1.2 Marina Activation (Pending Board Approval)
+
+**Milestone Goal:** Convert the 237 CSV marinas into active listings and capture demand-side leads — creating the first path to real bookings without requiring all marina owners to sign up first.
+
+#### Phase 7: Marina Claim Flow
+
+- [ ] **Phase 7: Marina Claim Flow** - /claim page where marina owners search and claim their CSV listing, linking their account to an existing marina record and unlocking the dashboard for real slip management
+
+#### Phase 8: Demo Slip + Lead Capture
+
+- [ ] **Phase 8: Demo Slip + Lead Capture** - When boat owners try to book at an unclaimed marina, show a "Request a spot" form capturing lead info, then email the marina's CSV contact to activate
+
+#### Phase 9: Marina Activation Emails
+
+- [ ] **Phase 9: Marina Activation Emails** - React Email templates for the activation flow: nudge to unclaimed marina owners and confirmation to boat owners
+
 ## Phase Details
 
 ### Phase 6: Vercel Migration
@@ -51,4 +68,7 @@ Full details: `.planning/milestones/v1.0-ROADMAP.md`
 | 3. Map Search | v1.0 | 2/2 | Complete | 2026-03-11 |
 | 4. Stripe Connect Payouts | v1.0 | 4/4 | Complete | 2026-03-11 |
 | 5. Booking Lifecycle and Notifications | v1.0 | 3/3 | Complete | 2026-03-12 |
-| 6. Vercel Migration | v1.1 | 0/TBD | Not started | - |
+| 6. Vercel Migration | v1.1 | 1/1 | Complete | 2026-06-27 |
+| 7. Marina Claim Flow | v1.2 | 0/TBD | Pending approval | - |
+| 8. Demo Slip + Lead Capture | v1.2 | 0/TBD | Pending approval | - |
+| 9. Marina Activation Emails | v1.2 | 0/TBD | Pending approval | - |
