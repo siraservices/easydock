@@ -112,10 +112,10 @@ export default function AboutPage() {
           We&apos;re onboarding marinas and boat owners now. Get early access before we launch publicly.
         </p>
         <Link
-          href="/"
+          href="/signup"
           className="inline-block rounded-xl bg-teal-500 px-8 py-3 text-sm font-semibold text-white hover:bg-teal-400 transition-colors"
         >
-          Join the waitlist
+          Get early access
         </Link>
       </div>
     </div>
