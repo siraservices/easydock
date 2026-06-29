@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getAllPosts, getPost } from '@/lib/blog/posts';
+import BlogEmailCapture from '@/components/blog-email-capture';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -236,9 +237,12 @@ export default async function BlogPostPage({ params }: Props) {
           {renderMarkdown(post.content)}
         </div>
 
+        {/* Email capture fallback for marina-owner posts */}
+        {post.category === 'marina-owners' && <BlogEmailCapture />}
+
         {/* CTA */}
         <div
-          className="mt-16 rounded-2xl p-8 text-center"
+          className="mt-10 rounded-2xl p-8 text-center"
           style={{
             background: 'linear-gradient(135deg, #0F2445 0%, #1B3A6B 100%)',
           }}
