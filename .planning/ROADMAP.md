@@ -5,6 +5,7 @@
 - ✅ **v1.0 MVP** — Phases 1-5 (shipped 2026-03-12)
 - ✅ **v1.1 Vercel Deploy** — Phase 6 (shipped 2026-06-27)
 - ✅ **v1.2 Marina Activation** — Phases 7-9 (shipped 2026-06-28)
+- 🚧 **v1.3 Marina Owner Acquisition** — Phase 10+ (in progress 2026-06-29)
 
 ## Phases
 
@@ -45,6 +46,14 @@ Full details: `.planning/milestones/v1.0-ROADMAP.md`
 
 - [x] **Phase 9: Marina Activation Emails** - marina-lead-confirmation.tsx (boat owner) + marina-activation-nudge.tsx (EasyDock admin) React Email templates — completed 2026-06-28 (EAS-109)
 
+### 🚧 v1.3 Marina Owner Acquisition (In Progress — 2026-06-29)
+
+**Milestone Goal:** Drive the first marina owner sign-up through organic discovery and improved conversion paths — without relying on the paused cold-outreach SalesAgent channel (EAS-26).
+
+#### Phase 10: SEO Blog
+
+- [x] **Phase 10: SEO Blog** - /blog listing page + 3 pre-rendered static posts targeting marina owner and boat owner keywords; OG/Twitter meta per post; per-post CTA routing to /claim or /search — completed 2026-06-29 (EAS-112, commit 993a860)
+
 ## Phase Details
 
 ### Phase 6: Vercel Migration
@@ -72,3 +81,4 @@ Full details: `.planning/milestones/v1.0-ROADMAP.md`
 | 7. Marina Claim Flow | v1.2 | 1/1 | Complete | 2026-06-28 |
 | 8. Demo Slip + Lead Capture | v1.2 | 1/1 | Complete | 2026-06-28 |
 | 9. Marina Activation Emails | v1.2 | 1/1 | Complete | 2026-06-28 |
+| 10. SEO Blog | v1.3 | 1/1 | Complete | 2026-06-29 |

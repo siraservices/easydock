@@ -1,16 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.2
-milestone_name: Marina Activation
-status: complete
+milestone: v1.3
+milestone_name: Marina Owner Acquisition
+status: in_progress
 stopped_at: null
-last_updated: "2026-06-28"
-last_activity: 2026-06-28 — Phase 9 complete; all v1.2 phases shipped (EAS-109)
+last_updated: "2026-06-29"
+last_activity: 2026-06-29 — Phase 10 (SEO Blog) complete (EAS-112)
 progress:
-  total_phases: 3
-  completed_phases: 3
-  total_plans: 3
-  completed_plans: 3
+  total_phases: 1
+  completed_phases: 1
+  total_plans: 1
+  completed_plans: 1
   percent: 100
 ---
 
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-13)
 
 **Core value:** A yacht owner can find an available slip, book it, and pay — and a marina owner receives that booking and gets paid.
-**Current focus:** v1.2 Marina Activation — ALL PHASES COMPLETE
+**Current focus:** v1.3 Marina Owner Acquisition — Phase 10 complete, more phases possible
 
 ## Current Position
 
-Phase: 9 of 9 (Marina Activation Emails) — **COMPLETE**
+Phase: 10 of ? (SEO Blog) — **COMPLETE**
 Plan: 1 of 1
 Status: Complete
-Last activity: 2026-06-28 — lead capture form, /api/marina-leads, UnclaimedMarinaCard, activation nudge + confirmation emails shipped (EAS-109)
+Last activity: 2026-06-29 — /blog listing + 3 static blog posts shipped (EAS-112); pushed to main, Vercel autodeploy pending
 
 Progress: [██████████] 100%
 
@@ -56,22 +56,24 @@ Recent decisions affecting current work:
 
 ### Pending Todos
 
-None — v1.2 complete.
+None — Phase 10 complete. Next phases for v1.3 TBD by board/CEO direction.
 
 ### Blockers/Concerns
 
-None.
+EAS-26 (cold email outreach) remains blocked — SalesAgent is board-paused. CTO is also paused.
+No engineering blockers.
 
 ### Completed Post-Ship Work
 
-- v1.0 tech debt resolved (EAS-100, 2026-06-27): all tests pass (312/312), demo flow handled via isDemo prop, price mismatch fixed (now shows service fee), TypeScript clean
-- E2E booking flow gaps fixed (EAS-99, 2026-06-27): isDemo prop for mock marina IDs, poll timeout UX on booking confirmation page
-- Nyquist validation finalized (EAS-103, 2026-06-28): all VALIDATION.md files updated to reflect passing state (nyquist_compliant: true), REQUIREMENTS.md HOST items marked complete, MILESTONES.md v1.1 record added
-- Marina Claim Flow (EAS-107, 2026-06-28): Phase 7 complete — /claim page, claim API, DB schema migration, 241 CSV marinas imported
-- Demo Slip + Lead Capture (EAS-109, 2026-06-28): Phase 8+9 complete — UnclaimedMarinaCard component, /api/marina-leads endpoint, 005_marina_spot_requests.sql, marina-lead-confirmation.tsx and marina-activation-nudge.tsx email templates, search page integration
+- v1.0 tech debt resolved (EAS-100, 2026-06-27)
+- E2E booking flow gaps fixed (EAS-99, 2026-06-27)
+- Nyquist validation finalized (EAS-103, 2026-06-28)
+- Marina Claim Flow (EAS-107, 2026-06-28)
+- Demo Slip + Lead Capture (EAS-109, 2026-06-28)
+- SEO Blog (EAS-112, 2026-06-29): /blog listing + 3 static posts (marina owner how-to, digital transition awareness, boat owner guide); pushed commit 993a860
 
 ## Session Continuity
 
-Last session: 2026-06-28
-Stopped at: v1.2 complete. All 3 phases shipped (EAS-107, EAS-108, EAS-109). Ready for v1.3 planning.
+Last session: 2026-06-29
+Stopped at: Phase 10 (SEO Blog) complete. v1.3 in progress. Next phases need CEO direction.
 Resume file: None
