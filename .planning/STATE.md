@@ -1,17 +1,17 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.3
-milestone_name: Marina Owner Acquisition
+milestone: v1.4
+milestone_name: Revenue Unblock
 status: in_progress
 stopped_at: null
 last_updated: "2026-06-29"
-last_activity: 2026-06-29 — Quality fixes: About CTA → /signup, pricing page SEO metadata layout (commit 655c0d0)
+last_activity: 2026-06-29 — Admin leads panel + /api/admin/leads endpoint (EAS-7 heartbeat)
 progress:
   total_phases: 3
-  completed_phases: 3
+  completed_phases: 1
   total_plans: 3
-  completed_plans: 3
-  percent: 100
+  completed_plans: 1
+  percent: 33
 ---
 
 # Project State
@@ -25,10 +25,8 @@ See: .planning/PROJECT.md (updated 2026-03-13)
 
 ## Current Position
 
-Phase: 12 of ? (Post-Claim Onboarding) — **COMPLETE**
-Plan: 3 of 3
-Status: Complete
-Last activity: 2026-06-29 — Getting Started checklist + welcome banner on /dashboard/marinas/[id] (EAS-115); commit d6444ac
+Phase: v1.4 in progress — EAS-117 ✅, EAS-118 🚧 blocked (Stripe live-mode)
+Last activity: 2026-06-29 heartbeat — Admin leads panel shipped; conversion tracking + sitemap (EAS-117) complete
 
 Progress: [██████████] 100%
 
@@ -56,14 +54,19 @@ Recent decisions affecting current work:
 
 ### Pending Todos
 
-None — Phases 10+11+12 complete. Next phases for v1.3 TBD by board/CEO direction.
+v1.4 EAS-118 (Stripe live-mode) pending board completing Stripe account verification.
 
 ### Blockers/Concerns
 
-EAS-26 (cold email outreach) remains blocked — SalesAgent is board-paused. CTO is also paused.
-No engineering blockers.
+- EAS-118 (Stripe live-mode) blocked on board completing Stripe business verification + sharing live keys
+- EAS-26 (cold email outreach) blocked — SalesAgent is board-paused
+- CTO is also paused
 
-### Completed Post-Ship Work
+### Completed v1.4 Work
+
+- EAS-117 (conversion tracking + sitemap.xml, 2026-06-29): Vercel Analytics custom events across signup/claim/checkout/lead funnel; /sitemap.xml via App Router built-in; commit e284160
+
+### Completed v1.3 Post-Ship Work
 
 - v1.0 tech debt resolved (EAS-100, 2026-06-27)
 - E2E booking flow gaps fixed (EAS-99, 2026-06-27)
@@ -81,5 +84,5 @@ No engineering blockers.
 ## Session Continuity
 
 Last session: 2026-06-29
-Stopped at: v1.3 complete. Quality fixes committed. EAS-116 created for CEO — asking for v1.4 direction (conversion tracking, Stripe live-mode, sitemap, email nurture, or admin tools).
+Stopped at: v1.4 in progress. EAS-117 complete (conversion tracking + sitemap). EAS-118 blocked on Stripe board action. Admin leads panel shipped this heartbeat (GET /api/admin/leads + Leads tab in /admin). Build clean, 124 tests green.
 Resume file: None

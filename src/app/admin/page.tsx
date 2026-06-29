@@ -216,8 +216,30 @@ export default function AdminPage() {
   );
 }
 
+interface BlogLead {
+  id: string;
+  name: string;
+  email: string;
+  user_type: "yacht_owner" | "marina_owner";
+  created_at: string;
+}
+
+interface CalcLead {
+  id: string;
+  created_at: string;
+  email: string;
+  phone: string | null;
+  role: string | null;
+  region: string | null;
+  marina_name: string | null;
+  total_slips: number | null;
+  vacant_slips: number | null;
+  avg_monthly_rate: number | null;
+  annual_loss: number | null;
+}
+
 function AdminContent() {
-  const [activeTab, setActiveTab] = useState<"overview" | "marinas" | "claims">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "marinas" | "claims" | "leads">("overview");
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [statsLoading, setStatsLoading] = useState(true);
   const [marinas, setMarinas] = useState<AdminMarina[]>([]);
@@ -230,6 +252,16 @@ function AdminContent() {
   const [editingMarina, setEditingMarina] = useState<AdminMarina | null>(null);
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
   const [toggleLoadingId, setToggleLoadingId] = useState<string | null>(null);
+
+  // Leads tab state
+  const [leadsSubTab, setLeadsSubTab] = useState<"blog" | "calculator">("blog");
+  const [blogLeads, setBlogLeads] = useState<BlogLead[]>([]);
+  const [blogLeadsTotal, setBlogLeadsTotal] = useState(0);
+  const [calcLeads, setCalcLeads] = useState<CalcLead[]>([]);
+  const [calcLeadsTotal, setCalcLeadsTotal] = useState(0);
+  const [leadsLoading, setLeadsLoading] = useState(false);
+  const [leadsUserTypeFilter, setLeadsUserTypeFilter] = useState("all");
+  const [leadsPage, setLeadsPage] = useState(1);
 
   useEffect(() => {
     if (!toast) return;
@@ -272,6 +304,38 @@ function AdminContent() {
     }
   }, [search, statusFilter, claimedFilter, page]);
 
+  const fetchLeads = useCallback(async () => {
+    setLeadsLoading(true);
+    try {
+      const blogParams = new URLSearchParams({
+        kind: "blog",
+        user_type: leadsUserTypeFilter,
+        page: String(leadsPage),
+      });
+      const calcParams = new URLSearchParams({ kind: "calculator", page: String(leadsPage) });
+
+      const [blogRes, calcRes] = await Promise.all([
+        fetch(`/api/admin/leads?${blogParams}`),
+        fetch(`/api/admin/leads?${calcParams}`),
+      ]);
+
+      if (blogRes.ok) {
+        const d = await blogRes.json();
+        setBlogLeads(d.leads ?? []);
+        setBlogLeadsTotal(d.total ?? 0);
+      }
+      if (calcRes.ok) {
+        const d = await calcRes.json();
+        setCalcLeads(d.leads ?? []);
+        setCalcLeadsTotal(d.total ?? 0);
+      }
+    } catch {
+      // non-fatal
+    } finally {
+      setLeadsLoading(false);
+    }
+  }, [leadsUserTypeFilter, leadsPage]);
+
   useEffect(() => {
     fetchStats();
   }, [fetchStats]);
@@ -281,6 +345,12 @@ function AdminContent() {
       fetchMarinas();
     }
   }, [activeTab, fetchMarinas]);
+
+  useEffect(() => {
+    if (activeTab === "leads") {
+      fetchLeads();
+    }
+  }, [activeTab, fetchLeads]);
 
   const handleToggleActive = async (marina: AdminMarina) => {
     setToggleLoadingId(marina.id);
@@ -327,7 +397,7 @@ function AdminContent() {
 
         {/* Tabs */}
         <div className="flex border-b border-gray-200 mb-6 gap-1">
-          {(["overview", "marinas", "claims"] as const).map((tab) => (
+          {(["overview", "marinas", "claims", "leads"] as const).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -577,10 +647,206 @@ function AdminContent() {
             <div className="mt-4 text-xs text-gray-400 bg-gray-50 rounded-lg p-3">
               Hook for future claim approval flow: when marina owners claim a listing, it lands
               here for admin review before going live. Currently self-serve — activate manually
+
               once the owner has completed Stripe setup.
             </div>
           </div>
         )}
+        {/* Leads tab */}
+        {activeTab === "leads" && (
+          <div>
+            {/* Sub-tabs */}
+            <div className="flex gap-1 mb-5 border-b border-gray-200">
+              {(["blog", "calculator"] as const).map((sub) => (
+                <button
+                  key={sub}
+                  onClick={() => { setLeadsSubTab(sub); setLeadsPage(1); }}
+                  className={`px-4 py-2 text-sm font-semibold border-b-2 transition-colors ${
+                    leadsSubTab === sub
+                      ? "border-teal-600 text-teal-700"
+                      : "border-transparent text-gray-500 hover:text-gray-700"
+                  }`}
+                >
+                  {sub === "blog" ? `Blog / Form (${blogLeadsTotal})` : `Calculator (${calcLeadsTotal})`}
+                </button>
+              ))}
+            </div>
+
+            {leadsSubTab === "blog" && (
+              <div>
+                <div className="flex items-center gap-3 mb-4">
+                  <select
+                    value={leadsUserTypeFilter}
+                    onChange={(e) => { setLeadsUserTypeFilter(e.target.value); setLeadsPage(1); }}
+                    className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  >
+                    <option value="all">All Types</option>
+                    <option value="marina_owner">Marina Owner</option>
+                    <option value="yacht_owner">Yacht Owner</option>
+                  </select>
+                  <span className="text-sm text-gray-500">{blogLeadsTotal} lead{blogLeadsTotal !== 1 ? "s" : ""}</span>
+                </div>
+
+                {leadsLoading ? (
+                  <LoadingSpinner message="Loading leads..." />
+                ) : (
+                  <>
+                    <div className="bg-white rounded-xl border shadow-sm overflow-hidden">
+                      <table className="w-full text-sm">
+                        <thead className="bg-gray-50 border-b">
+                          <tr>
+                            <th className="text-left px-4 py-3 font-semibold text-gray-700">Name</th>
+                            <th className="text-left px-4 py-3 font-semibold text-gray-700">Email</th>
+                            <th className="text-left px-4 py-3 font-semibold text-gray-700">Type</th>
+                            <th className="text-left px-4 py-3 font-semibold text-gray-700">Date</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y">
+                          {blogLeads.length === 0 ? (
+                            <tr>
+                              <td colSpan={4} className="text-center py-10 text-gray-400">
+                                No leads yet.
+                              </td>
+                            </tr>
+                          ) : (
+                            blogLeads.map((lead) => (
+                              <tr key={lead.id} className="hover:bg-gray-50 transition-colors">
+                                <td className="px-4 py-3 font-medium text-navy-800">{lead.name}</td>
+                                <td className="px-4 py-3 text-gray-600">
+                                  <a href={`mailto:${lead.email}`} className="hover:underline text-teal-700">
+                                    {lead.email}
+                                  </a>
+                                </td>
+                                <td className="px-4 py-3">
+                                  <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
+                                    lead.user_type === "marina_owner"
+                                      ? "bg-teal-100 text-teal-800"
+                                      : "bg-navy-100 text-navy-800"
+                                  }`}>
+                                    {lead.user_type === "marina_owner" ? "Marina Owner" : "Yacht Owner"}
+                                  </span>
+                                </td>
+                                <td className="px-4 py-3 text-xs text-gray-400">
+                                  {new Date(lead.created_at).toLocaleDateString()}
+                                </td>
+                              </tr>
+                            ))
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                    {Math.ceil(blogLeadsTotal / 25) > 1 && (
+                      <div className="flex items-center justify-between mt-4">
+                        <button
+                          disabled={leadsPage === 1}
+                          onClick={() => setLeadsPage((p) => p - 1)}
+                          className="px-4 py-2 text-sm font-medium text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-40"
+                        >
+                          Previous
+                        </button>
+                        <span className="text-sm text-gray-500">
+                          Page {leadsPage} of {Math.ceil(blogLeadsTotal / 25)}
+                        </span>
+                        <button
+                          disabled={leadsPage === Math.ceil(blogLeadsTotal / 25)}
+                          onClick={() => setLeadsPage((p) => p + 1)}
+                          className="px-4 py-2 text-sm font-medium text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-40"
+                        >
+                          Next
+                        </button>
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+            )}
+
+            {leadsSubTab === "calculator" && (
+              <div>
+                <p className="text-sm text-gray-500 mb-4">{calcLeadsTotal} calculator submission{calcLeadsTotal !== 1 ? "s" : ""}</p>
+                {leadsLoading ? (
+                  <LoadingSpinner message="Loading leads..." />
+                ) : (
+                  <>
+                    <div className="bg-white rounded-xl border shadow-sm overflow-hidden">
+                      <table className="w-full text-sm">
+                        <thead className="bg-gray-50 border-b">
+                          <tr>
+                            <th className="text-left px-4 py-3 font-semibold text-gray-700">Email</th>
+                            <th className="text-left px-4 py-3 font-semibold text-gray-700">Marina</th>
+                            <th className="text-left px-4 py-3 font-semibold text-gray-700">Region</th>
+                            <th className="text-left px-4 py-3 font-semibold text-gray-700">Slips</th>
+                            <th className="text-left px-4 py-3 font-semibold text-gray-700">Est. Loss</th>
+                            <th className="text-left px-4 py-3 font-semibold text-gray-700">Date</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y">
+                          {calcLeads.length === 0 ? (
+                            <tr>
+                              <td colSpan={6} className="text-center py-10 text-gray-400">
+                                No calculator submissions yet.
+                              </td>
+                            </tr>
+                          ) : (
+                            calcLeads.map((lead) => (
+                              <tr key={lead.id} className="hover:bg-gray-50 transition-colors">
+                                <td className="px-4 py-3 text-gray-600">
+                                  <a href={`mailto:${lead.email}`} className="hover:underline text-teal-700">
+                                    {lead.email}
+                                  </a>
+                                  {lead.phone && <p className="text-xs text-gray-400">{lead.phone}</p>}
+                                </td>
+                                <td className="px-4 py-3 text-navy-800 font-medium">{lead.marina_name ?? "—"}</td>
+                                <td className="px-4 py-3 text-gray-500">{lead.region ?? "—"}</td>
+                                <td className="px-4 py-3 text-gray-500">
+                                  {lead.total_slips != null ? (
+                                    <span>{lead.total_slips} total / {lead.vacant_slips ?? "?"} vacant</span>
+                                  ) : "—"}
+                                </td>
+                                <td className="px-4 py-3">
+                                  {lead.annual_loss != null ? (
+                                    <span className="font-semibold text-red-700">
+                                      ${Math.round(lead.annual_loss).toLocaleString()}
+                                    </span>
+                                  ) : "—"}
+                                </td>
+                                <td className="px-4 py-3 text-xs text-gray-400">
+                                  {new Date(lead.created_at).toLocaleDateString()}
+                                </td>
+                              </tr>
+                            ))
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                    {Math.ceil(calcLeadsTotal / 25) > 1 && (
+                      <div className="flex items-center justify-between mt-4">
+                        <button
+                          disabled={leadsPage === 1}
+                          onClick={() => setLeadsPage((p) => p - 1)}
+                          className="px-4 py-2 text-sm font-medium text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-40"
+                        >
+                          Previous
+                        </button>
+                        <span className="text-sm text-gray-500">
+                          Page {leadsPage} of {Math.ceil(calcLeadsTotal / 25)}
+                        </span>
+                        <button
+                          disabled={leadsPage === Math.ceil(calcLeadsTotal / 25)}
+                          onClick={() => setLeadsPage((p) => p + 1)}
+                          className="px-4 py-2 text-sm font-medium text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-40"
+                        >
+                          Next
+                        </button>
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
       </div>
 
       {/* Edit Modal */}
