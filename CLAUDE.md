@@ -11,8 +11,8 @@ EasyDock is a marina booking marketplace MVP that connects boat owners with mari
 - **Frontend**: Next.js 15 (App Router), React 19, TypeScript
 - **Styling**: Tailwind CSS 4 with navy/teal theme
 - **Backend**: Supabase (PostgreSQL, Auth, Storage, Row Level Security)
-- **Hosting**: Netlify (with `@netlify/plugin-nextjs` for SSR)
-- **Payments**: Stripe Connect (pending integration)
+- **Hosting**: Vercel (deployed at https://easydock.vercel.app; analytics via `@vercel/analytics`)
+- **Payments**: Stripe Connect (test mode; live mode pending board verification — see EAS-118)
 
 ## Project Structure
 
@@ -42,8 +42,7 @@ easydock/
 ├── next.config.ts
 ├── tailwind.config.ts
 ├── postcss.config.mjs
-├── netlify.toml
-└── .env.local                  # Supabase credentials (gitignored)
+└── .env.local                  # Supabase + Stripe credentials (gitignored)
 ```
 
 ## Key Database Tables
