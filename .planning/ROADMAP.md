@@ -4,7 +4,7 @@
 
 - ✅ **v1.0 MVP** — Phases 1-5 (shipped 2026-03-12)
 - ✅ **v1.1 Vercel Deploy** — Phase 6 (shipped 2026-06-27)
-- 🚧 **v1.2 Marina Activation** — Phases 7-9 (pending board approval)
+- ✅ **v1.2 Marina Activation** — Phases 7-9 (shipped 2026-06-28)
 
 ## Phases
 
@@ -39,11 +39,11 @@ Full details: `.planning/milestones/v1.0-ROADMAP.md`
 
 #### Phase 8: Demo Slip + Lead Capture
 
-- [ ] **Phase 8: Demo Slip + Lead Capture** - When boat owners try to book at an unclaimed marina, show a "Request a spot" form capturing lead info, then email the marina's CSV contact to activate
+- [x] **Phase 8: Demo Slip + Lead Capture** - UnclaimedMarinaCard component, POST /api/marina-leads, 005_marina_spot_requests.sql, search page integration — completed 2026-06-28 (EAS-109)
 
 #### Phase 9: Marina Activation Emails
 
-- [ ] **Phase 9: Marina Activation Emails** - React Email templates for the activation flow: nudge to unclaimed marina owners and confirmation to boat owners
+- [x] **Phase 9: Marina Activation Emails** - marina-lead-confirmation.tsx (boat owner) + marina-activation-nudge.tsx (EasyDock admin) React Email templates — completed 2026-06-28 (EAS-109)
 
 ## Phase Details
 
@@ -70,5 +70,5 @@ Full details: `.planning/milestones/v1.0-ROADMAP.md`
 | 5. Booking Lifecycle and Notifications | v1.0 | 3/3 | Complete | 2026-03-12 |
 | 6. Vercel Migration | v1.1 | 1/1 | Complete | 2026-06-27 |
 | 7. Marina Claim Flow | v1.2 | 1/1 | Complete | 2026-06-28 |
-| 8. Demo Slip + Lead Capture | v1.2 | 0/TBD | Pending approval | - |
-| 9. Marina Activation Emails | v1.2 | 0/TBD | Pending approval | - |
+| 8. Demo Slip + Lead Capture | v1.2 | 1/1 | Complete | 2026-06-28 |
+| 9. Marina Activation Emails | v1.2 | 1/1 | Complete | 2026-06-28 |
