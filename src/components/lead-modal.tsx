@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { track } from '@vercel/analytics';
 
 interface LeadModalProps {
   isOpen: boolean;
@@ -79,6 +80,7 @@ export default function LeadModal({ isOpen, onClose }: LeadModalProps) {
         return;
       }
 
+      track("lead_captured", { user_type: userType, source: "modal" });
       setSubmitted(true);
     } catch {
       setErrors({ name: 'Something went wrong. Please try again.' });

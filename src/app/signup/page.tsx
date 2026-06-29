@@ -4,6 +4,7 @@ import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
+import { track } from "@vercel/analytics";
 
 function SignUpForm() {
   const { signUp } = useAuth();
@@ -39,6 +40,7 @@ function SignUpForm() {
       return;
     }
 
+    track("signup_started", { role });
     setIsSubmitting(true);
 
     const defaultRedirect = role === "marina_owner" ? "/dashboard" : "/search";
@@ -58,11 +60,13 @@ function SignUpForm() {
     }
 
     if (result.needsConfirmation) {
+      track("signup_completed", { role });
       setNeedsConfirmation(true);
       setIsSubmitting(false);
       return;
     }
 
+    track("signup_completed", { role });
     router.push(returnTo ?? (role === "marina_owner" ? "/dashboard" : "/search"));
   }
 

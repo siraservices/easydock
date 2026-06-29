@@ -9,6 +9,7 @@ import {
 } from "@/lib/utils/format";
 import { VESSEL_TYPES } from "@/lib/constants";
 import type { Database } from "@/types/database";
+import { track } from "@vercel/analytics";
 
 type Slip = Database["public"]["Tables"]["slips"]["Row"];
 
@@ -63,6 +64,12 @@ export default function BookingWidget({
       return;
     }
 
+    track("checkout_started", {
+      slip_id: slip.id,
+      marina_id: marinaId,
+      nights,
+      total,
+    });
     setSubmitting(true);
     setError("");
 
@@ -97,8 +104,20 @@ export default function BookingWidget({
 
       // Redirect to Stripe Checkout
       if (data.url) {
+        track("checkout_completed", {
+          slip_id: slip.id,
+          marina_id: marinaId,
+          nights,
+          total,
+        });
         window.location.href = data.url;
       } else if (data.bookingId) {
+        track("checkout_completed", {
+          slip_id: slip.id,
+          marina_id: marinaId,
+          nights,
+          total,
+        });
         router.push(`/bookings/${data.bookingId}?success=true`);
       }
     } catch {

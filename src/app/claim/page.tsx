@@ -6,6 +6,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 import LoadingSpinner from "@/components/ui/loading-spinner";
+import { track } from "@vercel/analytics";
 
 interface UnclaimedMarina {
   id: string;
@@ -39,6 +40,10 @@ function ClaimContent() {
   const [hasSearched, setHasSearched] = useState(false);
   const [claimingId, setClaimingId] = useState<string | null>(null);
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
+
+  useEffect(() => {
+    track("claim_viewed");
+  }, []);
 
   // Pre-populate search from URL params (e.g. returning from signup flow)
   useEffect(() => {
@@ -86,6 +91,8 @@ function ClaimContent() {
   };
 
   const handleClaim = async (marina: UnclaimedMarina) => {
+    track("claim_started", { marina_id: marina.id, marina_name: marina.name });
+
     if (!user) {
       // Redirect to signup with context — role pre-selected, return to /claim with marina name
       const returnTo = `/claim?name=${encodeURIComponent(marina.name)}`;
@@ -114,6 +121,7 @@ function ClaimContent() {
         return;
       }
 
+      track("claim_completed", { marina_id: marina.id, marina_name: marina.name });
       setToast({ message: `${marina.name} claimed! Complete your setup in the dashboard.`, type: "success" });
       setTimeout(() => {
         router.push(`/dashboard/marinas/${marina.id}?welcome=1`);

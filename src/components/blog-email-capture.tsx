@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { track } from "@vercel/analytics";
 
 export default function BlogEmailCapture() {
   const [name, setName] = useState("");
@@ -28,6 +29,7 @@ export default function BlogEmailCapture() {
         return;
       }
 
+      track("lead_captured", { user_type: "marina_owner", source: "blog" });
       setStatus("success");
     } catch {
       setErrorMsg("Network error — please try again.");
