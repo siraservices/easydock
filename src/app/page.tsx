@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import LeadModal from '@/components/lead-modal';
 import RegionCoverageSection from '@/components/region-coverage-section';
 import RequestAreaCTA from '@/components/request-area-cta';
@@ -81,12 +82,12 @@ export default function HomePage() {
               >
                 Find an open slip
               </button>
-              <button
-                onClick={() => setModalOpen(true)}
+              <Link
+                href="/claim"
                 className="rounded-xl border border-white/30 px-7 py-3 text-base font-medium text-white hover:bg-white/10 transition-colors"
               >
                 I own a marina
-              </button>
+              </Link>
             </div>
 
             {/* Value-prop checkmarks */}
@@ -209,23 +210,33 @@ export default function HomePage() {
 
           {/* Marina Owners steps */}
           {activeTab === 'marina_owners' && (
-            <div className="grid md:grid-cols-3 gap-6">
-              <StepCard
-                icon="fa-plus-circle"
-                title="List Your Marina"
-                description="Add your marina to our network. Set availability, pricing, and showcase your amenities to qualified yacht owners."
-              />
-              <StepCard
-                icon="fa-users"
-                title="Connect with Customers"
-                description="Reach a broader audience of yacht owners through our booking platform. Maximize occupancy and revenue potential."
-              />
-              <StepCard
-                icon="fa-chart-line"
-                title="Grow Your Business"
-                description="Increase bookings and revenue with streamlined online reservations and a dashboard built for marina operators."
-              />
-            </div>
+            <>
+              <div className="grid md:grid-cols-3 gap-6">
+                <StepCard
+                  icon="fa-plus-circle"
+                  title="List Your Marina"
+                  description="Add your marina to our network. Set availability, pricing, and showcase your amenities to qualified yacht owners."
+                />
+                <StepCard
+                  icon="fa-users"
+                  title="Connect with Customers"
+                  description="Reach a broader audience of yacht owners through our booking platform. Maximize occupancy and revenue potential."
+                />
+                <StepCard
+                  icon="fa-chart-line"
+                  title="Grow Your Business"
+                  description="Increase bookings and revenue with streamlined online reservations and a dashboard built for marina operators."
+                />
+              </div>
+              <div className="mt-8 text-center">
+                <Link
+                  href="/claim"
+                  className="inline-block rounded-xl bg-teal-500 px-8 py-3 text-base font-semibold text-white shadow-lg hover:bg-teal-400 transition-colors"
+                >
+                  Find and claim your marina →
+                </Link>
+              </div>
+            </>
           )}
         </div>
       </section>
