@@ -247,6 +247,168 @@ If your target marina isn't listed yet, you can [request that we add it](/search
 Ready to search? [Browse available slips →](/search)
     `.trim(),
   },
+  {
+    slug: 'how-to-fill-empty-marina-slips',
+    title: 'How to Fill Empty Slips and Boost Marina Revenue',
+    description:
+      'Vacant slips are lost revenue. Here are the most effective strategies marina operators use to fill empty dock space and maximize occupancy year-round.',
+    date: '2026-06-29',
+    readingTime: 5,
+    category: 'marina-owners',
+    content: `
+Vacant slips are the single biggest revenue leak at most marinas. A slip that sits empty for a month at $2,000/month is $2,000 you'll never recover. At a 50-slip marina, even 15% vacancy costs $180,000 per year.
+
+The good news: most marina vacancies are addressable. Here's what the highest-occupancy operators in South Florida do differently.
+
+## 1. Make Your Inventory Discoverable Online
+
+The most common cause of vacant slips isn't lack of demand — it's lack of visibility. Boat owners searching for available slips in Miami, Fort Lauderdale, or the Keys can't book a slip they don't know about.
+
+The first step is listing your available inventory on a platform where boaters are actively searching. When your slips appear in online search results with real-time availability, pricing, and specs, you capture demand that would otherwise go to a competitor.
+
+[EasyDock](/) lists 241 South Florida marinas and connects marina operators directly with boat owners looking to book. If your marina isn't listed, [claim it here](/claim).
+
+## 2. Separate Permanent and Transient Inventory
+
+Many marinas treat all their slips as "permanent" by default and miss out on transient revenue between tenant contracts or during seasonal gaps.
+
+Consider designating 10–20% of your slips as transient inventory during slow periods. Transient rates ($3–$6/ft/night) often exceed what you'd earn on the same slip under a monthly contract, especially in high-season months (November through April in South Florida).
+
+Platforms like EasyDock make it easy to set per-slip availability windows so transient bookings never conflict with your permanent tenants.
+
+## 3. Price Dynamically Based on Demand
+
+Fixed monthly pricing leaves money on the table during peak season and creates vacancies during slow months. Operators who adjust their slip rates seasonally — even modest 15–20% shifts — consistently outperform those with static pricing.
+
+Basic seasonal pricing framework for South Florida:
+- **Peak season (Nov–Apr)**: Price at or above market
+- **Off-season (May–Oct)**: Offer slightly below market to maintain occupancy
+- **Holidays (New Year's, Memorial Day)**: Short-term premium pricing for transient slips
+
+## 4. Activate Your Waitlist for Short-Term Revenue
+
+Most popular marinas have waiting lists for permanent slips. Those waitlist members are already vetted, interested boaters.
+
+When a permanent tenant cancels or a slip opens unexpectedly, contact your waitlist immediately with a short-term offer: "The slip is available now through [date] — would you like it on a month-to-month basis while you're waiting for your permanent assignment?"
+
+This fills your vacancy fast and builds goodwill with future tenants.
+
+## 5. Convert Leads from Unclaimed Inventory
+
+If you have slips available but no active booking system, boat owners who find you will call — and calls you can't answer are leads you lose. Even a simple inquiry form with an email notification can prevent those leads from going cold.
+
+With EasyDock, boat owners who find an unclaimed marina can submit an interest form. Those leads go directly to your email so you can follow up immediately, even before you've fully set up your listing.
+
+## The Math of Occupancy Improvement
+
+If you currently run at 80% occupancy on a 30-slip marina at $1,500/slip/month:
+- **Current revenue**: 24 slips × $1,500 = $36,000/month
+- **At 93% occupancy**: 28 slips × $1,500 = $42,000/month
+- **Annual gain**: $72,000
+
+Getting from 80% to 93% occupancy — 4 additional slips out of 30 — is entirely achievable with better visibility and an online booking channel.
+
+## Getting Started
+
+The fastest path to higher occupancy is getting your marina listed where boaters are actively searching. [Claim your marina on EasyDock](/claim) — the process takes about two minutes, and your listing goes live the same day.
+    `.trim(),
+  },
+  {
+    slug: 'transient-docking-south-florida-guide',
+    title: 'Transient Docking in Miami and Fort Lauderdale: A Boater\'s Guide',
+    description:
+      'Planning a stop along the Florida ICW or cruising South Florida? Here\'s what you need to know about transient docking in Miami, Fort Lauderdale, and the Keys.',
+    date: '2026-06-29',
+    readingTime: 6,
+    category: 'boat-owners',
+    content: `
+South Florida is one of the most popular cruising destinations on the East Coast — and one of the most competitive for short-term dock space. If you're planning to transit the Intracoastal Waterway, cruise the Biscayne Bay, or spend time in the Keys, here's what experienced boaters know about finding transient slips.
+
+## What Is Transient Docking?
+
+Transient docking (also called guest docking or transient slip rental) is short-term dock space — typically nightly, weekly, or for a specific number of days. Unlike annual contracts, transient slips are available on-demand and don't require a long-term commitment.
+
+Transient docking is ideal for:
+- **Coastal cruisers** passing through South Florida on the ICW or offshore route
+- **Snowbirds** relocating seasonally between South Florida and the Northeast
+- **Charter vessels** that need flexible, multi-stop accommodations
+- **Boat owners** visiting South Florida for a weekend or vacation
+
+## Rates: What to Expect in 2026
+
+Transient rates in South Florida vary significantly by location, marina quality, and season. General ranges as of 2026:
+
+| Area | Nightly Rate (per foot) | Notes |
+|------|------------------------|-------|
+| Miami / Coconut Grove | $4.00–$6.00/ft | Premium waterfront, highest demand |
+| Fort Lauderdale | $3.50–$5.50/ft | High availability, strong amenity base |
+| Palm Beach / Boca | $3.00–$5.00/ft | Less busy, good anchorage alternatives |
+| Marathon / The Keys | $2.50–$4.50/ft | Tight availability during peak season |
+| Miami Beach | $5.00–$7.00/ft | Urban premium, limited supply |
+
+A 40-foot boat at a Fort Lauderdale marina might pay $140–$220/night for a transient slip. Factor in electricity ($15–$40/night depending on shore power draw) and any facility fees.
+
+**Note:** Off-season (May through October) rates are typically 15–25% lower, and availability improves substantially.
+
+## Where to Search for Transient Slips
+
+### Online Booking Platforms
+The most efficient way to find available transient slips is through an online platform with real-time availability. You can see open slips, compare rates, and book without phone tag.
+
+[Search EasyDock's South Florida marina map](/search) to find available slips near your destination, filtered to your vessel dimensions and dates.
+
+### Marina Directories
+The USCG and BoatUS publish marina directories with contact information, but they don't show real-time availability. Use these as a starting point, then verify directly.
+
+### VHF Channel 16
+The traditional method: hail marinas on channel 16 as you approach. Most South Florida marinas monitor 16 and can advise on availability and direct you to their working channel.
+
+## What Amenities to Look For
+
+When evaluating a transient slip, confirm these details in advance:
+
+**Shore power**
+Confirm the slip has the right pedestal for your boat. 30A, 50A, and 100A service are common, but not universal. Running your generator all night in a marina will cost you goodwill quickly.
+
+**Pump-out**
+Most marinas require you to use their pump-out facility rather than pumping overboard. Confirm it's available and whether there's a fee.
+
+**Fuel**
+If you need diesel or gas, check whether the marina has a fuel dock or whether you'll need to move the boat. Many marinas separate fuel and slip services.
+
+**Security and access**
+Ask about gate codes for showers, laundry, and the dock. Most quality transient marinas provide 24-hour gate access with a code on check-in.
+
+**Liveaboard policy**
+If you're living aboard, confirm the marina allows overnight stays. Some transient slips are for day visits only.
+
+## Tips for High-Demand Periods
+
+### Book in Advance for Peak Season
+November through April is peak season in South Florida — especially around New Year's, Presidents Day weekend, and spring break. Transient slips at popular Fort Lauderdale and Miami marinas book out weeks in advance during these periods.
+
+If you're cruising south in the fall or north in the spring, book your overnight stops 1–2 weeks ahead, not the day before.
+
+### Have a Backup Plan
+During Boat Show week in Fort Lauderdale (October/November), every slip within 20 miles is booked. Same story during the Miami Boat Show (February). Build in alternatives: anchor-out spots, less-convenient marinas a few miles away, or arriving a day early.
+
+### Arrive Early in the Day
+Most transient slips are first-come, first-served unless reserved. Arriving after 4pm in peak season means you may be calling around for alternatives while running out of daylight.
+
+## Anchoring as an Alternative
+
+South Florida has excellent anchoring opportunities, especially in Biscayne Bay, the ICW, and the Keys. A free anchorage with a solid dinghy can save $150/night while keeping you close to the action.
+
+Popular anchoring spots:
+- **Biscayne Bay** (south of Miami): Good holding, lots of swing room, dinghy to Coconut Grove or Matheson Hammock
+- **Lake Sylvia, Fort Lauderdale**: Tucked behind the ICW, protected in most conditions
+- **No Name Harbor, Key Biscayne**: Free, protected, beautiful — but fills up on weekends
+
+## Ready to Search?
+
+[Browse available slips on EasyDock →](/search) to find transient dock space near your destination, with real-time availability and online booking.
+    `.trim(),
+  },
 ];
 
 export function getPost(slug: string): BlogPost | undefined {

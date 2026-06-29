@@ -5,7 +5,7 @@ milestone_name: Revenue Unblock
 status: in_progress
 stopped_at: null
 last_updated: "2026-06-29"
-last_activity: 2026-06-29 — Admin leads panel + /api/admin/leads endpoint (EAS-7 heartbeat)
+last_activity: 2026-06-29 — SEO blog expansion: 2 new posts added (marina revenue + transient docking guide)
 progress:
   total_phases: 3
   completed_phases: 1
@@ -65,6 +65,7 @@ v1.4 EAS-118 (Stripe live-mode) pending board completing Stripe account verifica
 ### Completed v1.4 Work
 
 - EAS-117 (conversion tracking + sitemap.xml, 2026-06-29): Vercel Analytics custom events across signup/claim/checkout/lead funnel; /sitemap.xml via App Router built-in; commit e284160
+- SEO blog expansion (2026-06-29, EAS-7 heartbeat): 2 additional posts — "How to Fill Empty Marina Slips" (marina-owners) + "Transient Docking South Florida Guide" (boat-owners); blog now has 5 posts targeting high-intent keywords
 
 ### Completed v1.3 Post-Ship Work
 
@@ -84,5 +85,5 @@ v1.4 EAS-118 (Stripe live-mode) pending board completing Stripe account verifica
 ## Session Continuity
 
 Last session: 2026-06-29
-Stopped at: v1.4 in progress. EAS-117 complete (conversion tracking + sitemap). EAS-118 blocked on Stripe board action. Admin leads panel shipped this heartbeat (GET /api/admin/leads + Leads tab in /admin). Build clean, 124 tests green.
+Stopped at: v1.4 in progress. EAS-117 complete (conversion tracking + sitemap). EAS-118 blocked on Stripe board action. SEO blog expanded to 5 posts this heartbeat (2 new: marina revenue + transient docking). Build clean, 124 tests green.
 Resume file: None
