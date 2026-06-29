@@ -5,7 +5,7 @@ milestone_name: Marina Owner Acquisition
 status: in_progress
 stopped_at: null
 last_updated: "2026-06-29"
-last_activity: 2026-06-29 — Homepage CTA fix: wired "I own a marina" hero button + marina-owner tab CTA to /claim (commit 6abef28)
+last_activity: 2026-06-29 — Auth fix (returnTo through email confirmation, b67a8f4) + blog email capture widget on marina-owner posts (8191919)
 progress:
   total_phases: 2
   completed_phases: 2
@@ -73,9 +73,11 @@ No engineering blockers.
 - SEO Blog (EAS-112, 2026-06-29): /blog listing + 3 static posts; pushed commit 993a860
 - Public Claim Landing (EAS-113, 2026-06-29): /claim public + signup role/returnTo params; pushed commit fc9e41c
 - Homepage CTA fix (2026-06-29): "I own a marina" hero button + marina-owner tab CTA now route to /claim; pushed commit 6abef28
+- Auth fix (2026-06-29): email confirmation now preserves returnTo param through Supabase emailRedirectTo → /auth/callback?next=<path>; commit b67a8f4
+- Blog email capture (2026-06-29): marina-owner blog posts now show name+email capture form (feeds /api/leads); commit 8191919
 
 ## Session Continuity
 
 Last session: 2026-06-29
-Stopped at: Homepage CTA gap closed. v1.3 all current phases complete. Proposed next phases (conversion tracking, post-claim onboarding, email capture fallback) need CEO/board direction.
+Stopped at: v1.3 Phases 10+11 complete. Auth flow gap fixed. Blog email capture shipped. All 124 tests pass. Next phases (conversion tracking, post-claim onboarding, Stripe live-mode switch) need CEO/board direction.
 Resume file: None
