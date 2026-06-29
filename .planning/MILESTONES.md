@@ -50,3 +50,21 @@
 
 ---
 
+## v1.2 Marina Activation (Shipped: 2026-06-28)
+
+**Phases completed:** 3 phases, 3 plans
+
+**Key accomplishments:**
+- Marina claim flow: /claim page where marina owners search and claim their CSV listing, linking their account to an existing marina record and unlocking the dashboard for real slip management
+- Admin dashboard: 3-tab UI (Overview / Marinas / Claims) with stats, paginated list, and PATCH endpoint for claim review
+- Lead capture for unclaimed marinas: UnclaimedMarinaCard in search results, POST /api/marina-leads, spot_requests table with RLS
+- Marina activation emails: confirmation email to boat owners + nudge email to EasyDock admin (React Email templates)
+- 241 South Florida marinas imported from CSV (includes 4 previously missing records)
+
+**Stats:**
+- Tests: 332 passing (up from 312 at v1.1 ship)
+- TypeScript: clean (zero errors)
+- Issues: EAS-107, EAS-108, EAS-109
+
+---
+

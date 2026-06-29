@@ -29,7 +29,7 @@ Full details: `.planning/milestones/v1.0-ROADMAP.md`
 
 - [x] **Phase 6: Vercel Migration** - Remove Netlify, configure Vercel, add analytics, and ship a clean production deploy — completed 2026-06-27
 
-### 🚧 v1.2 Marina Activation (Pending Board Approval)
+### ✅ v1.2 Marina Activation (Complete — 2026-06-28)
 
 **Milestone Goal:** Convert the 237 CSV marinas into active listings and capture demand-side leads — creating the first path to real bookings without requiring all marina owners to sign up first.
 
