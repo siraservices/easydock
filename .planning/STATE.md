@@ -5,12 +5,12 @@ milestone_name: Marina Owner Acquisition
 status: in_progress
 stopped_at: null
 last_updated: "2026-06-29"
-last_activity: 2026-06-29 — Phase 10 (SEO Blog) complete (EAS-112)
+last_activity: 2026-06-29 — Phase 11 (Public Claim Landing) complete (EAS-113)
 progress:
-  total_phases: 1
-  completed_phases: 1
-  total_plans: 1
-  completed_plans: 1
+  total_phases: 2
+  completed_phases: 2
+  total_plans: 2
+  completed_plans: 2
   percent: 100
 ---
 
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-13)
 
 **Core value:** A yacht owner can find an available slip, book it, and pay — and a marina owner receives that booking and gets paid.
-**Current focus:** v1.3 Marina Owner Acquisition — Phase 10 complete, more phases possible
+**Current focus:** v1.3 Marina Owner Acquisition — Phases 10+11 complete, more phases possible
 
 ## Current Position
 
-Phase: 10 of ? (SEO Blog) — **COMPLETE**
-Plan: 1 of 1
+Phase: 11 of ? (Public Claim Landing) — **COMPLETE**
+Plan: 2 of 2
 Status: Complete
-Last activity: 2026-06-29 — /blog listing + 3 static blog posts shipped (EAS-112); pushed to main, Vercel autodeploy pending
+Last activity: 2026-06-29 — /claim made public + signup role/returnTo params (EAS-113); pushed commit fc9e41c
 
 Progress: [██████████] 100%
 
@@ -56,7 +56,7 @@ Recent decisions affecting current work:
 
 ### Pending Todos
 
-None — Phase 10 complete. Next phases for v1.3 TBD by board/CEO direction.
+None — Phases 10+11 complete. Next phases for v1.3 TBD by board/CEO direction.
 
 ### Blockers/Concerns
 
@@ -70,10 +70,11 @@ No engineering blockers.
 - Nyquist validation finalized (EAS-103, 2026-06-28)
 - Marina Claim Flow (EAS-107, 2026-06-28)
 - Demo Slip + Lead Capture (EAS-109, 2026-06-28)
-- SEO Blog (EAS-112, 2026-06-29): /blog listing + 3 static posts (marina owner how-to, digital transition awareness, boat owner guide); pushed commit 993a860
+- SEO Blog (EAS-112, 2026-06-29): /blog listing + 3 static posts; pushed commit 993a860
+- Public Claim Landing (EAS-113, 2026-06-29): /claim public + signup role/returnTo params; pushed commit fc9e41c
 
 ## Session Continuity
 
 Last session: 2026-06-29
-Stopped at: Phase 10 (SEO Blog) complete. v1.3 in progress. Next phases need CEO direction.
+Stopped at: Phase 11 (Public Claim Landing) complete. v1.3 in progress. Next phases need CEO direction.
 Resume file: None

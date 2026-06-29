@@ -54,6 +54,10 @@ Full details: `.planning/milestones/v1.0-ROADMAP.md`
 
 - [x] **Phase 10: SEO Blog** - /blog listing page + 3 pre-rendered static posts targeting marina owner and boat owner keywords; OG/Twitter meta per post; per-post CTA routing to /claim or /search — completed 2026-06-29 (EAS-112, commit 993a860)
 
+#### Phase 11: Public Claim Landing
+
+- [x] **Phase 11: Public Claim Landing** - /claim made publicly accessible (no auth to search/browse); unauthenticated users redirected to /signup?role=marina_owner&returnTo=/claim on "Claim" click; signup page accepts role + returnTo params; "How it works" 3-step section + OG meta on /claim — completed 2026-06-29 (EAS-113, commit fc9e41c)
+
 ## Phase Details
 
 ### Phase 6: Vercel Migration
