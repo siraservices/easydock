@@ -1,19 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 
-export default function SignUpPage() {
+function SignUpForm() {
   const { signUp } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const roleParam = searchParams.get("role");
+  const returnTo = searchParams.get("returnTo");
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
-  const [role, setRole] = useState<"boat_owner" | "marina_owner" | null>(null);
+  const [role, setRole] = useState<"boat_owner" | "marina_owner" | null>(
+    roleParam === "marina_owner" ? "marina_owner" : roleParam === "boat_owner" ? "boat_owner" : null
+  );
   const [companyName, setCompanyName] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -52,7 +58,7 @@ export default function SignUpPage() {
       return;
     }
 
-    router.push(role === "marina_owner" ? "/dashboard" : "/search");
+    router.push(returnTo ?? (role === "marina_owner" ? "/dashboard" : "/search"));
   }
 
   if (needsConfirmation) {
@@ -283,5 +289,13 @@ export default function SignUpPage() {
       </div>
       </div>
     </div>
+  );
+}
+
+export default function SignUpPage() {
+  return (
+    <Suspense fallback={null}>
+      <SignUpForm />
+    </Suspense>
   );
 }
