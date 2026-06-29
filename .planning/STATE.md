@@ -5,7 +5,7 @@ milestone_name: Marina Owner Acquisition
 status: in_progress
 stopped_at: null
 last_updated: "2026-06-29"
-last_activity: 2026-06-29 — Phase 11 (Public Claim Landing) complete (EAS-113)
+last_activity: 2026-06-29 — Homepage CTA fix: wired "I own a marina" hero button + marina-owner tab CTA to /claim (commit 6abef28)
 progress:
   total_phases: 2
   completed_phases: 2
@@ -72,9 +72,10 @@ No engineering blockers.
 - Demo Slip + Lead Capture (EAS-109, 2026-06-28)
 - SEO Blog (EAS-112, 2026-06-29): /blog listing + 3 static posts; pushed commit 993a860
 - Public Claim Landing (EAS-113, 2026-06-29): /claim public + signup role/returnTo params; pushed commit fc9e41c
+- Homepage CTA fix (2026-06-29): "I own a marina" hero button + marina-owner tab CTA now route to /claim; pushed commit 6abef28
 
 ## Session Continuity
 
 Last session: 2026-06-29
-Stopped at: Phase 11 (Public Claim Landing) complete. v1.3 in progress. Next phases need CEO direction.
+Stopped at: Homepage CTA gap closed. v1.3 all current phases complete. Proposed next phases (conversion tracking, post-claim onboarding, email capture fallback) need CEO/board direction.
 Resume file: None
