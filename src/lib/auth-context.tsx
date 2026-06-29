@@ -34,7 +34,7 @@ interface AuthContextType {
     password: string,
     fullName: string,
     role: "boat_owner" | "marina_owner",
-    options?: { companyName?: string; phone?: string }
+    options?: { companyName?: string; phone?: string; redirectTo?: string }
   ) => Promise<SignUpResult>;
   signIn: (email: string, password: string) => Promise<SignInResult>;
   signOut: () => Promise<void>;
@@ -120,7 +120,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     password: string,
     fullName: string,
     role: "boat_owner" | "marina_owner",
-    options?: { companyName?: string; phone?: string }
+    options?: { companyName?: string; phone?: string; redirectTo?: string }
   ): Promise<SignUpResult> {
     const { data, error } = await supabase.auth.signUp({
       email,
@@ -130,6 +130,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           full_name: fullName,
           role,
         },
+        ...(options?.redirectTo ? { emailRedirectTo: options.redirectTo } : {}),
       },
     });
 

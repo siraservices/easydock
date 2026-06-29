@@ -41,9 +41,14 @@ function SignUpForm() {
 
     setIsSubmitting(true);
 
+    const defaultRedirect = role === "marina_owner" ? "/dashboard" : "/search";
+    const postConfirmPath = returnTo ?? defaultRedirect;
+    const redirectTo = `${window.location.origin}/auth/callback?next=${encodeURIComponent(postConfirmPath)}`;
+
     const result = await signUp(email, password, fullName, role, {
       companyName: role === "marina_owner" ? companyName : undefined,
       phone: phone || undefined,
+      redirectTo,
     });
 
     if (result.error) {
