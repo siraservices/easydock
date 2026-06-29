@@ -116,7 +116,7 @@ function ClaimContent() {
 
       setToast({ message: `${marina.name} claimed! Complete your setup in the dashboard.`, type: "success" });
       setTimeout(() => {
-        router.push(`/dashboard/marinas/${marina.id}`);
+        router.push(`/dashboard/marinas/${marina.id}?welcome=1`);
       }, 1500);
     } catch {
       setToast({ message: "Something went wrong. Please try again.", type: "error" });

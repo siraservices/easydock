@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useMemo, useCallback } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/auth-context";
@@ -16,9 +16,125 @@ import type { Database } from "@/types/database";
 type Marina = Database["public"]["Tables"]["marinas"]["Row"];
 type Slip = Database["public"]["Tables"]["slips"]["Row"];
 
+interface OnboardingChecklistProps {
+  marina: Marina;
+  slips: Slip[];
+  onAddSlipClick: () => void;
+}
+
+function OnboardingChecklist({ marina, slips, onAddSlipClick }: OnboardingChecklistProps) {
+  const [connectLoading, setConnectLoading] = useState(false);
+
+  const handleConnectStripe = async () => {
+    setConnectLoading(true);
+    try {
+      const res = await fetch("/api/connect/onboard", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ marinaId: marina.id }),
+      });
+      const data = await res.json();
+      if (data.url) window.location.href = data.url;
+    } catch {
+      // silent — user can retry from the main dashboard
+    } finally {
+      setConnectLoading(false);
+    }
+  };
+
+  const steps = [
+    {
+      done: slips.length > 0,
+      label: "Add your first slip",
+      detail: "Slips are what boat owners book — add at least one to start receiving reservations.",
+      cta: (
+        <button
+          onClick={onAddSlipClick}
+          className="text-xs font-semibold text-teal-700 hover:underline"
+        >
+          Add Slip →
+        </button>
+      ),
+    },
+    {
+      done: marina.payouts_enabled,
+      label: "Connect Stripe",
+      detail: "Link your bank account to receive payouts when bookings are completed.",
+      cta: (
+        <button
+          onClick={handleConnectStripe}
+          disabled={connectLoading}
+          className="text-xs font-semibold text-teal-700 hover:underline disabled:opacity-60"
+        >
+          {connectLoading ? "Redirecting…" : "Connect →"}
+        </button>
+      ),
+    },
+    {
+      done: !!marina.description,
+      label: "Add a description",
+      detail: "Help boat owners understand what makes your marina special.",
+      cta: (
+        <Link href={`/dashboard/marinas/${marina.id}/edit`} className="text-xs font-semibold text-teal-700 hover:underline">
+          Edit →
+        </Link>
+      ),
+    },
+    {
+      done: marina.photos.length > 0,
+      label: "Add photos",
+      detail: "Listings with photos get significantly more bookings.",
+      cta: (
+        <Link href={`/dashboard/marinas/${marina.id}/edit`} className="text-xs font-semibold text-teal-700 hover:underline">
+          Edit →
+        </Link>
+      ),
+    },
+  ];
+
+  const completedCount = steps.filter((s) => s.done).length;
+  if (completedCount === steps.length) return null;
+
+  return (
+    <div className="bg-white rounded-xl shadow-sm border p-5 mb-6">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-base font-semibold text-navy-800">Getting Started</h2>
+        <span className="text-sm text-gray-500">{completedCount}/{steps.length} complete</span>
+      </div>
+      <div className="space-y-2">
+        {steps.map((step, i) => (
+          <div
+            key={i}
+            className={`flex items-start gap-3 rounded-lg px-3 py-2.5 ${step.done ? "" : "bg-gray-50"}`}
+          >
+            <span
+              className={`w-5 h-5 rounded-full flex-shrink-0 flex items-center justify-center text-xs font-bold mt-0.5 ${
+                step.done ? "bg-teal-500 text-white" : "bg-gray-200 text-gray-500"
+              }`}
+            >
+              {step.done ? "✓" : i + 1}
+            </span>
+            <div className="flex-1 min-w-0">
+              <p className={`text-sm font-medium ${step.done ? "text-gray-400 line-through" : "text-gray-800"}`}>
+                {step.label}
+              </p>
+              {!step.done && (
+                <p className="text-xs text-gray-500 mt-0.5">{step.detail}</p>
+              )}
+            </div>
+            {!step.done && <div className="flex-shrink-0 mt-0.5">{step.cta}</div>}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function MarinaDetailPage() {
   const params = useParams();
   const id = params.id as string;
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const { user } = useAuth();
   const supabase = useMemo(() => createClient(), []);
 
@@ -27,6 +143,17 @@ export default function MarinaDetailPage() {
   const [loading, setLoading] = useState(true);
   const [showSlipForm, setShowSlipForm] = useState(false);
   const [editingSlip, setEditingSlip] = useState<Slip | undefined>();
+  const [showWelcome, setShowWelcome] = useState(false);
+
+  useEffect(() => {
+    if (searchParams.get("welcome") === "1") {
+      setShowWelcome(true);
+      const params = new URLSearchParams(searchParams.toString());
+      params.delete("welcome");
+      const newPath = params.toString() ? `/dashboard/marinas/${id}?${params.toString()}` : `/dashboard/marinas/${id}`;
+      router.replace(newPath);
+    }
+  }, [searchParams, id, router]);
 
   const fetchData = useCallback(async () => {
     const { data: marinaData } = (await supabase
@@ -96,6 +223,37 @@ export default function MarinaDetailPage() {
   return (
     <ProtectedRoute allowedRoles={["marina_owner"]}>
       <div className="max-w-5xl mx-auto px-6 py-10">
+        {/* Welcome banner — shown once after claiming */}
+        {showWelcome && (
+          <div className="mb-6 bg-teal-50 border border-teal-200 rounded-xl p-4 flex items-start justify-between gap-4">
+            <div>
+              <p className="text-sm font-semibold text-teal-800">
+                🎉 Marina claimed successfully!
+              </p>
+              <p className="text-sm text-teal-700 mt-0.5">
+                Complete the steps below to start receiving bookings.
+              </p>
+            </div>
+            <button
+              onClick={() => setShowWelcome(false)}
+              className="text-teal-600 hover:text-teal-800 text-lg leading-none flex-shrink-0 mt-0.5"
+              aria-label="Dismiss"
+            >
+              ×
+            </button>
+          </div>
+        )}
+
+        {/* Onboarding checklist — visible until all steps complete */}
+        <OnboardingChecklist
+          marina={marina}
+          slips={slips}
+          onAddSlipClick={() => {
+            setEditingSlip(undefined);
+            setShowSlipForm(true);
+          }}
+        />
+
         {/* Marina header */}
         <div className="bg-white rounded-xl shadow-sm border p-6 mb-6">
           <div className="flex items-start justify-between mb-4">
