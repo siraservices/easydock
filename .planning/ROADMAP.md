@@ -58,6 +58,10 @@ Full details: `.planning/milestones/v1.0-ROADMAP.md`
 
 - [x] **Phase 11: Public Claim Landing** - /claim made publicly accessible (no auth to search/browse); unauthenticated users redirected to /signup?role=marina_owner&returnTo=/claim on "Claim" click; signup page accepts role + returnTo params; "How it works" 3-step section + OG meta on /claim — completed 2026-06-29 (EAS-113, commit fc9e41c)
 
+#### Phase 12: Post-Claim Onboarding Checklist
+
+- [x] **Phase 12: Post-Claim Onboarding Checklist** - Getting Started 4-step checklist (add slip, connect Stripe, add description, add photos) on /dashboard/marinas/[id]; claim flow redirects with ?welcome=1 to show dismissable welcome banner; checklist hides once all steps complete — completed 2026-06-29 (EAS-115, commit d6444ac)
+
 ## Phase Details
 
 ### Phase 6: Vercel Migration

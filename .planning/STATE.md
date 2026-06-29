@@ -5,12 +5,12 @@ milestone_name: Marina Owner Acquisition
 status: in_progress
 stopped_at: null
 last_updated: "2026-06-29"
-last_activity: 2026-06-29 — Auth fix (returnTo through email confirmation, b67a8f4) + blog email capture widget on marina-owner posts (8191919)
+last_activity: 2026-06-29 — Post-claim onboarding checklist on marina detail page (EAS-115, commit d6444ac)
 progress:
-  total_phases: 2
-  completed_phases: 2
-  total_plans: 2
-  completed_plans: 2
+  total_phases: 3
+  completed_phases: 3
+  total_plans: 3
+  completed_plans: 3
   percent: 100
 ---
 
@@ -25,10 +25,10 @@ See: .planning/PROJECT.md (updated 2026-03-13)
 
 ## Current Position
 
-Phase: 11 of ? (Public Claim Landing) — **COMPLETE**
-Plan: 2 of 2
+Phase: 12 of ? (Post-Claim Onboarding) — **COMPLETE**
+Plan: 3 of 3
 Status: Complete
-Last activity: 2026-06-29 — /claim made public + signup role/returnTo params (EAS-113); pushed commit fc9e41c
+Last activity: 2026-06-29 — Getting Started checklist + welcome banner on /dashboard/marinas/[id] (EAS-115); commit d6444ac
 
 Progress: [██████████] 100%
 
@@ -56,7 +56,7 @@ Recent decisions affecting current work:
 
 ### Pending Todos
 
-None — Phases 10+11 complete. Next phases for v1.3 TBD by board/CEO direction.
+None — Phases 10+11+12 complete. Next phases for v1.3 TBD by board/CEO direction.
 
 ### Blockers/Concerns
 
@@ -75,9 +75,10 @@ No engineering blockers.
 - Homepage CTA fix (2026-06-29): "I own a marina" hero button + marina-owner tab CTA now route to /claim; pushed commit 6abef28
 - Auth fix (2026-06-29): email confirmation now preserves returnTo param through Supabase emailRedirectTo → /auth/callback?next=<path>; commit b67a8f4
 - Blog email capture (2026-06-29): marina-owner blog posts now show name+email capture form (feeds /api/leads); commit 8191919
+- Post-claim onboarding checklist (EAS-115, 2026-06-29): Getting Started 4-step checklist + welcome banner on /dashboard/marinas/[id]; claim flow now redirects with ?welcome=1; commit d6444ac
 
 ## Session Continuity
 
 Last session: 2026-06-29
-Stopped at: v1.3 Phases 10+11 complete. Auth flow gap fixed. Blog email capture shipped. All 124 tests pass. Next phases (conversion tracking, post-claim onboarding, Stripe live-mode switch) need CEO/board direction.
+Stopped at: v1.3 Phases 10+11+12 complete. All 124 tests pass. Next phases (conversion tracking, Stripe live-mode switch) need CEO/board direction.
 Resume file: None
