@@ -5,7 +5,7 @@ milestone_name: Marina Owner Acquisition
 status: in_progress
 stopped_at: null
 last_updated: "2026-06-29"
-last_activity: 2026-06-29 — Post-claim onboarding checklist on marina detail page (EAS-115, commit d6444ac)
+last_activity: 2026-06-29 — Quality fixes: About CTA → /signup, pricing page SEO metadata layout (commit 655c0d0)
 progress:
   total_phases: 3
   completed_phases: 3
@@ -76,9 +76,10 @@ No engineering blockers.
 - Auth fix (2026-06-29): email confirmation now preserves returnTo param through Supabase emailRedirectTo → /auth/callback?next=<path>; commit b67a8f4
 - Blog email capture (2026-06-29): marina-owner blog posts now show name+email capture form (feeds /api/leads); commit 8191919
 - Post-claim onboarding checklist (EAS-115, 2026-06-29): Getting Started 4-step checklist + welcome banner on /dashboard/marinas/[id]; claim flow now redirects with ?welcome=1; commit d6444ac
+- Quality fixes (2026-06-29, no issue): About CTA now links to /signup (was /), pricing page SEO metadata via layout.tsx; commit 655c0d0; 124 tests pass
 
 ## Session Continuity
 
 Last session: 2026-06-29
-Stopped at: v1.3 Phases 10+11+12 complete. All 124 tests pass. Next phases (conversion tracking, Stripe live-mode switch) need CEO/board direction.
+Stopped at: v1.3 complete. Quality fixes committed. EAS-116 created for CEO — asking for v1.4 direction (conversion tracking, Stripe live-mode, sitemap, email nurture, or admin tools).
 Resume file: None
