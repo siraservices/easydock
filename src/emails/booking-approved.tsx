@@ -48,10 +48,10 @@ export default function BookingApprovedEmail({
 
           {/* Main content */}
           <Section style={contentStyle}>
-            <Heading style={h1Style}>Your Booking is Approved!</Heading>
+            <Heading style={h1Style}>Booking Approved by Marina</Heading>
             <Text style={textStyle}>
-              Great news! Your booking at <strong>{marinaName}</strong> has been approved by the marina.
-              Your slip is confirmed and ready for your arrival.
+              Great news! <strong>{marinaName}</strong> has approved your booking request.
+              Your reservation details are below.
             </Text>
 
             {/* Booking details card */}
@@ -70,7 +70,7 @@ export default function BookingApprovedEmail({
               </Text>
               <Hr style={hrStyle} />
               <Text style={detailRowStyle}>
-                <strong>Total Paid:</strong> ${totalPrice.toFixed(2)}
+                <strong>Total:</strong> ${totalPrice.toFixed(2)}
               </Text>
             </Section>
 
