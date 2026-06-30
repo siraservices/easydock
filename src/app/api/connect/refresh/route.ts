@@ -10,7 +10,7 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const accountId = searchParams.get("accountId");
     const marinaId = searchParams.get("marinaId");
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://easydock.vercel.app";
 
     if (!accountId || !marinaId) {
       return NextResponse.json(
@@ -33,7 +33,7 @@ export async function GET(request: Request) {
     return NextResponse.redirect(link.url);
   } catch (err) {
     console.error("Connect refresh error:", err);
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://easydock.vercel.app";
     return NextResponse.redirect(`${appUrl}/dashboard?stripeStatus=error`);
   }
 }

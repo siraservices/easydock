@@ -54,7 +54,7 @@ export async function POST(request: Request) {
     }
 
     const stripe = getStripe();
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://easydock.vercel.app";
 
     let accountId = marina.stripe_account_id;
 

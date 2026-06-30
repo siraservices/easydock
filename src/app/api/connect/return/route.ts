@@ -16,7 +16,7 @@ export async function GET(request: Request) {
     }
 
     const adminClient = createAdminClient();
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://easydock.vercel.app";
 
     // Fetch marina's stripe_account_id from DB
     const { data: marina, error: marinaError } = await adminClient
@@ -55,7 +55,7 @@ export async function GET(request: Request) {
     return NextResponse.redirect(`${appUrl}/dashboard?stripeStatus=${status}`);
   } catch (err) {
     console.error("Connect return error:", err);
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://easydock.vercel.app";
     return NextResponse.redirect(`${appUrl}/dashboard?stripeStatus=error`);
   }
 }
