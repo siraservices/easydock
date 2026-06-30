@@ -4,6 +4,7 @@ import { useEffect, useState, useMemo } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import { useAuth } from "@/lib/auth-context";
 import ProtectedRoute from "@/components/protected-route";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import BookingWidget from "@/components/booking-widget";
@@ -23,6 +24,8 @@ export default function SlipDetailPage() {
   const checkIn = searchParams.get("checkIn") || undefined;
   const checkOut = searchParams.get("checkOut") || undefined;
 
+  const { profile } = useAuth();
+  const isMarinaOwner = profile?.role === "marina_owner";
   const supabase = useMemo(() => createClient(), []);
   const [slip, setSlip] = useState<Slip | null>(null);
   const [loading, setLoading] = useState(true);
@@ -63,7 +66,7 @@ export default function SlipDetailPage() {
 
   if (loading) {
     return (
-      <ProtectedRoute allowedRoles={["boat_owner"]}>
+      <ProtectedRoute allowedRoles={["boat_owner", "marina_owner"]}>
         <LoadingSpinner size="lg" message="Loading slip details..." />
       </ProtectedRoute>
     );
@@ -71,7 +74,7 @@ export default function SlipDetailPage() {
 
   if (!slip) {
     return (
-      <ProtectedRoute allowedRoles={["boat_owner"]}>
+      <ProtectedRoute allowedRoles={["boat_owner", "marina_owner"]}>
         <div className="max-w-5xl mx-auto px-6 py-10 text-center">
           <p className="text-gray-600">Slip not found.</p>
           <Link
@@ -88,7 +91,7 @@ export default function SlipDetailPage() {
   const marina = slip.marinas;
 
   return (
-    <ProtectedRoute allowedRoles={["boat_owner"]}>
+    <ProtectedRoute allowedRoles={["boat_owner", "marina_owner"]}>
       <div className="max-w-5xl mx-auto px-6 py-8">
         {/* Back link */}
         <Link
@@ -252,16 +255,33 @@ export default function SlipDetailPage() {
             )}
           </div>
 
-          {/* Right: Booking widget */}
+          {/* Right: Booking widget or marina preview notice */}
           <div className="lg:col-span-1">
             <div className="sticky top-6">
-              <BookingWidget
-                slip={slip}
-                marinaId={marina.id}
-                initialCheckIn={checkIn}
-                initialCheckOut={checkOut}
-                isDemo={marina.id.startsWith("csv-marina-")}
-              />
+              {isMarinaOwner ? (
+                <div className="bg-teal-50 border border-teal-200 rounded-xl p-5 text-center">
+                  <p className="text-sm font-semibold text-teal-800 mb-1">
+                    Marina owner preview
+                  </p>
+                  <p className="text-sm text-teal-700 mb-4">
+                    This is how boat owners see your slip listing.
+                  </p>
+                  <Link
+                    href="/dashboard"
+                    className="bg-teal-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-teal-700 transition-colors inline-block"
+                  >
+                    Back to dashboard
+                  </Link>
+                </div>
+              ) : (
+                <BookingWidget
+                  slip={slip}
+                  marinaId={marina.id}
+                  initialCheckIn={checkIn}
+                  initialCheckOut={checkOut}
+                  isDemo={marina.id.startsWith("csv-marina-")}
+                />
+              )}
             </div>
           </div>
         </div>
