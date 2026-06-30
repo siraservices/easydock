@@ -5,7 +5,7 @@ milestone_name: Revenue Unblock
 status: in_progress
 stopped_at: null
 last_updated: "2026-06-30"
-last_activity: 2026-06-30 — Heartbeat 3: Fix dead pricing CTA buttons (route to /signup?role=marina_owner + pricing_cta_clicked analytics); 128 tests green, build clean
+last_activity: 2026-06-30 — Heartbeat 4: Mobile navbar hamburger (c113cc1) + forgot/reset password flow (df91e4f); 128 tests green, build clean
 progress:
   total_phases: 3
   completed_phases: 1
@@ -75,6 +75,8 @@ v1.4 EAS-118 (Stripe live-mode) pending board completing Stripe account verifica
 - Boat owner bookings list UX (2026-06-30, EAS-7 heartbeat): /bookings now splits into Upcoming (check_in >= today, not cancelled/declined) and Past sections; sorted by check-in ascending for upcoming; commit 2d512d0; 128 tests green, TypeScript clean
 - Platform polish (2026-06-30 heartbeat 2): (1) Custom 404 page — branded not-found.tsx with teal "404" heading, Go home + Find slips CTAs; (2) Favicon — configured via metadata.icons in layout.tsx pointing to /public/logo.png; (3) Booking detail "Total Paid" label fix — now shows "Total" for pending/approved (pre-payment) and "Total Paid" only for confirmed/completed; commit b00a9b2; 128 tests green, build clean
 - Pricing CTA fix (2026-06-30 heartbeat 3): All 3 "Start free trial" buttons on /pricing were dead (no onClick/href) — wired to router.push('/signup?role=marina_owner') with pricing_cta_clicked Vercel Analytics event per plan tier; commit 792312e; 128 tests green, build clean
+- Mobile navbar (2026-06-30 heartbeat 4): Nav links were absolutely-positioned and broken on mobile — added hamburger toggle with slide-down drawer for screens < md; commit c113cc1; build clean
+- Forgot/reset password flow (2026-06-30 heartbeat 4): Login page had no recovery path — added /forgot-password and /reset-password pages + Supabase email reset integration; commit df91e4f; 128 tests green, build clean
 
 ### Completed v1.3 Post-Ship Work
 
@@ -94,5 +96,5 @@ v1.4 EAS-118 (Stripe live-mode) pending board completing Stripe account verifica
 ## Session Continuity
 
 Last session: 2026-06-30
-Stopped at: v1.4 in progress. EAS-117 complete. EAS-118 blocked on board Stripe verification (EAS-119 in_review with CEO). Heartbeat 3 shipped: pricing CTA buttons now route to /signup. 128 tests green, build clean. Next: unblock EAS-118 when board provides Stripe live keys.
+Stopped at: v1.4 in progress. EAS-118 blocked on board Stripe verification (EAS-119 in_review with CEO, no response yet). Heartbeat 4 shipped: mobile navbar hamburger menu + forgot/reset password flow. 128 tests green, build clean. Next: unblock EAS-118 when board provides Stripe live keys.
 Resume file: None
