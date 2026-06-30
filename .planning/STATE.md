@@ -5,7 +5,7 @@ milestone_name: Revenue Unblock
 status: in_progress
 stopped_at: null
 last_updated: "2026-06-30"
-last_activity: 2026-06-30 — Heartbeat: Approve/Decline for marina bookings inbox; email copy fix; slip detail marina preview; bookings list upcoming/past split; 128 tests green, TypeScript clean
+last_activity: 2026-06-30 — Heartbeat 2: Custom 404 page, favicon config, booking "Total Paid" label fix; 128 tests green, build clean
 progress:
   total_phases: 3
   completed_phases: 1
@@ -73,6 +73,7 @@ v1.4 EAS-118 (Stripe live-mode) pending board completing Stripe account verifica
 - Booking-approved email copy fix (2026-06-30, EAS-7 heartbeat): Removed "Total Paid" label and "slip is confirmed" language from email that fires when marina approves a pending (pre-payment) booking; commit a354e48
 - Marina owner slip preview (2026-06-30, EAS-7 heartbeat): /slips/[id] now accessible to marina_owner role; shows "Marina owner preview" card with Back to dashboard link instead of booking widget; commit 58227e2
 - Boat owner bookings list UX (2026-06-30, EAS-7 heartbeat): /bookings now splits into Upcoming (check_in >= today, not cancelled/declined) and Past sections; sorted by check-in ascending for upcoming; commit 2d512d0; 128 tests green, TypeScript clean
+- Platform polish (2026-06-30 heartbeat 2): (1) Custom 404 page — branded not-found.tsx with teal "404" heading, Go home + Find slips CTAs; (2) Favicon — configured via metadata.icons in layout.tsx pointing to /public/logo.png; (3) Booking detail "Total Paid" label fix — now shows "Total" for pending/approved (pre-payment) and "Total Paid" only for confirmed/completed; commit b00a9b2; 128 tests green, build clean
 
 ### Completed v1.3 Post-Ship Work
 
@@ -92,5 +93,5 @@ v1.4 EAS-118 (Stripe live-mode) pending board completing Stripe account verifica
 ## Session Continuity
 
 Last session: 2026-06-30
-Stopped at: v1.4 in progress. EAS-117 complete. EAS-118 blocked on board Stripe verification (EAS-119 in_review with CEO). This heartbeat shipped: approve/decline for marina bookings inbox, email copy fix, marina owner slip preview, bookings upcoming/past split. 128 tests green, TypeScript clean. Next: unblock EAS-118 when board provides Stripe live keys.
+Stopped at: v1.4 in progress. EAS-117 complete. EAS-118 blocked on board Stripe verification (EAS-119 in_review with CEO). Heartbeat 2 shipped: custom 404 page, favicon, booking total label fix. 128 tests green, build clean. Next: unblock EAS-118 when board provides Stripe live keys.
 Resume file: None
