@@ -5,7 +5,6 @@ import { useParams, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/auth-context";
-import ProtectedRoute from "@/components/protected-route";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import BookingWidget from "@/components/booking-widget";
 import { formatPrice } from "@/lib/utils/format";
@@ -65,34 +64,27 @@ export default function SlipDetailPage() {
   }, [id, supabase]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (loading) {
-    return (
-      <ProtectedRoute allowedRoles={["boat_owner", "marina_owner"]}>
-        <LoadingSpinner size="lg" message="Loading slip details..." />
-      </ProtectedRoute>
-    );
+    return <LoadingSpinner size="lg" message="Loading slip details..." />;
   }
 
   if (!slip) {
     return (
-      <ProtectedRoute allowedRoles={["boat_owner", "marina_owner"]}>
-        <div className="max-w-5xl mx-auto px-6 py-10 text-center">
-          <p className="text-gray-600">Slip not found.</p>
-          <Link
-            href="/search"
-            className="text-teal-600 hover:underline text-sm mt-2 inline-block"
-          >
-            Back to search
-          </Link>
-        </div>
-      </ProtectedRoute>
+      <div className="max-w-5xl mx-auto px-6 py-10 text-center">
+        <p className="text-gray-600">Slip not found.</p>
+        <Link
+          href="/search"
+          className="text-teal-600 hover:underline text-sm mt-2 inline-block"
+        >
+          Back to search
+        </Link>
+      </div>
     );
   }
 
   const marina = slip.marinas;
 
   return (
-    <ProtectedRoute allowedRoles={["boat_owner", "marina_owner"]}>
-      <div className="max-w-5xl mx-auto px-6 py-8">
+    <div className="max-w-5xl mx-auto px-6 py-8">
         {/* Back link */}
         <Link
           href="/search"
@@ -285,7 +277,6 @@ export default function SlipDetailPage() {
             </div>
           </div>
         </div>
-      </div>
-    </ProtectedRoute>
+    </div>
   );
 }
