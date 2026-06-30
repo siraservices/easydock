@@ -5,7 +5,7 @@ milestone_name: Revenue Unblock
 status: in_progress
 stopped_at: null
 last_updated: "2026-06-30"
-last_activity: 2026-06-30 — Approve/Decline actions for pending bookings on marina dashboard; TS type fix in marina-bookings-api.test.ts; 128 tests green, TypeScript clean
+last_activity: 2026-06-30 — Heartbeat: Approve/Decline for marina bookings inbox; email copy fix; slip detail marina preview; bookings list upcoming/past split; 128 tests green, TypeScript clean
 progress:
   total_phases: 3
   completed_phases: 1
@@ -69,7 +69,10 @@ v1.4 EAS-118 (Stripe live-mode) pending board completing Stripe account verifica
 - Admin lead notifications (2026-06-30, EAS-7 heartbeat): landing page form + calculator now fire admin email on each lead (Resend via leads@easydock.co → aira4development@gmail.com); new /api/calculator-leads server route replaces insecure client-side Supabase insert; 2 new React Email templates; commit fa0c4b0; build clean, 124 tests green
 - Admin bookings panel (2026-06-30, EAS-7 heartbeat): added Bookings tab to /admin with filterable booking table (all fields: marina, slip, boat owner, dates, amount, status); enhanced overview stats to show booking count + GMV; new /api/admin/bookings route; build clean, 124 tests green
 - Marina bookings inbox (2026-06-30, EAS-7 heartbeat): BookingsInbox component on /dashboard/marinas/[id] — marina owners can now see all bookings for their marina with status filter, boat owner name/email, dates, vessel info, amount, and cancel action for active bookings; new GET /api/marinas/[id]/bookings (auth-gated, ownership-verified, adminClient join for profiles); commit 38bbb7d; build clean, 128 tests green
-- Booking approve/decline UI (2026-06-30, EAS-7 heartbeat): Added Approve + Decline buttons to BookingsInbox for pending bookings (wires to existing /api/bookings/[id]/approve and /api/bookings/[id]/deny); added "Approved" status to filter dropdown; consolidated action state into single actionInFlight field; fixed NextRequest TS type error in marina-bookings-api.test.ts; 128 tests green, TypeScript clean
+- Booking approve/decline UI (2026-06-30, EAS-7 heartbeat): Added Approve + Decline buttons to BookingsInbox for pending bookings (wires to existing /api/bookings/[id]/approve and /api/bookings/[id]/deny); added "Approved" status to filter dropdown; consolidated action state into single actionInFlight field; fixed NextRequest TS type error in marina-bookings-api.test.ts; commit 67ee1b5; 128 tests green, TypeScript clean
+- Booking-approved email copy fix (2026-06-30, EAS-7 heartbeat): Removed "Total Paid" label and "slip is confirmed" language from email that fires when marina approves a pending (pre-payment) booking; commit a354e48
+- Marina owner slip preview (2026-06-30, EAS-7 heartbeat): /slips/[id] now accessible to marina_owner role; shows "Marina owner preview" card with Back to dashboard link instead of booking widget; commit 58227e2
+- Boat owner bookings list UX (2026-06-30, EAS-7 heartbeat): /bookings now splits into Upcoming (check_in >= today, not cancelled/declined) and Past sections; sorted by check-in ascending for upcoming; commit 2d512d0; 128 tests green, TypeScript clean
 
 ### Completed v1.3 Post-Ship Work
 
@@ -89,5 +92,5 @@ v1.4 EAS-118 (Stripe live-mode) pending board completing Stripe account verifica
 ## Session Continuity
 
 Last session: 2026-06-30
-Stopped at: v1.4 in progress. EAS-117 complete (conversion tracking + sitemap). EAS-118 blocked on Stripe board action (EAS-119 in_review with CEO). Marina bookings inbox shipped (EAS-7 heartbeat) — marina owners now see all bookings + can cancel from /dashboard/marinas/[id]. 128 tests green. Next: unblock EAS-118 when board provides Stripe live keys.
+Stopped at: v1.4 in progress. EAS-117 complete. EAS-118 blocked on board Stripe verification (EAS-119 in_review with CEO). This heartbeat shipped: approve/decline for marina bookings inbox, email copy fix, marina owner slip preview, bookings upcoming/past split. 128 tests green, TypeScript clean. Next: unblock EAS-118 when board provides Stripe live keys.
 Resume file: None
