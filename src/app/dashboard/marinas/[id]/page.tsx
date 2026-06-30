@@ -16,6 +16,29 @@ import type { Database } from "@/types/database";
 type Marina = Database["public"]["Tables"]["marinas"]["Row"];
 type Slip = Database["public"]["Tables"]["slips"]["Row"];
 
+type BookingStatus =
+  | "pending"
+  | "approved"
+  | "confirmed"
+  | "completed"
+  | "cancelled"
+  | "declined";
+
+interface MarinaBooking {
+  id: string;
+  status: BookingStatus;
+  check_in: string;
+  check_out: string;
+  total_price: number;
+  vessel_name: string | null;
+  vessel_length: number | null;
+  vessel_type: string | null;
+  special_requests: string | null;
+  created_at: string;
+  slips: { id: string; name: string } | null;
+  profiles: { email: string; full_name: string | null } | null;
+}
+
 interface OnboardingChecklistProps {
   marina: Marina;
   slips: Slip[];
@@ -130,6 +153,165 @@ function OnboardingChecklist({ marina, slips, onAddSlipClick }: OnboardingCheckl
   );
 }
 
+const ACTIVE_STATUSES: BookingStatus[] = ["pending", "approved", "confirmed"];
+
+function nightCount(checkIn: string, checkOut: string) {
+  const diff =
+    new Date(checkOut).getTime() - new Date(checkIn).getTime();
+  return Math.round(diff / 86400000);
+}
+
+function BookingsInbox({
+  marinaId,
+  refreshToken,
+}: {
+  marinaId: string;
+  refreshToken: number;
+}) {
+  const [bookings, setBookings] = useState<MarinaBooking[]>([]);
+  const [total, setTotal] = useState(0);
+  const [filter, setFilter] = useState<"all" | BookingStatus>("all");
+  const [loading, setLoading] = useState(true);
+  const [cancelling, setCancelling] = useState<string | null>(null);
+
+  const fetchBookings = useCallback(async () => {
+    setLoading(true);
+    const qs = filter !== "all" ? `?status=${filter}` : "";
+    const res = await fetch(`/api/marinas/${marinaId}/bookings${qs}`);
+    if (res.ok) {
+      const data = await res.json();
+      setBookings(data.bookings ?? []);
+      setTotal(data.total ?? 0);
+    }
+    setLoading(false);
+  }, [marinaId, filter]);
+
+  useEffect(() => {
+    fetchBookings();
+  }, [fetchBookings, refreshToken]);
+
+  async function handleCancel(bookingId: string) {
+    if (!confirm("Cancel this booking? The boat owner will be notified.")) return;
+    setCancelling(bookingId);
+    const res = await fetch(`/api/bookings/${bookingId}/cancel`, {
+      method: "POST",
+    });
+    if (res.ok) {
+      setBookings((prev) =>
+        prev.map((b) =>
+          b.id === bookingId ? { ...b, status: "cancelled" } : b
+        )
+      );
+    }
+    setCancelling(null);
+  }
+
+  const pendingCount = bookings.filter((b) => b.status === "pending").length;
+
+  return (
+    <div className="bg-white rounded-xl shadow-sm border mt-6">
+      <div className="flex items-center justify-between p-5 border-b">
+        <div className="flex items-center gap-2">
+          <h2 className="text-lg font-semibold text-navy-800">Bookings</h2>
+          {pendingCount > 0 && (
+            <span className="bg-yellow-100 text-yellow-800 text-xs font-semibold px-2 py-0.5 rounded-full">
+              {pendingCount} pending
+            </span>
+          )}
+        </div>
+        <select
+          value={filter}
+          onChange={(e) => setFilter(e.target.value as typeof filter)}
+          className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 text-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-400"
+        >
+          <option value="all">All ({total})</option>
+          <option value="pending">Pending</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="completed">Completed</option>
+          <option value="cancelled">Cancelled</option>
+          <option value="declined">Declined</option>
+        </select>
+      </div>
+
+      {loading ? (
+        <div className="p-8 text-center text-gray-400 text-sm">
+          Loading bookings…
+        </div>
+      ) : bookings.length === 0 ? (
+        <div className="p-8 text-center text-gray-500 text-sm">
+          {filter === "all"
+            ? "No bookings yet. Once boat owners book your slips, they'll appear here."
+            : `No ${filter} bookings.`}
+        </div>
+      ) : (
+        <div className="divide-y">
+          {bookings.map((booking) => {
+            const nights = nightCount(booking.check_in, booking.check_out);
+            const canCancel = ACTIVE_STATUSES.includes(booking.status);
+            return (
+              <div key={booking.id} className="px-5 py-4 flex items-start gap-4">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <StatusBadge status={booking.status} />
+                    <span className="text-sm font-medium text-gray-900 truncate">
+                      {booking.profiles?.full_name || booking.profiles?.email || "Guest"}
+                    </span>
+                    <span className="text-xs text-gray-400">
+                      {booking.profiles?.email}
+                    </span>
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    <span className="font-medium">{booking.slips?.name ?? "Slip"}</span>
+                    {" · "}
+                    {new Date(booking.check_in).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                    })}{" "}
+                    →{" "}
+                    {new Date(booking.check_out).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
+                    {" · "}
+                    {nights} night{nights !== 1 ? "s" : ""}
+                  </div>
+                  {booking.vessel_name && (
+                    <div className="text-xs text-gray-400 mt-0.5">
+                      {booking.vessel_name}
+                      {booking.vessel_length ? ` · ${booking.vessel_length}ft` : ""}
+                      {booking.vessel_type ? ` · ${booking.vessel_type}` : ""}
+                    </div>
+                  )}
+                  {booking.special_requests && (
+                    <div className="text-xs text-gray-500 mt-1 italic">
+                      &ldquo;{booking.special_requests}&rdquo;
+                    </div>
+                  )}
+                </div>
+                <div className="flex-shrink-0 text-right">
+                  <div className="text-base font-semibold text-gray-900">
+                    ${booking.total_price.toFixed(2)}
+                  </div>
+                  {canCancel && (
+                    <button
+                      onClick={() => handleCancel(booking.id)}
+                      disabled={cancelling === booking.id}
+                      className="mt-1 text-xs text-red-600 hover:underline disabled:opacity-50"
+                    >
+                      {cancelling === booking.id ? "Cancelling…" : "Cancel"}
+                    </button>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function MarinaDetailPage() {
   const params = useParams();
   const id = params.id as string;
@@ -144,6 +326,7 @@ export default function MarinaDetailPage() {
   const [showSlipForm, setShowSlipForm] = useState(false);
   const [editingSlip, setEditingSlip] = useState<Slip | undefined>();
   const [showWelcome, setShowWelcome] = useState(false);
+  const [bookingsRefreshToken, setBookingsRefreshToken] = useState(0);
 
   useEffect(() => {
     if (searchParams.get("welcome") === "1") {
@@ -200,6 +383,7 @@ export default function MarinaDetailPage() {
   function handleSlipSaved() {
     fetchData();
     setEditingSlip(undefined);
+    setBookingsRefreshToken((t) => t + 1);
   }
 
   if (loading) {
@@ -360,6 +544,12 @@ export default function MarinaDetailPage() {
             />
           </details>
         )}
+
+        {/* Bookings inbox */}
+        <BookingsInbox
+          marinaId={id}
+          refreshToken={bookingsRefreshToken}
+        />
 
         {/* Slip form modal */}
         <SlipFormModal
