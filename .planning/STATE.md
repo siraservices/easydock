@@ -5,7 +5,7 @@ milestone_name: Revenue Unblock
 status: in_progress
 stopped_at: null
 last_updated: "2026-06-30"
-last_activity: 2026-06-30 — RESEND_API_KEY added to Vercel + redeployed; admin lead notifications now live in production
+last_activity: 2026-06-30 — Fixed NEXT_PUBLIC_APP_URL fallback bug in Connect routes (commit 8d17783); 124 tests green; EAS-118 remains blocked on board Stripe verification
 progress:
   total_phases: 3
   completed_phases: 1
@@ -86,5 +86,5 @@ v1.4 EAS-118 (Stripe live-mode) pending board completing Stripe account verifica
 ## Session Continuity
 
 Last session: 2026-06-30
-Stopped at: v1.4 in progress. EAS-117 complete (conversion tracking + sitemap). EAS-118 blocked on Stripe board action (EAS-119 in_review with CEO). RESEND_API_KEY added to Vercel production + redeployed — admin lead notifications now live in production (landing page form + calculator emails aira4development@gmail.com on each lead). Build clean, 124 tests green. Next: unblock EAS-118 when board provides Stripe live keys.
+Stopped at: v1.4 in progress. EAS-117 complete (conversion tracking + sitemap). EAS-118 blocked on Stripe board action (EAS-119 in_review with CEO). Fixed NEXT_PUBLIC_APP_URL fallback bug in 3 Connect routes (commit 8d17783) — would have caused Stripe to reject onboarding links in production. 124 tests green. Next: unblock EAS-118 when board provides Stripe live keys.
 Resume file: None
