@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { track } from "@vercel/analytics";
 
 const BRAND = {
   navy: "#1B3A6B",
@@ -122,11 +124,17 @@ const faqData = [
 export default function PricingPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [visible, setVisible] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const t = setTimeout(() => setVisible(true), 100);
     return () => clearTimeout(t);
   }, []);
+
+  function handleCta(plan: string) {
+    track("pricing_cta_clicked", { plan });
+    router.push("/signup?role=marina_owner");
+  }
 
   return (
     <div style={{
@@ -355,6 +363,7 @@ export default function PricingPage() {
                 {/* CTA */}
                 <button
                   className={tier.featured ? "cta-btn" : "cta-btn-outline"}
+                  onClick={() => handleCta(tier.name)}
                   style={{
                     width: "100%", padding: "14px 0",
                     borderRadius: 10, fontSize: 15, fontWeight: 600,
@@ -593,6 +602,7 @@ export default function PricingPage() {
             </p>
             <button
               className="cta-btn"
+              onClick={() => handleCta("hero_bottom")}
               style={{
                 background: `linear-gradient(135deg, ${BRAND.teal}, ${BRAND.tealDark})`,
                 color: "white", border: "none", borderRadius: 10,
