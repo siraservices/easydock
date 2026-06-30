@@ -297,7 +297,11 @@ export default function BookingDetailPage() {
               </span>
             </div>
             <div className="flex justify-between font-semibold border-t pt-2">
-              <span>Total Paid</span>
+              <span>
+                {["confirmed", "completed"].includes(booking.status)
+                  ? "Total Paid"
+                  : "Total"}
+              </span>
               <span className="text-navy-800">
                 {formatPrice(booking.total_price)}
               </span>

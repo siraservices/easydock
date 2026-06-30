@@ -9,6 +9,10 @@ export const metadata: Metadata = {
   title: "EasyDock - Marina Booking Marketplace",
   description:
     "Connect with marinas and book dock slips for your vessel. Easy online reservations for boat owners and marina operators.",
+  icons: {
+    icon: "/logo.png",
+    apple: "/logo.png",
+  },
 };
 
 export default function RootLayout({
