@@ -19,6 +19,48 @@ type BookingWithDetails = Booking & {
   marinas: Marina;
 };
 
+function BookingCard({ booking }: { booking: BookingWithDetails }) {
+  const nights = calculateNights(booking.check_in, booking.check_out);
+  return (
+    <Link
+      href={`/bookings/${booking.id}`}
+      className="block bg-white rounded-xl shadow-sm border p-5 hover:shadow-md transition-shadow"
+    >
+      <div className="flex items-start justify-between">
+        <div>
+          <h3 className="font-semibold text-navy-800">
+            {booking.slips.name}
+          </h3>
+          <p className="text-sm text-gray-600">
+            {booking.marinas.name} &middot;{" "}
+            {booking.marinas.city}, {booking.marinas.state}
+          </p>
+        </div>
+        <StatusBadge status={booking.status} />
+      </div>
+
+      <div className="mt-3 flex items-center gap-6 text-sm text-gray-600">
+        <span>
+          {formatDate(booking.check_in)} &rarr;{" "}
+          {formatDate(booking.check_out)}
+        </span>
+        <span>
+          {nights} night{nights > 1 ? "s" : ""}
+        </span>
+        <span className="font-semibold text-navy-800">
+          {formatPrice(booking.total_price)}
+        </span>
+      </div>
+
+      {booking.vessel_name && (
+        <p className="text-xs text-gray-500 mt-2">
+          Vessel: {booking.vessel_name}
+        </p>
+      )}
+    </Link>
+  );
+}
+
 export default function BookingsPage() {
   const { user } = useAuth();
   const supabase = useMemo(() => createClient(), []);
@@ -33,7 +75,7 @@ export default function BookingsPage() {
           .from("bookings")
           .select("*, slips(*), marinas(*)")
           .eq("boat_owner_id", user.id)
-          .order("created_at", { ascending: false });
+          .order("check_in", { ascending: true });
 
         const { data } = await Promise.race([
           query as unknown as Promise<{ data: BookingWithDetails[] | null }>,
@@ -62,6 +104,23 @@ export default function BookingsPage() {
     );
   }
 
+  const today = new Date().toISOString().split("T")[0];
+  const upcoming = bookings.filter(
+    (b) =>
+      b.check_in >= today &&
+      !["cancelled", "declined"].includes(b.status)
+  );
+  const past = bookings.filter(
+    (b) =>
+      b.check_in < today ||
+      ["cancelled", "declined"].includes(b.status)
+  );
+  // Past: newest first
+  past.sort(
+    (a, b) =>
+      new Date(b.check_in).getTime() - new Date(a.check_in).getTime()
+  );
+
   return (
     <ProtectedRoute allowedRoles={["boat_owner"]}>
       <div className="max-w-4xl mx-auto px-6 py-8">
@@ -84,52 +143,32 @@ export default function BookingsPage() {
             </Link>
           </div>
         ) : (
-          <div className="space-y-4">
-            {bookings.map((booking) => {
-              const nights = calculateNights(
-                booking.check_in,
-                booking.check_out
-              );
-              return (
-                <Link
-                  key={booking.id}
-                  href={`/bookings/${booking.id}`}
-                  className="block bg-white rounded-xl shadow-sm border p-5 hover:shadow-md transition-shadow"
-                >
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <h3 className="font-semibold text-navy-800">
-                        {booking.slips.name}
-                      </h3>
-                      <p className="text-sm text-gray-600">
-                        {booking.marinas.name} &middot;{" "}
-                        {booking.marinas.city}, {booking.marinas.state}
-                      </p>
-                    </div>
-                    <StatusBadge status={booking.status} />
-                  </div>
+          <div className="space-y-8">
+            {upcoming.length > 0 && (
+              <section>
+                <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">
+                  Upcoming
+                </h2>
+                <div className="space-y-4">
+                  {upcoming.map((booking) => (
+                    <BookingCard key={booking.id} booking={booking} />
+                  ))}
+                </div>
+              </section>
+            )}
 
-                  <div className="mt-3 flex items-center gap-6 text-sm text-gray-600">
-                    <span>
-                      {formatDate(booking.check_in)} &rarr;{" "}
-                      {formatDate(booking.check_out)}
-                    </span>
-                    <span>
-                      {nights} night{nights > 1 ? "s" : ""}
-                    </span>
-                    <span className="font-semibold text-navy-800">
-                      {formatPrice(booking.total_price)}
-                    </span>
-                  </div>
-
-                  {booking.vessel_name && (
-                    <p className="text-xs text-gray-500 mt-2">
-                      Vessel: {booking.vessel_name}
-                    </p>
-                  )}
-                </Link>
-              );
-            })}
+            {past.length > 0 && (
+              <section>
+                <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">
+                  Past
+                </h2>
+                <div className="space-y-4">
+                  {past.map((booking) => (
+                    <BookingCard key={booking.id} booking={booking} />
+                  ))}
+                </div>
+              </section>
+            )}
           </div>
         )}
       </div>
