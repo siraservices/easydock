@@ -24,6 +24,7 @@ function LoginContent() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const resetSuccess = searchParams.get("reset") === "success";
 
   function getRedirectDest(role?: string) {
     if (next) return next;
@@ -92,6 +93,12 @@ function LoginContent() {
       <div className="bg-white rounded-2xl shadow-2xl p-8">
         <h1 className="sr-only">Login</h1>
 
+        {resetSuccess && (
+          <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6 text-sm">
+            Password updated successfully. Please log in with your new password.
+          </div>
+        )}
+
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 text-sm">
             {error}
@@ -120,12 +127,14 @@ function LoginContent() {
 
           {/* Password */}
           <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Password
-            </label>
+            <div className="flex items-center justify-between mb-1">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                Password
+              </label>
+              <Link href="/forgot-password" className="text-xs text-teal-500 hover:text-teal-600">
+                Forgot password?
+              </Link>
+            </div>
             <input
               id="password"
               type="password"
