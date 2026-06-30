@@ -5,7 +5,7 @@ milestone_name: Revenue Unblock
 status: in_progress
 stopped_at: null
 last_updated: "2026-06-30"
-last_activity: 2026-06-30 — Marina bookings inbox on dashboard (EAS-7 heartbeat); 128 tests green; EAS-118 remains blocked on board Stripe verification
+last_activity: 2026-06-30 — Approve/Decline actions for pending bookings on marina dashboard; TS type fix in marina-bookings-api.test.ts; 128 tests green, TypeScript clean
 progress:
   total_phases: 3
   completed_phases: 1
@@ -69,6 +69,7 @@ v1.4 EAS-118 (Stripe live-mode) pending board completing Stripe account verifica
 - Admin lead notifications (2026-06-30, EAS-7 heartbeat): landing page form + calculator now fire admin email on each lead (Resend via leads@easydock.co → aira4development@gmail.com); new /api/calculator-leads server route replaces insecure client-side Supabase insert; 2 new React Email templates; commit fa0c4b0; build clean, 124 tests green
 - Admin bookings panel (2026-06-30, EAS-7 heartbeat): added Bookings tab to /admin with filterable booking table (all fields: marina, slip, boat owner, dates, amount, status); enhanced overview stats to show booking count + GMV; new /api/admin/bookings route; build clean, 124 tests green
 - Marina bookings inbox (2026-06-30, EAS-7 heartbeat): BookingsInbox component on /dashboard/marinas/[id] — marina owners can now see all bookings for their marina with status filter, boat owner name/email, dates, vessel info, amount, and cancel action for active bookings; new GET /api/marinas/[id]/bookings (auth-gated, ownership-verified, adminClient join for profiles); commit 38bbb7d; build clean, 128 tests green
+- Booking approve/decline UI (2026-06-30, EAS-7 heartbeat): Added Approve + Decline buttons to BookingsInbox for pending bookings (wires to existing /api/bookings/[id]/approve and /api/bookings/[id]/deny); added "Approved" status to filter dropdown; consolidated action state into single actionInFlight field; fixed NextRequest TS type error in marina-bookings-api.test.ts; 128 tests green, TypeScript clean
 
 ### Completed v1.3 Post-Ship Work
 

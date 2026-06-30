@@ -172,7 +172,7 @@ function BookingsInbox({
   const [total, setTotal] = useState(0);
   const [filter, setFilter] = useState<"all" | BookingStatus>("all");
   const [loading, setLoading] = useState(true);
-  const [cancelling, setCancelling] = useState<string | null>(null);
+  const [actionInFlight, setActionInFlight] = useState<string | null>(null);
 
   const fetchBookings = useCallback(async () => {
     setLoading(true);
@@ -190,20 +190,23 @@ function BookingsInbox({
     fetchBookings();
   }, [fetchBookings, refreshToken]);
 
-  async function handleCancel(bookingId: string) {
-    if (!confirm("Cancel this booking? The boat owner will be notified.")) return;
-    setCancelling(bookingId);
-    const res = await fetch(`/api/bookings/${bookingId}/cancel`, {
+  async function handleAction(
+    bookingId: string,
+    action: "approve" | "deny" | "cancel",
+    confirmMsg: string,
+    nextStatus: BookingStatus
+  ) {
+    if (!confirm(confirmMsg)) return;
+    setActionInFlight(bookingId + ":" + action);
+    const res = await fetch(`/api/bookings/${bookingId}/${action}`, {
       method: "POST",
     });
     if (res.ok) {
       setBookings((prev) =>
-        prev.map((b) =>
-          b.id === bookingId ? { ...b, status: "cancelled" } : b
-        )
+        prev.map((b) => (b.id === bookingId ? { ...b, status: nextStatus } : b))
       );
     }
-    setCancelling(null);
+    setActionInFlight(null);
   }
 
   const pendingCount = bookings.filter((b) => b.status === "pending").length;
@@ -226,6 +229,7 @@ function BookingsInbox({
         >
           <option value="all">All ({total})</option>
           <option value="pending">Pending</option>
+          <option value="approved">Approved</option>
           <option value="confirmed">Confirmed</option>
           <option value="completed">Completed</option>
           <option value="cancelled">Cancelled</option>
@@ -247,7 +251,9 @@ function BookingsInbox({
         <div className="divide-y">
           {bookings.map((booking) => {
             const nights = nightCount(booking.check_in, booking.check_out);
-            const canCancel = ACTIVE_STATUSES.includes(booking.status);
+            const isPending = booking.status === "pending";
+            const canCancel = !isPending && ACTIVE_STATUSES.includes(booking.status);
+            const inFlight = actionInFlight?.startsWith(booking.id);
             return (
               <div key={booking.id} className="px-5 py-4 flex items-start gap-4">
                 <div className="flex-1 min-w-0">
@@ -293,13 +299,52 @@ function BookingsInbox({
                   <div className="text-base font-semibold text-gray-900">
                     ${booking.total_price.toFixed(2)}
                   </div>
+                  {isPending && (
+                    <div className="flex gap-2 mt-1 justify-end">
+                      <button
+                        onClick={() =>
+                          handleAction(
+                            booking.id,
+                            "approve",
+                            "Approve this booking? The boat owner will be notified.",
+                            "approved"
+                          )
+                        }
+                        disabled={!!inFlight}
+                        className="text-xs font-semibold text-teal-700 hover:underline disabled:opacity-50"
+                      >
+                        {actionInFlight === booking.id + ":approve" ? "Approving…" : "Approve"}
+                      </button>
+                      <button
+                        onClick={() =>
+                          handleAction(
+                            booking.id,
+                            "deny",
+                            "Decline this booking? The boat owner will be notified.",
+                            "declined"
+                          )
+                        }
+                        disabled={!!inFlight}
+                        className="text-xs font-semibold text-red-600 hover:underline disabled:opacity-50"
+                      >
+                        {actionInFlight === booking.id + ":deny" ? "Declining…" : "Decline"}
+                      </button>
+                    </div>
+                  )}
                   {canCancel && (
                     <button
-                      onClick={() => handleCancel(booking.id)}
-                      disabled={cancelling === booking.id}
+                      onClick={() =>
+                        handleAction(
+                          booking.id,
+                          "cancel",
+                          "Cancel this booking? The boat owner will be notified.",
+                          "cancelled"
+                        )
+                      }
+                      disabled={!!inFlight}
                       className="mt-1 text-xs text-red-600 hover:underline disabled:opacity-50"
                     >
-                      {cancelling === booking.id ? "Cancelling…" : "Cancel"}
+                      {actionInFlight === booking.id + ":cancel" ? "Cancelling…" : "Cancel"}
                     </button>
                   )}
                 </div>

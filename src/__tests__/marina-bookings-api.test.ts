@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { NextRequest } from 'next/server';
 
 // --- Mock: @/lib/supabase/admin ---
 
@@ -84,12 +85,6 @@ function makeRequest(marinaId = 'marina-uuid-1', queryString = '') {
     request: new NextRequest(`http://localhost/api/marinas/${marinaId}/bookings${queryString}`),
     context: { params: Promise.resolve({ id: marinaId }) },
   };
-}
-
-class NextRequest extends Request {
-  constructor(url: string) {
-    super(url);
-  }
 }
 
 // --- Tests ---
