@@ -5,7 +5,7 @@ milestone_name: Revenue Unblock
 status: in_progress
 stopped_at: null
 last_updated: "2026-06-30"
-last_activity: 2026-06-30 — Fixed NEXT_PUBLIC_APP_URL fallback bug in Connect routes (commit 8d17783); 124 tests green; EAS-118 remains blocked on board Stripe verification
+last_activity: 2026-06-30 — Admin bookings tab + booking stats in overview (EAS-7 heartbeat); 124 tests green; EAS-118 remains blocked on board Stripe verification
 progress:
   total_phases: 3
   completed_phases: 1
@@ -67,6 +67,7 @@ v1.4 EAS-118 (Stripe live-mode) pending board completing Stripe account verifica
 - EAS-117 (conversion tracking + sitemap.xml, 2026-06-29): Vercel Analytics custom events across signup/claim/checkout/lead funnel; /sitemap.xml via App Router built-in; commit e284160
 - SEO blog expansion (2026-06-29, EAS-7 heartbeat): 2 additional posts — "How to Fill Empty Marina Slips" (marina-owners) + "Transient Docking South Florida Guide" (boat-owners); blog now has 5 posts targeting high-intent keywords
 - Admin lead notifications (2026-06-30, EAS-7 heartbeat): landing page form + calculator now fire admin email on each lead (Resend via leads@easydock.co → aira4development@gmail.com); new /api/calculator-leads server route replaces insecure client-side Supabase insert; 2 new React Email templates; commit fa0c4b0; build clean, 124 tests green
+- Admin bookings panel (2026-06-30, EAS-7 heartbeat): added Bookings tab to /admin with filterable booking table (all fields: marina, slip, boat owner, dates, amount, status); enhanced overview stats to show booking count + GMV; new /api/admin/bookings route; build clean, 124 tests green
 
 ### Completed v1.3 Post-Ship Work
 
@@ -86,5 +87,5 @@ v1.4 EAS-118 (Stripe live-mode) pending board completing Stripe account verifica
 ## Session Continuity
 
 Last session: 2026-06-30
-Stopped at: v1.4 in progress. EAS-117 complete (conversion tracking + sitemap). EAS-118 blocked on Stripe board action (EAS-119 in_review with CEO). Fixed NEXT_PUBLIC_APP_URL fallback bug in 3 Connect routes (commit 8d17783) — would have caused Stripe to reject onboarding links in production. 124 tests green. Next: unblock EAS-118 when board provides Stripe live keys.
+Stopped at: v1.4 in progress. EAS-117 complete (conversion tracking + sitemap). EAS-118 blocked on Stripe board action (EAS-119 in_review with CEO). Admin bookings panel shipped (EAS-7 heartbeat) — /admin now has Bookings tab + booking GMV stats in overview. 124 tests green. Next: unblock EAS-118 when board provides Stripe live keys.
 Resume file: None

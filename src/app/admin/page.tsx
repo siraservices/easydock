@@ -11,6 +11,9 @@ interface AdminStats {
   claimed: number;
   unclaimed: number;
   active: number;
+  bookingsTotal: number;
+  bookingsActive: number;
+  totalRevenue: number;
 }
 
 interface AdminMarina {
@@ -238,8 +241,23 @@ interface CalcLead {
   annual_loss: number | null;
 }
 
+interface AdminBooking {
+  id: string;
+  status: string;
+  check_in: string;
+  check_out: string;
+  total_price: number;
+  platform_fee_amount: number | null;
+  vessel_name: string | null;
+  vessel_length: number | null;
+  created_at: string;
+  slips: { name: string; marina_id: string } | null;
+  marinas: { name: string; city: string; state: string } | null;
+  profiles: { email: string; full_name: string | null } | null;
+}
+
 function AdminContent() {
-  const [activeTab, setActiveTab] = useState<"overview" | "marinas" | "claims" | "leads">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "marinas" | "claims" | "leads" | "bookings">("overview");
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [statsLoading, setStatsLoading] = useState(true);
   const [marinas, setMarinas] = useState<AdminMarina[]>([]);
@@ -262,6 +280,13 @@ function AdminContent() {
   const [leadsLoading, setLeadsLoading] = useState(false);
   const [leadsUserTypeFilter, setLeadsUserTypeFilter] = useState("all");
   const [leadsPage, setLeadsPage] = useState(1);
+
+  // Bookings tab state
+  const [bookings, setBookings] = useState<AdminBooking[]>([]);
+  const [bookingsTotal, setBookingsTotal] = useState(0);
+  const [bookingsLoading, setBookingsLoading] = useState(false);
+  const [bookingsStatusFilter, setBookingsStatusFilter] = useState("all");
+  const [bookingsPage, setBookingsPage] = useState(1);
 
   useEffect(() => {
     if (!toast) return;
@@ -336,6 +361,26 @@ function AdminContent() {
     }
   }, [leadsUserTypeFilter, leadsPage]);
 
+  const fetchBookings = useCallback(async () => {
+    setBookingsLoading(true);
+    try {
+      const params = new URLSearchParams({
+        status: bookingsStatusFilter,
+        page: String(bookingsPage),
+      });
+      const res = await fetch(`/api/admin/bookings?${params}`);
+      const data = await res.json();
+      if (res.ok) {
+        setBookings(data.bookings ?? []);
+        setBookingsTotal(data.total ?? 0);
+      }
+    } catch {
+      setBookings([]);
+    } finally {
+      setBookingsLoading(false);
+    }
+  }, [bookingsStatusFilter, bookingsPage]);
+
   useEffect(() => {
     fetchStats();
   }, [fetchStats]);
@@ -351,6 +396,12 @@ function AdminContent() {
       fetchLeads();
     }
   }, [activeTab, fetchLeads]);
+
+  useEffect(() => {
+    if (activeTab === "bookings") {
+      fetchBookings();
+    }
+  }, [activeTab, fetchBookings]);
 
   const handleToggleActive = async (marina: AdminMarina) => {
     setToggleLoadingId(marina.id);
@@ -397,7 +448,7 @@ function AdminContent() {
 
         {/* Tabs */}
         <div className="flex border-b border-gray-200 mb-6 gap-1">
-          {(["overview", "marinas", "claims", "leads"] as const).map((tab) => (
+          {(["overview", "marinas", "claims", "leads", "bookings"] as const).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -424,11 +475,27 @@ function AdminContent() {
               <LoadingSpinner message="Loading stats..." />
             ) : stats ? (
               <>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-                  <StatCard label="Total Marinas" value={stats.total} color="navy" />
-                  <StatCard label="Claimed" value={stats.claimed} color="teal" />
-                  <StatCard label="Unclaimed" value={stats.unclaimed} color="gray" />
-                  <StatCard label="Active" value={stats.active} color="green" />
+                <div className="mb-4">
+                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Marinas</p>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    <StatCard label="Total Marinas" value={stats.total} color="navy" />
+                    <StatCard label="Claimed" value={stats.claimed} color="teal" />
+                    <StatCard label="Unclaimed" value={stats.unclaimed} color="gray" />
+                    <StatCard label="Active" value={stats.active} color="green" />
+                  </div>
+                </div>
+                <div className="mb-8">
+                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Bookings</p>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                    <StatCard label="Total Bookings" value={stats.bookingsTotal ?? 0} color="navy" />
+                    <StatCard label="Active Bookings" value={stats.bookingsActive ?? 0} color="teal" />
+                    <div className="rounded-xl p-5 bg-green-600 text-white">
+                      <p className="text-3xl font-bold">
+                        ${Math.round((stats.totalRevenue ?? 0) / 100).toLocaleString()}
+                      </p>
+                      <p className="text-sm mt-1 opacity-90">GMV (confirmed)</p>
+                    </div>
+                  </div>
                 </div>
                 <div className="bg-white rounded-xl border shadow-sm p-6">
                   <h3 className="font-semibold text-navy-800 mb-3">Quick Actions</h3>
@@ -448,6 +515,12 @@ function AdminContent() {
                       className="border border-amber-500 text-amber-700 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-amber-50 transition-colors"
                     >
                       Review Claims Queue
+                    </button>
+                    <button
+                      onClick={() => setActiveTab("bookings")}
+                      className="border border-navy-300 text-navy-700 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-navy-50 transition-colors"
+                    >
+                      View All Bookings
                     </button>
                   </div>
                 </div>
@@ -843,6 +916,119 @@ function AdminContent() {
                   </>
                 )}
               </div>
+            )}
+          </div>
+        )}
+
+        {/* Bookings tab */}
+        {activeTab === "bookings" && (
+          <div>
+            <div className="flex flex-wrap gap-3 mb-5">
+              <select
+                value={bookingsStatusFilter}
+                onChange={(e) => { setBookingsStatusFilter(e.target.value); setBookingsPage(1); }}
+                className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+              >
+                <option value="all">All Statuses</option>
+                <option value="pending">Pending</option>
+                <option value="approved">Approved</option>
+                <option value="confirmed">Confirmed</option>
+                <option value="completed">Completed</option>
+                <option value="cancelled">Cancelled</option>
+                <option value="declined">Declined</option>
+              </select>
+              <span className="self-center text-sm text-gray-500">
+                {bookingsTotal} booking{bookingsTotal !== 1 ? "s" : ""}
+              </span>
+            </div>
+
+            {bookingsLoading ? (
+              <LoadingSpinner message="Loading bookings..." />
+            ) : (
+              <>
+                <div className="bg-white rounded-xl border shadow-sm overflow-hidden">
+                  <table className="w-full text-sm">
+                    <thead className="bg-gray-50 border-b">
+                      <tr>
+                        <th className="text-left px-4 py-3 font-semibold text-gray-700">Marina / Slip</th>
+                        <th className="text-left px-4 py-3 font-semibold text-gray-700">Boat Owner</th>
+                        <th className="text-left px-4 py-3 font-semibold text-gray-700">Dates</th>
+                        <th className="text-left px-4 py-3 font-semibold text-gray-700">Amount</th>
+                        <th className="text-left px-4 py-3 font-semibold text-gray-700">Status</th>
+                        <th className="text-left px-4 py-3 font-semibold text-gray-700">Created</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y">
+                      {bookings.length === 0 ? (
+                        <tr>
+                          <td colSpan={6} className="text-center py-10 text-gray-400">
+                            No bookings found.
+                          </td>
+                        </tr>
+                      ) : (
+                        bookings.map((booking) => (
+                          <tr key={booking.id} className="hover:bg-gray-50 transition-colors">
+                            <td className="px-4 py-3">
+                              <p className="font-medium text-navy-800">{booking.marinas?.name ?? "—"}</p>
+                              <p className="text-xs text-gray-400">
+                                {booking.slips?.name ?? "—"} · {booking.marinas?.city}, {booking.marinas?.state}
+                              </p>
+                            </td>
+                            <td className="px-4 py-3 text-gray-600">
+                              <p>{booking.profiles?.email ?? "—"}</p>
+                              {booking.vessel_name && (
+                                <p className="text-xs text-gray-400">{booking.vessel_name}</p>
+                              )}
+                            </td>
+                            <td className="px-4 py-3 text-gray-600 text-xs">
+                              <p>{new Date(booking.check_in).toLocaleDateString()}</p>
+                              <p className="text-gray-400">→ {new Date(booking.check_out).toLocaleDateString()}</p>
+                            </td>
+                            <td className="px-4 py-3">
+                              <p className="font-semibold text-navy-800">
+                                ${(booking.total_price / 100).toLocaleString()}
+                              </p>
+                              {booking.platform_fee_amount != null && (
+                                <p className="text-xs text-gray-400">
+                                  fee: ${(booking.platform_fee_amount / 100).toLocaleString()}
+                                </p>
+                              )}
+                            </td>
+                            <td className="px-4 py-3">
+                              <StatusBadge status={booking.status} />
+                            </td>
+                            <td className="px-4 py-3 text-xs text-gray-400">
+                              {new Date(booking.created_at).toLocaleDateString()}
+                            </td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+
+                {Math.ceil(bookingsTotal / 25) > 1 && (
+                  <div className="flex items-center justify-between mt-4">
+                    <button
+                      disabled={bookingsPage === 1}
+                      onClick={() => setBookingsPage((p) => p - 1)}
+                      className="px-4 py-2 text-sm font-medium text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-40"
+                    >
+                      Previous
+                    </button>
+                    <span className="text-sm text-gray-500">
+                      Page {bookingsPage} of {Math.ceil(bookingsTotal / 25)}
+                    </span>
+                    <button
+                      disabled={bookingsPage === Math.ceil(bookingsTotal / 25)}
+                      onClick={() => setBookingsPage((p) => p + 1)}
+                      className="px-4 py-2 text-sm font-medium text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-40"
+                    >
+                      Next
+                    </button>
+                  </div>
+                )}
+              </>
             )}
           </div>
         )}
