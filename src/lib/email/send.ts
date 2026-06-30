@@ -6,6 +6,8 @@ import BookingCancelledEmail from '@/emails/booking-cancelled';
 import LeadConfirmationEmail from '@/emails/lead-confirmation';
 import MarinaLeadConfirmation from '@/emails/marina-lead-confirmation';
 import MarinaActivationNudge from '@/emails/marina-activation-nudge';
+import LeadAdminNotification from '@/emails/lead-admin-notification';
+import CalculatorLeadAdminNotification from '@/emails/calculator-lead-admin-notification';
 
 // Lazy initialization — Resend throws if API key is missing at constructor time,
 // so we instantiate only when actually sending (not at module load).
@@ -239,4 +241,71 @@ export async function fetchBookingEmailParams(
     boatOwnerEmail,
     marinaOwnerEmail,
   };
+}
+
+const ADMIN_NOTIFY_EMAIL = 'aira4development@gmail.com';
+
+export interface LeadAdminNotificationParams {
+  name: string;
+  email: string;
+  userType: 'yacht_owner' | 'marina_owner';
+  phone?: string | null;
+  boatLength?: string | null;
+  preferredArea?: string | null;
+}
+
+/**
+ * Sends admin notification when someone submits the landing page interest form.
+ * Non-fatal — email failure must never block the API response.
+ */
+export async function sendLeadAdminNotification(params: LeadAdminNotificationParams): Promise<void> {
+  try {
+    const { error } = await getResend().emails.send({
+      from: 'EasyDock Leads <leads@easydock.co>',
+      to: [ADMIN_NOTIFY_EMAIL],
+      subject: `New ${params.userType === 'marina_owner' ? 'marina owner' : 'boat owner'} lead — ${params.name}`,
+      react: LeadAdminNotification(params),
+    });
+    if (error) {
+      console.error('sendLeadAdminNotification Resend error:', error);
+    }
+  } catch (err) {
+    console.error('sendLeadAdminNotification failed:', err);
+  }
+}
+
+export interface CalculatorLeadAdminNotificationParams {
+  email: string;
+  phone?: string | null;
+  role?: string | null;
+  marinaName?: string | null;
+  region?: string | null;
+  totalSlips?: number | null;
+  vacantSlips?: number | null;
+  avgMonthlyRate?: number | null;
+  annualLoss?: number | null;
+}
+
+/**
+ * Sends admin notification when someone submits the revenue calculator lead form.
+ * Non-fatal — email failure must never block the API response.
+ */
+export async function sendCalculatorLeadAdminNotification(
+  params: CalculatorLeadAdminNotificationParams
+): Promise<void> {
+  try {
+    const loss = params.annualLoss != null ? ` — $${params.annualLoss.toLocaleString()}/yr loss` : '';
+    const marina = params.marinaName ? ` (${params.marinaName})` : '';
+    const { error } = await getResend().emails.send({
+      from: 'EasyDock Leads <leads@easydock.co>',
+      to: [ADMIN_NOTIFY_EMAIL],
+      subject: `New calculator lead${marina}${loss}`,
+      react: CalculatorLeadAdminNotification(params),
+    });
+    if (error) {
+      console.error('sendCalculatorLeadAdminNotification Resend error:', error);
+    }
+  } catch (err) {
+    console.error('sendCalculatorLeadAdminNotification failed:', err);
+  }
 }

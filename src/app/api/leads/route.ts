@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { sendLeadConfirmationEmail } from '@/lib/email/send';
+import { sendLeadConfirmationEmail, sendLeadAdminNotification } from '@/lib/email/send';
 import { subscribeToMailchimp } from '@/lib/email/mailchimp';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -68,12 +68,20 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Failed to save' }, { status: 500 });
   }
 
-  // Send confirmation email — non-blocking, failure won't affect response
+  // Send confirmation to lead and admin notification — non-blocking
   await sendLeadConfirmationEmail(
     insertData.email,
     insertData.name,
     insertData.user_type
   );
+  void sendLeadAdminNotification({
+    name: insertData.name,
+    email: insertData.email,
+    userType: insertData.user_type,
+    phone: phone ?? null,
+    boatLength: boat_length ?? null,
+    preferredArea: preferred_area ?? null,
+  });
 
   // Subscribe to Mailchimp welcome sequence — non-blocking
   void subscribeToMailchimp(insertData.email, insertData.name, insertData.user_type);

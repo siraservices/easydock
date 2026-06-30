@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/client";
 
 const BRAND = {
   navy: "#1B3A6B",
@@ -209,20 +208,23 @@ export default function CalculatorPage() {
     setSubmitError("");
 
     try {
-      const supabase = createClient();
-      const { error } = await (supabase.from("calculator_leads") as any).insert({
-        marina_name: marinaName || null,
-        email,
-        phone: phone || null,
-        role: captureRole || null,
-        region: region || null,
-        total_slips: parseInt(totalSlips),
-        vacant_slips: parseInt(vacantSlips),
-        avg_monthly_rate: parseFloat(avgMonthlyRate),
-        avg_vacancy_months: avgVacancyMonths,
-        annual_loss: results.annualLoss,
+      const res = await fetch("/api/calculator-leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          marina_name: marinaName || null,
+          email,
+          phone: phone || null,
+          role: captureRole || null,
+          region: region || null,
+          total_slips: parseInt(totalSlips),
+          vacant_slips: parseInt(vacantSlips),
+          avg_monthly_rate: parseFloat(avgMonthlyRate),
+          avg_vacancy_months: avgVacancyMonths,
+          annual_loss: results.annualLoss,
+        }),
       });
-      if (error) throw error;
+      if (!res.ok) throw new Error("Server error");
       setEmailSubmitted(true);
       setShowFinalCTA(true);
       setShowModal(false);
