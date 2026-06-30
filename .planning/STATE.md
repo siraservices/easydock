@@ -5,7 +5,7 @@ milestone_name: Revenue Unblock
 status: in_progress
 stopped_at: null
 last_updated: "2026-06-30"
-last_activity: 2026-06-30 — Heartbeat 2: Custom 404 page, favicon config, booking "Total Paid" label fix; 128 tests green, build clean
+last_activity: 2026-06-30 — Heartbeat 3: Fix dead pricing CTA buttons (route to /signup?role=marina_owner + pricing_cta_clicked analytics); 128 tests green, build clean
 progress:
   total_phases: 3
   completed_phases: 1
@@ -74,6 +74,7 @@ v1.4 EAS-118 (Stripe live-mode) pending board completing Stripe account verifica
 - Marina owner slip preview (2026-06-30, EAS-7 heartbeat): /slips/[id] now accessible to marina_owner role; shows "Marina owner preview" card with Back to dashboard link instead of booking widget; commit 58227e2
 - Boat owner bookings list UX (2026-06-30, EAS-7 heartbeat): /bookings now splits into Upcoming (check_in >= today, not cancelled/declined) and Past sections; sorted by check-in ascending for upcoming; commit 2d512d0; 128 tests green, TypeScript clean
 - Platform polish (2026-06-30 heartbeat 2): (1) Custom 404 page — branded not-found.tsx with teal "404" heading, Go home + Find slips CTAs; (2) Favicon — configured via metadata.icons in layout.tsx pointing to /public/logo.png; (3) Booking detail "Total Paid" label fix — now shows "Total" for pending/approved (pre-payment) and "Total Paid" only for confirmed/completed; commit b00a9b2; 128 tests green, build clean
+- Pricing CTA fix (2026-06-30 heartbeat 3): All 3 "Start free trial" buttons on /pricing were dead (no onClick/href) — wired to router.push('/signup?role=marina_owner') with pricing_cta_clicked Vercel Analytics event per plan tier; commit 792312e; 128 tests green, build clean
 
 ### Completed v1.3 Post-Ship Work
 
@@ -93,5 +94,5 @@ v1.4 EAS-118 (Stripe live-mode) pending board completing Stripe account verifica
 ## Session Continuity
 
 Last session: 2026-06-30
-Stopped at: v1.4 in progress. EAS-117 complete. EAS-118 blocked on board Stripe verification (EAS-119 in_review with CEO). Heartbeat 2 shipped: custom 404 page, favicon, booking total label fix. 128 tests green, build clean. Next: unblock EAS-118 when board provides Stripe live keys.
+Stopped at: v1.4 in progress. EAS-117 complete. EAS-118 blocked on board Stripe verification (EAS-119 in_review with CEO). Heartbeat 3 shipped: pricing CTA buttons now route to /signup. 128 tests green, build clean. Next: unblock EAS-118 when board provides Stripe live keys.
 Resume file: None
