@@ -4,8 +4,8 @@ milestone: v1.4
 milestone_name: Revenue Unblock
 status: in_progress
 stopped_at: null
-last_updated: "2026-06-30"
-last_activity: 2026-06-30 — Heartbeat 4: Mobile navbar hamburger (c113cc1) + forgot/reset password flow (df91e4f); 128 tests green, build clean
+last_updated: "2026-07-01"
+last_activity: 2026-07-01 — Heartbeat 5: Site-wide OG/Twitter metadata (13a5a19); search layout.tsx added; about page OG; .gitignore cleanup; 128 tests green, build clean
 progress:
   total_phases: 3
   completed_phases: 1
@@ -77,6 +77,8 @@ v1.4 EAS-118 (Stripe live-mode) pending board completing Stripe account verifica
 - Pricing CTA fix (2026-06-30 heartbeat 3): All 3 "Start free trial" buttons on /pricing were dead (no onClick/href) — wired to router.push('/signup?role=marina_owner') with pricing_cta_clicked Vercel Analytics event per plan tier; commit 792312e; 128 tests green, build clean
 - Mobile navbar (2026-06-30 heartbeat 4): Nav links were absolutely-positioned and broken on mobile — added hamburger toggle with slide-down drawer for screens < md; commit c113cc1; build clean
 - Forgot/reset password flow (2026-06-30 heartbeat 4): Login page had no recovery path — added /forgot-password and /reset-password pages + Supabase email reset integration; commit df91e4f; 128 tests green, build clean
+- Dynamic OG metadata for slip detail pages (2026-06-30 heartbeat 4): /slips/[id] split into server wrapper (generateMetadata) + slip-detail-client.tsx; each slip page gets its own OG/Twitter card from live Supabase data; commit b469394
+- Site-wide OG/Twitter metadata (2026-07-01 heartbeat 5): root layout.tsx has metadataBase + openGraph/twitter defaults; search/layout.tsx added; about page OG/Twitter; .gitignore excludes board design reference files; commit 13a5a19; 128 tests green, build clean
 
 ### Completed v1.3 Post-Ship Work
 
@@ -95,6 +97,6 @@ v1.4 EAS-118 (Stripe live-mode) pending board completing Stripe account verifica
 
 ## Session Continuity
 
-Last session: 2026-06-30
-Stopped at: v1.4 in progress. EAS-118 blocked on board Stripe verification (EAS-119 in_review with CEO, no response yet). Heartbeat 4 shipped: mobile navbar hamburger menu + forgot/reset password flow. 128 tests green, build clean. Next: unblock EAS-118 when board provides Stripe live keys.
+Last session: 2026-07-01
+Stopped at: v1.4 in progress. EAS-118 still blocked on board Stripe verification (EAS-119 in_review with CEO). Heartbeat 5 shipped: site-wide OG/Twitter metadata, search route layout, about page OG, .gitignore cleanup. 128 tests green, build clean. Next: unblock EAS-118 when board provides Stripe live keys.
 Resume file: None
