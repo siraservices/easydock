@@ -1,158 +1,90 @@
 # EasyDock Deployment Guide
 
+> **Current stack:** Next.js 15 (App Router) deployed on **Vercel** at https://easydock.vercel.app  
+> This document reflects the live production setup. The old legacy app (vanilla JS / Netlify) is archived in `app-legacy/`.
+
 ## Pre-Deployment Checklist
 
-- [ ] Supabase project created and configured
-- [ ] Database schema executed successfully
-- [ ] Admin user created and verified
-- [ ] `app/config.js` updated with real credentials
-- [ ] All features tested locally
-- [ ] Git repository created and code pushed
+- [ ] Supabase project configured and schema applied
+- [ ] Local build passes (`npm run build`)
+- [ ] All relevant env vars set in Vercel dashboard
+- [ ] Feature tested locally with `npm run dev`
 
-## Deployment Steps
+## Deployment
 
-### 1. Prepare Your Code
+EasyDock auto-deploys via **Vercel + GitHub**. Push to `main` → Vercel builds and deploys automatically.
 
 ```bash
-# Ensure all files are committed
 git add .
-git commit -m "Ready for deployment"
+git commit -m "your change"
 git push origin main
+# Vercel picks it up automatically — check status at vercel.com/dashboard
 ```
 
-### 2. Deploy to Netlify
+## Environment Variables (Vercel Dashboard)
 
-1. **Connect Repository**
-   - Go to https://app.netlify.com
-   - Click "Add new site" > "Import an existing project"
-   - Choose your Git provider (GitHub, GitLab, Bitbucket)
-   - Select your repository
+All secrets live in the **Vercel** project environment settings — NOT Netlify.
 
-2. **Configure Build Settings**
-   - **Build command:** (leave empty - no build needed)
-   - **Publish directory:** `app`
-   - Click "Deploy site"
+Go to: https://vercel.com → EasyDock project → Settings → Environment Variables
 
-3. **Wait for Deployment**
-   - Netlify will deploy your site
-   - You'll get a URL like `https://your-site-name.netlify.app`
-   - First deployment takes 1-2 minutes
+### Required variables
 
-### 3. Configure Custom Domain (Optional)
+| Variable | Description |
+|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anon/public key |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service-role key (server-side only) |
+| `STRIPE_SECRET_KEY` | Stripe secret key (`sk_test_…` in test, `sk_live_…` in live) |
+| `STRIPE_WEBHOOK_SECRET` | Stripe webhook signing secret for `/api/webhook` |
+| `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Stripe publishable key (client-side) |
 
-1. In Netlify dashboard, go to Site settings > Domain management
-2. Click "Add custom domain"
-3. Enter your domain (easydock.com)
-4. Follow DNS configuration instructions
-5. Wait for DNS propagation (can take up to 48 hours)
+### Stripe live-mode switch (EAS-118)
 
-### 4. Environment Variables (If Needed)
+When the board confirms live Stripe keys are available:
 
-If you need to use environment variables:
-1. Go to Site settings > Environment variables
-2. Add variables (though config.js is client-side, so this is optional)
-3. Redeploy if needed
+1. In Vercel dashboard → Environment Variables, update:
+   - `STRIPE_SECRET_KEY` → `sk_live_…`
+   - `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` → `pk_live_…`
+   - `STRIPE_WEBHOOK_SECRET` → new live signing secret (from Stripe dashboard → Webhooks)
 
-### 5. Post-Deployment Verification
+2. In the Stripe live dashboard, register the production webhook:
+   - Endpoint: `https://easydock.vercel.app/api/webhook`
+   - Events: `checkout.session.completed`, `checkout.session.expired`, `account.updated`
 
-- [ ] Visit your deployed site
-- [ ] Test user signup
-- [ ] Test login
-- [ ] Verify Supabase connection
-- [ ] Test marina search
-- [ ] Test booking flow
-- [ ] Verify admin panel access
+3. Trigger a Vercel redeploy so the new env vars take effect:
+   ```bash
+   # Trivial commit or use Vercel dashboard "Redeploy"
+   git commit --allow-empty -m "chore: redeploy for live Stripe keys" && git push
+   ```
 
-## Production Configuration
+4. Smoke test one low-value real charge and refund to confirm end-to-end.
 
-### Security Checklist
+## Preview Deployments
 
-- [ ] HTTPS enabled (automatic with Netlify)
-- [ ] Supabase RLS policies verified
-- [ ] No sensitive data in client-side code
-- [ ] API keys are public (Supabase anon key is safe to expose)
-- [ ] Admin access restricted properly
+Every PR gets a Vercel preview URL automatically. Use these for QA before merging to `main`.
 
-### Performance Optimization
+## Rollback
 
-1. **Enable Netlify CDN** (automatic)
-2. **Configure Caching** (already in netlify.toml)
-3. **Optimize Images** (if adding photos)
-4. **Minify Assets** (optional, Netlify can do this)
+In Vercel dashboard → Deployments → find the last good deploy → click "..." → "Promote to Production".
 
-### Monitoring
+## Monitoring
 
-1. **Set up Netlify Analytics** (optional, paid feature)
-2. **Monitor Supabase Dashboard** for usage
-3. **Set up Error Tracking** (optional)
-4. **Check Logs Regularly**
+- **Runtime errors / logs**: Vercel dashboard → Project → Functions (or use `mcp__claude_ai_Vercel__get_runtime_errors`)
+- **Supabase**: Supabase dashboard → Logs
+- **Stripe**: Stripe dashboard → Developers → Events
 
-## Troubleshooting Deployment Issues
+## Troubleshooting
 
-### Build Fails
-- Check Netlify build logs
-- Verify publish directory is correct
-- Ensure all files are committed
+### Build fails
+Check Vercel build logs in the dashboard. Common causes:
+- TypeScript errors (`npm run build` locally to reproduce)
+- Missing env vars (Vercel only receives vars that are explicitly set)
 
-### Site Not Loading
-- Check Netlify deployment status
-- Verify domain configuration
-- Check browser console for errors
+### Stripe webhooks not firing
+- Verify the webhook endpoint is registered in the **live** Stripe dashboard (not test)
+- Confirm `STRIPE_WEBHOOK_SECRET` matches the signing secret shown for that endpoint
+- Check Vercel function logs for 4xx/5xx from `/api/webhook`
 
-### Database Connection Issues
-- Verify Supabase URL and key in config.js
-- Check Supabase project status
-- Verify RLS policies allow public access where needed
-
-### Authentication Not Working
-- Check Supabase Auth settings
-- Verify redirect URLs in Supabase dashboard
-- Check browser console for errors
-
-## Rollback Procedure
-
-If you need to rollback:
-
-1. Go to Netlify dashboard > Deploys
-2. Find the previous working deployment
-3. Click "..." menu > "Publish deploy"
-4. Site will revert to that version
-
-## Continuous Deployment
-
-Netlify automatically deploys when you push to your main branch:
-
-1. Make changes locally
-2. Commit and push to GitHub
-3. Netlify automatically builds and deploys
-4. Check deployment status in Netlify dashboard
-
-## Maintenance
-
-### Regular Tasks
-
-- **Weekly:** Check error logs
-- **Monthly:** Review Supabase usage
-- **Quarterly:** Update dependencies
-- **As needed:** Monitor user feedback
-
-### Updates
-
-To update the site:
-1. Make changes locally
-2. Test thoroughly
-3. Commit and push
-4. Netlify auto-deploys
-5. Verify on production
-
-## Support Resources
-
-- **Netlify Docs:** https://docs.netlify.com
-- **Supabase Docs:** https://supabase.com/docs
-- **Project README:** See README.md
-- **Setup Guide:** See docs/SETUP_GUIDE.md
-
----
-
-**Your site is now live!** Share your URL and start onboarding users.
-
+### Supabase connection issues
+- Verify `NEXT_PUBLIC_SUPABASE_URL` and keys are set in Vercel env vars
+- Check Supabase project is not paused (free-tier projects pause after inactivity)
