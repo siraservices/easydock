@@ -5,7 +5,7 @@ milestone_name: Revenue Unblock
 status: in_progress
 stopped_at: null
 last_updated: "2026-07-01"
-last_activity: 2026-07-01 — Heartbeat 6: Public marina profile page /marinas/[id] (b4066b0); slip card + slip detail link marina name to profile; sitemap updated to include all active marina URLs; 128 tests green, build clean
+last_activity: 2026-07-01 — Heartbeat 7: EAS-126 done — README.md rewritten from stale vanilla JS/Netlify to current Next.js 15/Vercel stack; TESTING_GUIDE.md Netlify ref fixed; commit 8d75311 pushed. EAS-118 remains blocked on board Stripe verification (EAS-119 in_review).
 progress:
   total_phases: 3
   completed_phases: 1
