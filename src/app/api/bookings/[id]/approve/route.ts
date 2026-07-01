@@ -19,6 +19,27 @@ export async function POST(
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  // Fetch current status — approve is only valid for pending bookings
+  const { data: existing, error: fetchError } = await supabase
+    .from("bookings")
+    .select("id, status")
+    .eq("id", id)
+    .single();
+
+  if (fetchError || !existing) {
+    return NextResponse.json(
+      { error: "Not found or not authorized" },
+      { status: 404 }
+    );
+  }
+
+  if (existing.status !== "pending") {
+    return NextResponse.json(
+      { error: "Approve is only allowed for pending bookings." },
+      { status: 422 }
+    );
+  }
+
   // Update booking status to 'approved' — RLS scopes UPDATE to marina owners
   const { data, error } = await supabase
     .from("bookings")

@@ -1,5 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
+// --- Hoist the update spy so it's available inside vi.mock factories ---
+
+const { mockUpdate } = vi.hoisted(() => ({ mockUpdate: vi.fn() }));
+
 // --- Mock: @/lib/email/send (non-fatal email sends should not affect route behavior) ---
 
 vi.mock('@/lib/email/send', () => ({
@@ -18,10 +22,13 @@ vi.mock('@/lib/supabase/admin', () => ({
 const mockState = {
   authenticated: true,
   bookingFound: true,
-  updateError: false,
+  bookingStatus: 'pending' as string,
 };
 
 // --- Mock: @/lib/supabase/server ---
+// from() supports two call shapes used by the route:
+//   1. select().eq().single()  — status pre-check
+//   2. update().eq().select().single()  — status update
 
 vi.mock('@/lib/supabase/server', () => ({
   createClient: vi.fn(() => ({
@@ -35,19 +42,20 @@ vi.mock('@/lib/supabase/server', () => ({
       ),
     },
     from: vi.fn(() => ({
-      update: vi.fn(() => ({
+      // Status pre-check path: from().select().eq().single()
+      select: vi.fn(() => ({
         eq: vi.fn(() => ({
-          select: vi.fn(() => ({
-            single: vi.fn().mockImplementation(() =>
-              Promise.resolve(
-                mockState.bookingFound
-                  ? { data: { id: 'booking-uuid-1', status: 'approved' }, error: null }
-                  : { data: null, error: { message: 'Not found' } }
-              )
-            ),
-          })),
+          single: vi.fn().mockImplementation(() =>
+            Promise.resolve(
+              mockState.bookingFound
+                ? { data: { id: 'booking-uuid-1', status: mockState.bookingStatus }, error: null }
+                : { data: null, error: { message: 'Not found' } }
+            )
+          ),
         })),
       })),
+      // Update path: from().update().eq().select().single()
+      update: mockUpdate,
     })),
   })),
 }));
@@ -71,7 +79,18 @@ describe('POST /api/bookings/[id]/approve', () => {
   beforeEach(() => {
     mockState.authenticated = true;
     mockState.bookingFound = true;
-    mockState.updateError = false;
+    mockState.bookingStatus = 'pending';
+    mockUpdate.mockReset();
+    mockUpdate.mockReturnValue({
+      eq: vi.fn(() => ({
+        select: vi.fn(() => ({
+          single: vi.fn().mockResolvedValue({
+            data: { id: 'booking-uuid-1', status: 'approved' },
+            error: null,
+          }),
+        })),
+      })),
+    });
   });
 
   it('returns 401 when user is not authenticated', async () => {
@@ -83,9 +102,8 @@ describe('POST /api/bookings/[id]/approve', () => {
     expect(json.error).toBeDefined();
   });
 
-  it('returns 200 and updates booking status to approved', async () => {
-    mockState.authenticated = true;
-    mockState.bookingFound = true;
+  it('returns 200 and approves a pending booking', async () => {
+    mockState.bookingStatus = 'pending';
     const { request, context } = makeRequest();
     const response = await POST(request, context);
     expect(response.status).toBe(200);
@@ -95,12 +113,21 @@ describe('POST /api/bookings/[id]/approve', () => {
   });
 
   it('returns 404 when booking not found or not owned by marina owner', async () => {
-    mockState.authenticated = true;
     mockState.bookingFound = false;
     const { request, context } = makeRequest();
     const response = await POST(request, context);
     expect(response.status).toBe(404);
     const json = await response.json();
     expect(json.error).toBeDefined();
+  });
+
+  it('returns 422 for a non-pending booking and does not call update', async () => {
+    mockState.bookingStatus = 'confirmed';
+    const { request, context } = makeRequest();
+    const response = await POST(request, context);
+    expect(response.status).toBe(422);
+    const json = await response.json();
+    expect(json.error).toMatch(/pending/i);
+    expect(mockUpdate).not.toHaveBeenCalled();
   });
 });
