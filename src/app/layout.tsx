@@ -5,13 +5,42 @@ import { AuthProvider } from "@/lib/auth-context";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://easydock.vercel.app";
+
 export const metadata: Metadata = {
-  title: "EasyDock - Marina Booking Marketplace",
+  title: {
+    default: "EasyDock — Find & Book Marina Slips in South Florida",
+    template: "%s | EasyDock",
+  },
   description:
-    "Connect with marinas and book dock slips for your vessel. Easy online reservations for boat owners and marina operators.",
+    "Stop waiting years for a marina slip. EasyDock connects boat owners with available dock slips across South Florida — browse, compare, and book online in minutes.",
+  metadataBase: new URL(APP_URL),
   icons: {
     icon: "/logo.png",
     apple: "/logo.png",
+  },
+  openGraph: {
+    type: "website",
+    siteName: "EasyDock",
+    title: "EasyDock — Find & Book Marina Slips in South Florida",
+    description:
+      "Stop waiting years for a marina slip. Browse available dock slips across South Florida and book online in minutes. No waitlist, no phone tag.",
+    url: APP_URL,
+    images: [
+      {
+        url: "/logo.png",
+        width: 512,
+        height: 512,
+        alt: "EasyDock logo",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "EasyDock — Find & Book Marina Slips in South Florida",
+    description:
+      "Stop waiting years for a marina slip. Browse available dock slips across South Florida and book online in minutes.",
+    images: ["/logo.png"],
   },
 };
 

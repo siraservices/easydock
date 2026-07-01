@@ -76,3 +76,8 @@ test-*.csv
 
 # GSD debug sessions
 .planning/debug/
+
+# Board-dropped design reference files (not part of the app)
+brand-guidelines.svg
+easydock_hero_before_after.html
+pricing-page.jsx

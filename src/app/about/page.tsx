@@ -4,6 +4,16 @@ import Link from 'next/link';
 export const metadata: Metadata = {
   title: 'About - EasyDock',
   description: "Learn about EasyDock — who we are, why we built it, and what we're creating for South Florida boaters.",
+  openGraph: {
+    title: 'About EasyDock',
+    description: "Learn about EasyDock — who we are, why we built it, and what we're creating for South Florida boaters.",
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'About EasyDock',
+    description: "Learn about EasyDock — who we are, why we built it, and what we're creating for South Florida boaters.",
+  },
 };
 
 const TEAM = [
