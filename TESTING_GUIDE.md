@@ -257,7 +257,7 @@ Before deploying to production:
 1. **Fix any bugs** found during testing
 2. **Add real marina data** (use cold email automation)
 3. **Customize branding** (colors, logos, copy)
-4. **Deploy to Netlify** (see DEPLOYMENT.md)
+4. **Deploy to Vercel** (see DEPLOYMENT.md)
 5. **Set up email notifications** (optional)
 6. **Integrate Stripe payments** (future enhancement)
 
