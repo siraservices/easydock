@@ -100,5 +100,5 @@ v1.4 EAS-118 (Stripe live-mode) pending board completing Stripe account verifica
 ## Session Continuity
 
 Last session: 2026-07-01
-Stopped at: v1.4 in progress. EAS-118 still blocked on board Stripe verification (EAS-119 in_review with CEO). Heartbeat 8: committed deny-route guard for confirmed bookings (28e6c38); 4 tests green. 128 tests green total, build clean. Next: unblock EAS-118 when board provides Stripe live keys.
+Stopped at: v1.4 in progress. EAS-118 still blocked on board Stripe verification (EAS-119 in_review with CEO). Heartbeat 8: committed deny-route guard for confirmed bookings (28e6c38); 131 tests green (20 files), build clean. Next: unblock EAS-118 when board provides Stripe live keys.
 Resume file: None
