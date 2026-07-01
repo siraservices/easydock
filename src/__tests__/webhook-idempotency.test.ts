@@ -161,4 +161,36 @@ describe('Webhook handler: idempotency', () => {
     // Event should be recorded after successful cancellation
     expect(mockInsert).toHaveBeenCalled();
   });
+
+  it('records event with null booking_id when checkout.session.completed has no booking in metadata', async () => {
+    mockState.existingEvent = false;
+    mockState.eventType = 'checkout.session.completed';
+    mockState.bookingId = null;
+
+    const response = await POST(makeRequest());
+    expect(response.status).toBe(200);
+    const json = await response.json();
+    expect(json.received).toBe(true);
+
+    // Event must still be recorded with null booking_id
+    expect(mockInsert).toHaveBeenCalledWith(
+      expect.objectContaining({ booking_id: null, event_type: 'checkout.session.completed' })
+    );
+  });
+
+  it('records event with null booking_id when checkout.session.expired has no booking in metadata', async () => {
+    mockState.existingEvent = false;
+    mockState.eventType = 'checkout.session.expired';
+    mockState.bookingId = null;
+
+    const response = await POST(makeRequest());
+    expect(response.status).toBe(200);
+    const json = await response.json();
+    expect(json.received).toBe(true);
+
+    // Event must still be recorded with null booking_id
+    expect(mockInsert).toHaveBeenCalledWith(
+      expect.objectContaining({ booking_id: null, event_type: 'checkout.session.expired' })
+    );
+  });
 });
