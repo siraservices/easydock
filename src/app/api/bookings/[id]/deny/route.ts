@@ -24,7 +24,7 @@ export async function POST(
     .from("bookings")
     .select("id, status")
     .eq("id", id)
-    .single();
+    .single() as unknown as { data: { id: string; status: string } | null; error: Error | null };
 
   if (fetchError || !existing) {
     return NextResponse.json(
