@@ -5,7 +5,7 @@ milestone_name: Revenue Unblock
 status: in_progress
 stopped_at: null
 last_updated: "2026-07-01"
-last_activity: 2026-07-01 — Heartbeat 8: approve + deny routes now reject non-pending bookings with 422; 132 tests green (b716842). EAS-118 still blocked on board Stripe verification.
+last_activity: 2026-07-01 — EAS-131: auth gap fixes — login page now surfaces auth_callback_failed URL param; company_name/phone saved in user metadata so email-confirmed signups don't lose them; DB migration 003 added; 132 tests green (b983ef4).
 progress:
   total_phases: 3
   completed_phases: 1
@@ -81,6 +81,7 @@ v1.4 EAS-118 (Stripe live-mode) pending board completing Stripe account verifica
 - Site-wide OG/Twitter metadata (2026-07-01 heartbeat 5): root layout.tsx has metadataBase + openGraph/twitter defaults; search/layout.tsx added; about page OG/Twitter; .gitignore excludes board design reference files; commit 13a5a19; 128 tests green, build clean
 - Public marina profile page (2026-07-01 heartbeat 6): /marinas/[id] — photos carousel, description, amenities, contact (phone/email/website), all available slips with Book Now links; claim CTA for unclaimed marinas; edit link for owners; marina name in SlipCard + slip detail page links to profile; sitemap.ts made async to include all active marina URLs; generateMetadata for OG/Twitter; commit b4066b0; 128 tests green, build clean
 - Booking state guards (2026-07-01 heartbeat 8): deny + approve routes now return 422 for non-pending bookings — prevents state machine violations (e.g., approving a confirmed booking, denying a cancelled one); tests updated to split-mock pattern with hoisted update spy, new 422-for-non-pending cases; commits 28e6c38 (deny) + b716842 (approve); 132 tests green
+- Auth gaps fixed (2026-07-01 EAS-131): (1) login page now renders ?error=auth_callback_failed URL param as a human-readable message instead of silently swallowing it; (2) company_name and phone now passed in raw_user_meta_data during signUp so DB trigger captures them for email-confirmed signups — previously the early-return needsConfirmation path skipped the profile update entirely; database/003_profile_trigger_company_phone.sql updates the trigger; commit b983ef4; 132 tests green
 
 ### Completed v1.3 Post-Ship Work
 
