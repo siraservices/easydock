@@ -20,23 +20,54 @@ EasyDock is a marina booking marketplace MVP that connects boat owners with mari
 easydock/
 ├── src/
 │   ├── app/                    # Next.js App Router pages
-│   │   ├── layout.tsx          # Root layout with nav
-│   │   ├── page.tsx            # Home page
-│   │   └── globals.css         # Tailwind imports + theme
+│   │   ├── layout.tsx          # Root layout with nav + metadata
+│   │   ├── page.tsx            # Home/landing page
+│   │   ├── globals.css         # Tailwind imports + theme
+│   │   ├── robots.ts           # robots.txt (disallows admin/dashboard/api)
+│   │   ├── sitemap.ts          # Dynamic sitemap.xml including all marina URLs
+│   │   ├── not-found.tsx       # Branded 404 page
+│   │   ├── error.tsx           # Global error boundary
+│   │   ├── about/              # About page
+│   │   ├── admin/              # Admin dashboard (bookings panel, leads, marinas)
+│   │   ├── api/                # API routes
+│   │   │   ├── admin/          # Admin endpoints (bookings, leads)
+│   │   │   ├── bookings/       # Booking CRUD + approve/deny/cancel
+│   │   │   ├── calculator-leads/ # Lead capture from pricing calculator
+│   │   │   ├── leads/          # Marina lead intake
+│   │   │   ├── marinas/        # Marina management + bookings inbox
+│   │   │   ├── slips/          # Slip management
+│   │   │   ├── stripe/         # Stripe Connect onboarding
+│   │   │   └── webhooks/stripe # Stripe webhook handler
+│   │   ├── auth/callback/      # Supabase auth callback (preserves returnTo)
+│   │   ├── blog/               # SEO blog — 5+ posts targeting marina/boat-owner keywords
+│   │   ├── bookings/           # Boat owner bookings list (upcoming + past)
+│   │   ├── calculator/         # ROI calculator with lead capture
+│   │   ├── claim/              # Public marina claim flow
+│   │   ├── dashboard/          # Marina owner dashboard + slip management
+│   │   ├── forgot-password/    # Password recovery
+│   │   ├── login/              # Email/password login
+│   │   ├── marinas/[id]/       # Public marina profile page
+│   │   ├── pricing/            # Pricing page with CTA
+│   │   ├── privacy/            # Privacy policy
+│   │   ├── reset-password/     # Reset password (Supabase recovery flow)
+│   │   ├── search/             # Interactive map search (Mapbox)
+│   │   ├── signup/             # Role-aware signup (role + returnTo params)
+│   │   ├── slips/[id]/         # Public slip detail + booking widget
+│   │   └── terms/              # Terms of service
+│   ├── components/             # Shared React components
+│   ├── config/                 # App configuration
+│   ├── emails/                 # React Email templates (Resend)
 │   ├── lib/
 │   │   └── supabase/
 │   │       ├── client.ts       # Browser Supabase client
 │   │       └── server.ts       # Server-side Supabase client
-│   ├── components/             # Shared React components (coming)
+│   ├── middleware.ts            # Auth middleware (protects dashboard/admin/bookings)
 │   └── types/
 │       └── database.ts         # TypeScript types matching DB schema
-├── database/
-│   ├── 001_initial_schema.sql  # Current schema (profiles, marinas, slips, bookings)
-│   ├── 002_seed.sql            # Test seed data
-│   └── schema_legacy.sql       # Old v1 schema (reference only)
-├── landing-page/               # Marketing landing page
+├── database/                   # SQL migrations (001–012); run in Supabase SQL Editor
+├── docs/                       # ARCHITECTURE.md, DEPLOYMENT.md, SETUP_GUIDE.md
+├── landing-page/               # Legacy standalone landing page (archived)
 ├── cold-email-automation/      # Python email outreach tools
-├── docs/                       # Setup, architecture, deployment guides
 ├── package.json
 ├── tsconfig.json
 ├── next.config.ts
@@ -97,11 +128,19 @@ pending/approved/confirmed -> cancelled
 - `app/config.js` (legacy credentials)
 - `cold-email-automation/*.csv` (contact lists)
 
-## Pending Features
+## Current Status (as of 2026-07-01)
 
-- Authentication (signup/login) — Phase 2
-- Marina search & listing pages — Phase 3
-- Booking flow — Phase 4
-- Stripe payment integration
-- Marina owner dashboard
-- Photo upload for marinas
+All core features are shipped and production-verified (132 tests green):
+- Auth: signup/login/logout with role-based access, email confirmation, password reset
+- Marina search: Mapbox interactive map, vessel dimension filters, public browsing
+- Booking flow: full lifecycle pending→approved→confirmed→completed, email notifications
+- Stripe Connect: Test-mode verified end-to-end (live-mode pending board — see EAS-118)
+- Marina owner dashboard: slip CRUD, bookings inbox with approve/deny, onboarding checklist
+- Photo upload for marinas: drag-and-drop via Supabase Storage
+- SEO: blog (5 posts), sitemap.xml, robots.txt, per-page OG/Twitter metadata
+- Admin: bookings panel, leads panel, GMV stats
+
+## Pending Board Action
+
+**EAS-118** — Stripe live-mode switch (revenue unblock). Engineering work is complete.
+Board must complete Stripe business verification and provide live keys. See `docs/DEPLOYMENT.md` for the runbook.
