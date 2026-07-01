@@ -35,7 +35,7 @@ Go to: https://vercel.com → EasyDock project → Settings → Environment Vari
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anon/public key |
 | `SUPABASE_SERVICE_ROLE_KEY` | Supabase service-role key (server-side only) |
 | `STRIPE_SECRET_KEY` | Stripe secret key (`sk_test_…` in test, `sk_live_…` in live) |
-| `STRIPE_WEBHOOK_SECRET` | Stripe webhook signing secret for `/api/webhook` |
+| `STRIPE_WEBHOOK_SECRET` | Stripe webhook signing secret for `/api/webhooks/stripe` |
 | `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Stripe publishable key (client-side) |
 
 ### Stripe live-mode switch (EAS-118)
@@ -48,7 +48,7 @@ When the board confirms live Stripe keys are available:
    - `STRIPE_WEBHOOK_SECRET` → new live signing secret (from Stripe dashboard → Webhooks)
 
 2. In the Stripe live dashboard, register the production webhook:
-   - Endpoint: `https://easydock.vercel.app/api/webhook`
+   - Endpoint: `https://easydock.vercel.app/api/webhooks/stripe`
    - Events: `checkout.session.completed`, `checkout.session.expired`, `account.updated`
 
 3. Trigger a Vercel redeploy so the new env vars take effect:
@@ -83,7 +83,7 @@ Check Vercel build logs in the dashboard. Common causes:
 ### Stripe webhooks not firing
 - Verify the webhook endpoint is registered in the **live** Stripe dashboard (not test)
 - Confirm `STRIPE_WEBHOOK_SECRET` matches the signing secret shown for that endpoint
-- Check Vercel function logs for 4xx/5xx from `/api/webhook`
+- Check Vercel function logs for 4xx/5xx from `/api/webhooks/stripe`
 
 ### Supabase connection issues
 - Verify `NEXT_PUBLIC_SUPABASE_URL` and keys are set in Vercel env vars

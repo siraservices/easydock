@@ -1,212 +1,140 @@
 # EasyDock Architecture Documentation
 
+> **Current stack:** Next.js 15 (App Router) + Supabase + Stripe Connect, deployed on Vercel.
+> The old vanilla JS / Netlify app is archived in `app-legacy/`.
+
 ## Project Structure
 
 ```
 easydock/
-├── app/                          # Main web application
-│   ├── index.html               # Home page
-│   ├── auth.html                # Login/signup page
-│   ├── search.html              # Marina search page
-│   ├── marina-detail.html       # Marina details & booking
-│   ├── dashboard.html           # User dashboard
-│   ├── admin.html               # Admin panel
-│   ├── config.js                # Configuration (update with your keys)
-│   ├── css/
-│   │   └── app.css              # Application styles
-│   └── js/
-│       ├── supabase-client.js   # Supabase initialization
-│       ├── auth.js              # Authentication functions
-│       ├── search.js            # Marina search & filtering
-│       ├── booking.js           # Booking management
-│       ├── dashboard.js         # Dashboard functionality
-│       └── admin.js             # Admin panel functions
-│
-├── landing-page/                 # Marketing landing page
-│   ├── index.html
-│   ├── styles.css
-│   ├── script.js
-│   └── README.md
-│
-├── cold-email-automation/        # Email outreach tools
-│   ├── email_automation.py
-│   ├── requirements.txt
-│   ├── test_email.py
-│   └── README.md
-│
-├── database/                     # Database schema
-│   └── schema.sql               # Complete database setup
-│
-├── docs/                        # Documentation
-│   ├── SETUP_GUIDE.md          # Setup instructions
-│   └── ARCHITECTURE.md         # This file
-│
-├── .gitignore                   # Git ignore rules
-├── netlify.toml                 # Netlify deployment config
-└── README.md                    # Main project documentation
+├── src/
+│   ├── app/                    # Next.js App Router pages
+│   │   ├── layout.tsx          # Root layout (nav, auth provider, analytics)
+│   │   ├── page.tsx            # Home / landing page
+│   │   ├── search/             # Marina search with map
+│   │   ├── marinas/[id]/       # Marina detail pages
+│   │   ├── slips/[id]/         # Slip detail pages (dynamic OG metadata)
+│   │   ├── bookings/           # Booking management (boat owner)
+│   │   ├── dashboard/          # Marina owner dashboard
+│   │   ├── admin/              # Admin panel
+│   │   ├── login/              # Login page
+│   │   ├── signup/             # Signup page (role selection)
+│   │   ├── forgot-password/    # Password reset request
+│   │   ├── reset-password/     # Password reset confirmation
+│   │   ├── auth/callback/      # Supabase auth callback handler
+│   │   ├── claim/              # Marina claim flow
+│   │   ├── blog/               # SEO blog content
+│   │   ├── pricing/            # Pricing page
+│   │   ├── calculator/         # ROI calculator
+│   │   ├── about/              # About page
+│   │   ├── terms/              # Terms of service
+│   │   ├── privacy/            # Privacy policy
+│   │   ├── robots.ts           # robots.txt (dynamic, disallows auth/admin paths)
+│   │   ├── sitemap.ts          # sitemap.xml (dynamic)
+│   │   ├── not-found.tsx       # 404 page
+│   │   ├── error.tsx           # Global error boundary
+│   │   └── api/                # API routes
+│   │       ├── checkout/       # Stripe checkout session creation
+│   │       ├── webhooks/stripe/ # Stripe webhook handler
+│   │       ├── connect/        # Stripe Connect (onboard/return/refresh/login-link)
+│   │       ├── bookings/[id]/  # Booking actions (approve/deny/cancel)
+│   │       ├── marinas/        # Marina CRUD
+│   │       ├── slips/          # Slip CRUD
+│   │       ├── leads/          # Lead capture
+│   │       ├── calculator-leads/ # Calculator lead capture
+│   │       └── admin/          # Admin endpoints
+│   ├── components/             # Shared React components
+│   │   └── ui/                 # UI primitives (LoadingSpinner, etc.)
+│   ├── lib/
+│   │   ├── auth-context.tsx    # AuthProvider + useAuth hook
+│   │   └── supabase/
+│   │       ├── client.ts       # Browser Supabase client
+│   │       └── server.ts       # Server-side Supabase client
+│   └── types/
+│       └── database.ts         # TypeScript types matching DB schema
+├── database/                   # SQL migrations (apply in order in Supabase SQL editor)
+│   ├── 001_initial_schema.sql  # Core tables: profiles, marinas, slips, bookings
+│   ├── 002_seed.sql            # Test seed data
+│   ├── 003_*.sql               # Marina leads, claim flow, profile trigger fixes
+│   ├── 004_*.sql               # Storage bucket, CSV import
+│   ├── 005_*.sql               # Marina spot requests, owner slip read policy
+│   ├── 006_marina_leads.sql
+│   ├── 007_booking_hardening.sql
+│   ├── 008_stripe_connect.sql  # stripe_account_id on marinas, Connect status
+│   ├── 009_marina_leads_intake_fields.sql
+│   ├── 010_slip_shore_power_type.sql
+│   ├── 011_waitlist_signups.sql
+│   └── 012_public_slip_reads.sql  # Public (anon) read on marinas/slips for SEO
+├── docs/
+│   ├── DEPLOYMENT.md           # Vercel deployment + Stripe live-mode runbook
+│   ├── ARCHITECTURE.md         # This file
+│   └── SETUP_GUIDE.md          # Local dev setup
+├── public/                     # Static assets
+├── app-legacy/                 # Archived vanilla JS app (do not use)
+└── cold-email-automation/      # Python outreach tools (EAS-26)
 ```
 
 ## Technology Stack
 
 ### Frontend
-- **HTML5** - Semantic markup
-- **CSS3** - Modern styling with CSS variables
-- **Vanilla JavaScript** - No framework dependencies
-- **Supabase JS Client** - Backend integration
+- **Next.js 15** (App Router) — server components, streaming, dynamic routes
+- **React 19** — client components where interactivity is needed
+- **TypeScript** — strict typing throughout
+- **Tailwind CSS 4** — utility-first styling, navy/teal theme
 
 ### Backend
-- **Supabase** - PostgreSQL database, authentication, storage
-- **Row Level Security (RLS)** - Database security policies
+- **Supabase** — PostgreSQL, Auth, Row Level Security, Storage
+- **Next.js API routes** — server-side business logic, webhook handling
 
-### Hosting & Deployment
-- **Netlify** - Static site hosting
-- **GitHub** - Version control (recommended)
+### Payments
+- **Stripe Connect** — platform payments + marina owner payouts (currently test mode; live pending EAS-118)
+- Webhook handler at `/api/webhooks/stripe` handles `checkout.session.completed`, `checkout.session.expired`, `account.updated`
 
-### Third-Party Services
-- **Stripe** - Payment processing (to be integrated)
-- **EmailJS** - Email notifications (optional)
+### Hosting & Observability
+- **Vercel** — hosting, edge middleware, preview deployments, analytics
+- **Resend** — transactional email (booking notifications, lead alerts)
+- **@vercel/analytics** — conversion event tracking
 
 ## Database Schema
 
 ### Core Tables
 
-1. **user_profiles**
-   - Extends Supabase auth.users
-   - Stores user type (boat_owner, marina_owner, admin)
-   - User preferences and settings
+1. **profiles** — extends `auth.users`; stores `role` (boat_owner | marina_owner | admin), `company_name`, `phone`, `stripe_account_id`
+2. **marinas** — listings with location, amenities, `is_active`, `stripe_account_id`, `stripe_onboarding_complete`
+3. **slips** — individual dock slips with dimensions, daily/weekly/monthly rates, power/water
+4. **bookings** — booking records; status flow: `pending → approved → confirmed → completed`; also `declined` and `cancelled`
 
-2. **marinas**
-   - Marina listings with details
-   - Pricing information
-   - Location and amenities
-   - Approval status
+### Row Level Security
 
-3. **bookings**
-   - Booking requests and confirmations
-   - Payment information
-   - Status tracking
-
-4. **availability**
-   - Calendar availability for marinas
-   - Price overrides for specific dates
-
-5. **messages**
-   - Communication between users
-   - Booking-related messages
-
-6. **reviews**
-   - Post-booking reviews and ratings
-
-## Security Model
-
-### Row Level Security (RLS)
 - All tables have RLS enabled
-- Users can only access their own data
-- Public read access for approved marinas
-- Admin users have elevated permissions
+- Marinas and slips: public (anon + authenticated) read when `is_active = TRUE` (migration 012)
+- Bookings: boat owner sees own; marina owner sees bookings for their marina; admin sees all
+- Profiles: users see their own; marina owners see profiles of their bookers
 
-### Authentication
-- Supabase Auth handles all authentication
-- Email/password authentication
-- Session management automatic
+### Auth Trigger
+
+`handle_new_user()` fires on `auth.users` insert; creates the `profiles` row including `full_name`, `role`, `company_name`, and `phone` from `raw_user_meta_data`. Migration `003_profile_trigger_company_phone.sql` extends the original trigger.
 
 ## User Flows
 
-### Boat Owner Flow
-1. Sign up → Create account
-2. Search → Browse available marinas
-3. View Details → See marina information
-4. Request Booking → Submit booking request
-5. Wait for Approval → Marina owner reviews
-6. Payment → Complete payment (when integrated)
+### Boat Owner
+1. Sign up (email confirmation) → search marinas → view slip detail → create booking (Stripe checkout) → marina owner approves → confirmed → completed
 
-### Marina Owner Flow
-1. Sign up → Create marina owner account
-2. Create Listing → Add marina details
-3. Wait for Approval → Admin reviews listing
-4. Receive Requests → View booking requests
-5. Approve/Decline → Manage bookings
-6. Receive Payments → Get paid (when integrated)
+### Marina Owner
+1. Sign up → dashboard → list marina/slips → complete Stripe Connect onboarding → receive bookings → approve → receive payout
+2. Or: claim an unclaimed marina listing via `/claim`
 
-### Admin Flow
-1. Sign in → Access admin panel
-2. Review Listings → Approve/reject marinas
-3. Monitor Activity → View analytics
-4. Manage Users → User administration
+### Admin
+1. Admin panel → approve/reject marina listings → manage users
 
-## API Integration
+## Security Model
 
-### Supabase Client
-- Initialized in `app/js/supabase-client.js`
-- Used throughout the application
-- Handles authentication and data operations
-
-### Configuration
-- All API keys stored in `app/config.js`
-- Never commit real credentials to git
-- Use environment variables in production
+- **Authentication**: Supabase Auth (email/password + email confirmation)
+- **Authorization**: Supabase RLS policies (server-enforced)
+- **API routes**: service-role key only on server; anon key on client
+- **Stripe webhooks**: signature verification with `STRIPE_WEBHOOK_SECRET`
+- **Booking state guards**: approve and deny routes reject non-pending bookings with 422
 
 ## Deployment
 
-### Netlify Configuration
-- `netlify.toml` defines deployment settings
-- Publish directory: `app`
-- No build process required
-- Automatic deployments from GitHub
-
-### Environment Setup
-1. Configure `app/config.js` with Supabase keys
-2. Run database schema in Supabase
-3. Create admin user
-4. Deploy to Netlify
-
-## Future Enhancements
-
-### Planned Features
-- [ ] Stripe payment integration
-- [ ] Photo upload functionality
-- [ ] Advanced calendar system
-- [ ] Real-time messaging
-- [ ] Reviews and ratings
-- [ ] Mobile app (React Native)
-
-### Scalability Considerations
-- Supabase free tier: ~100 users
-- Upgrade to Pro ($25/mo) for more capacity
-- Consider CDN for static assets
-- Implement caching strategies
-
-## Development Guidelines
-
-### Code Organization
-- Modular JavaScript files
-- Reusable helper functions
-- Consistent naming conventions
-- Error handling throughout
-
-### Best Practices
-- Always check authentication before operations
-- Validate user input
-- Handle errors gracefully
-- Provide user feedback
-
-### Testing
-- Test all user flows
-- Verify RLS policies
-- Check error handling
-- Test on multiple browsers
-
-## Support & Maintenance
-
-### Monitoring
-- Check Supabase logs regularly
-- Monitor Netlify deployment logs
-- Review user feedback
-- Track error rates
-
-### Updates
-- Keep Supabase client library updated
-- Monitor security advisories
-- Update dependencies regularly
-- Test updates in staging first
-
+Push to `main` → Vercel auto-deploys. See `docs/DEPLOYMENT.md` for the Stripe live-mode switch runbook and environment variable reference.
