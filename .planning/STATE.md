@@ -5,7 +5,7 @@ milestone_name: Revenue Unblock
 status: in_progress
 stopped_at: null
 last_updated: "2026-07-01"
-last_activity: 2026-07-01 — Heartbeat 8: deny-route confirmed-booking guard committed (28e6c38) — EAS-125 fix for pending-only deny (422 for confirmed); 4 tests pass. EAS-118 still blocked on board Stripe verification.
+last_activity: 2026-07-01 — Heartbeat 8: approve + deny routes now reject non-pending bookings with 422; 132 tests green (b716842). EAS-118 still blocked on board Stripe verification.
 progress:
   total_phases: 3
   completed_phases: 1
@@ -80,7 +80,7 @@ v1.4 EAS-118 (Stripe live-mode) pending board completing Stripe account verifica
 - Dynamic OG metadata for slip detail pages (2026-06-30 heartbeat 4): /slips/[id] split into server wrapper (generateMetadata) + slip-detail-client.tsx; each slip page gets its own OG/Twitter card from live Supabase data; commit b469394
 - Site-wide OG/Twitter metadata (2026-07-01 heartbeat 5): root layout.tsx has metadataBase + openGraph/twitter defaults; search/layout.tsx added; about page OG/Twitter; .gitignore excludes board design reference files; commit 13a5a19; 128 tests green, build clean
 - Public marina profile page (2026-07-01 heartbeat 6): /marinas/[id] — photos carousel, description, amenities, contact (phone/email/website), all available slips with Book Now links; claim CTA for unclaimed marinas; edit link for owners; marina name in SlipCard + slip detail page links to profile; sitemap.ts made async to include all active marina URLs; generateMetadata for OG/Twitter; commit b4066b0; 128 tests green, build clean
-- Deny-route confirmed-booking guard (2026-07-01 heartbeat 8): POST /api/bookings/[id]/deny now returns 422 if booking.status != 'pending' — prevents confirmed-booking mis-deny without refund; tests updated (4 pass, new case: 422-for-confirmed); commit 28e6c38
+- Booking state guards (2026-07-01 heartbeat 8): deny + approve routes now return 422 for non-pending bookings — prevents state machine violations (e.g., approving a confirmed booking, denying a cancelled one); tests updated to split-mock pattern with hoisted update spy, new 422-for-non-pending cases; commits 28e6c38 (deny) + b716842 (approve); 132 tests green
 
 ### Completed v1.3 Post-Ship Work
 
@@ -100,5 +100,5 @@ v1.4 EAS-118 (Stripe live-mode) pending board completing Stripe account verifica
 ## Session Continuity
 
 Last session: 2026-07-01
-Stopped at: v1.4 in progress. EAS-118 still blocked on board Stripe verification (EAS-119 in_review with CEO). Heartbeat 8: committed deny-route guard for confirmed bookings (28e6c38); 131 tests green (20 files), build clean. Next: unblock EAS-118 when board provides Stripe live keys.
+Stopped at: v1.4 in progress. EAS-118 still blocked on board Stripe verification (EAS-119 in_review with CEO). Heartbeat 8: approve + deny routes now both reject non-pending bookings with 422 (state machine integrity fix); 132 tests green, build clean. Next: unblock EAS-118 when board provides Stripe live keys.
 Resume file: None
