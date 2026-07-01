@@ -22,7 +22,12 @@ function LoginContent() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const errorParam = searchParams.get("error");
+  const [error, setError] = useState<string | null>(
+    errorParam === "auth_callback_failed"
+      ? "The confirmation link is invalid or has expired. Please try again."
+      : null
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const resetSuccess = searchParams.get("reset") === "success";
 

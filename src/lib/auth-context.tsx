@@ -129,6 +129,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         data: {
           full_name: fullName,
           role,
+          ...(options?.companyName ? { company_name: options.companyName } : {}),
+          ...(options?.phone ? { phone: options.phone } : {}),
         },
         ...(options?.redirectTo ? { emailRedirectTo: options.redirectTo } : {}),
       },
