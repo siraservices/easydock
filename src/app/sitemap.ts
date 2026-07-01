@@ -1,9 +1,10 @@
 import type { MetadataRoute } from "next";
 import { getAllPosts } from "@/lib/blog/posts";
+import { createClient } from "@/lib/supabase/server";
 
 const BASE_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://easydock.com";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const posts = getAllPosts();
 
   const staticPages: MetadataRoute.Sitemap = [
@@ -25,5 +26,27 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  return [...staticPages, ...blogPages];
+  // Marina profile pages
+  let marinaPages: MetadataRoute.Sitemap = [];
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from("marinas")
+      .select("id, updated_at")
+      .eq("is_active", true)
+      .limit(500) as unknown as { data: Array<{ id: string; updated_at: string }> | null };
+
+    if (data) {
+      marinaPages = data.map((m) => ({
+        url: `${BASE_URL}/marinas/${m.id}`,
+        lastModified: new Date(m.updated_at),
+        changeFrequency: "weekly" as const,
+        priority: 0.8,
+      }));
+    }
+  } catch {
+    // Supabase unavailable at build time — skip marina URLs
+  }
+
+  return [...staticPages, ...blogPages, ...marinaPages];
 }

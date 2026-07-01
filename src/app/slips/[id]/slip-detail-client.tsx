@@ -122,7 +122,13 @@ export default function SlipDetailClient() {
             {/* Marina & Slip info */}
             <div className="bg-white rounded-xl shadow-sm border p-6">
               <p className="text-sm text-gray-500 mb-1">
-                {marina.name} &middot; {marina.city}, {marina.state}
+                <Link
+                  href={`/marinas/${marina.id}`}
+                  className="hover:text-teal-600 hover:underline"
+                >
+                  {marina.name}
+                </Link>{" "}
+                &middot; {marina.city}, {marina.state}
               </p>
               <h1 className="text-2xl font-bold text-navy-800 mb-4">
                 {slip.name} &middot; {slip.length_ft}ft Slip

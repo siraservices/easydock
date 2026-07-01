@@ -58,7 +58,14 @@ export default function SlipCard({
       {/* Info */}
       <div className="p-4">
         <p className="text-xs text-gray-500 mb-1">
-          {marina.name} &middot; {marina.city}, {marina.state}
+          <Link
+            href={`/marinas/${marina.id}`}
+            className="hover:text-teal-600 hover:underline"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {marina.name}
+          </Link>{" "}
+          &middot; {marina.city}, {marina.state}
         </p>
         <h3 className="font-semibold text-navy-800 mb-2">
           {slip.name} &middot; {slip.length_ft}ft
