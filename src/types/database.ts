@@ -443,6 +443,46 @@ export interface Database {
         };
         Relationships: [];
       };
+      reviews: {
+        Row: {
+          id: string;
+          booking_id: string;
+          marina_id: string;
+          reviewer_id: string;
+          rating: number;
+          comment: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          booking_id: string;
+          marina_id: string;
+          reviewer_id: string;
+          rating: number;
+          comment?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          rating?: number;
+          comment?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "reviews_booking_id_fkey";
+            columns: ["booking_id"];
+            isOneToOne: true;
+            referencedRelation: "bookings";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "reviews_marina_id_fkey";
+            columns: ["marina_id"];
+            isOneToOne: false;
+            referencedRelation: "marinas";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       stripe_processed_events: {
         Row: {
           id: string;              // Stripe event ID (e.g., evt_xxx)

@@ -8,6 +8,7 @@ import { useAuth } from "@/lib/auth-context";
 import ProtectedRoute from "@/components/protected-route";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import StatusBadge from "@/components/ui/status-badge";
+import StarRating from "@/components/star-rating";
 import { formatPrice, formatDate, calculateNights } from "@/lib/utils/format";
 import type { Database } from "@/types/database";
 
@@ -38,6 +39,14 @@ export default function BookingDetailPage() {
   const [cancelling, setCancelling] = useState(false);
   const [cancelError, setCancelError] = useState<string | null>(null);
   const [pollTimedOut, setPollTimedOut] = useState(false);
+
+  // Review state
+  const [existingReview, setExistingReview] = useState<{ rating: number; comment: string | null } | null | undefined>(undefined);
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewComment, setReviewComment] = useState("");
+  const [submittingReview, setSubmittingReview] = useState(false);
+  const [reviewError, setReviewError] = useState<string | null>(null);
+  const [reviewSubmitted, setReviewSubmitted] = useState(false);
 
   async function fetchBooking() {
     const { data } = (await supabase
@@ -74,6 +83,46 @@ export default function BookingDetailPage() {
       setCancelling(false);
     }
   }
+
+  async function handleSubmitReview() {
+    if (!booking) return;
+    setSubmittingReview(true);
+    setReviewError(null);
+    try {
+      const res = await fetch("/api/reviews", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ booking_id: booking.id, rating: reviewRating, comment: reviewComment }),
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        setReviewError(json.error ?? "Failed to submit review");
+        return;
+      }
+      setExistingReview({ rating: reviewRating, comment: reviewComment });
+      setReviewSubmitted(true);
+    } catch {
+      setReviewError("Network error — please try again");
+    } finally {
+      setSubmittingReview(false);
+    }
+  }
+
+  // Fetch existing review for completed bookings
+  useEffect(() => {
+    if (!booking || booking.status !== "completed" || !user) return;
+    fetch(`/api/reviews?marina_id=${booking.marinas.id}`)
+      .then((r) => r.json())
+      .then(({ reviews }) => {
+        const mine = (reviews ?? []).find(
+          (r: { reviewer_id: string; rating: number; comment: string | null }) => r.reviewer_id === user.id
+        );
+        setExistingReview(mine ?? null);
+        if (mine) setReviewRating(mine.rating);
+      })
+      .catch(() => setExistingReview(null));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [booking?.id, booking?.status, user?.id]);
 
   useEffect(() => {
     fetchBooking();
@@ -322,6 +371,65 @@ export default function BookingDetailPage() {
               )}
           </div>
         </div>
+
+        {/* Review section — completed bookings only */}
+        {booking.status === "completed" && existingReview !== undefined && (
+          <div className="mt-6 bg-white rounded-xl shadow-sm border p-6">
+            <h2 className="text-base font-semibold text-navy-800 mb-3">
+              Your Review
+            </h2>
+
+            {existingReview || reviewSubmitted ? (
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <StarRating value={existingReview?.rating ?? reviewRating} size="md" />
+                  <span className="text-sm text-gray-600">
+                    {existingReview?.rating ?? reviewRating}/5
+                  </span>
+                </div>
+                {(existingReview?.comment || reviewComment) && (
+                  <p className="text-sm text-gray-700 italic">
+                    &ldquo;{existingReview?.comment ?? reviewComment}&rdquo;
+                  </p>
+                )}
+                {reviewSubmitted && (
+                  <p className="text-xs text-teal-600 mt-2">Thank you for your review!</p>
+                )}
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <div>
+                  <p className="text-sm text-gray-600 mb-2">
+                    How was your stay at {booking.marinas.name}?
+                  </p>
+                  <StarRating
+                    value={reviewRating}
+                    size="lg"
+                    interactive
+                    onChange={setReviewRating}
+                  />
+                </div>
+                <textarea
+                  value={reviewComment}
+                  onChange={(e) => setReviewComment(e.target.value)}
+                  placeholder="Share your experience (optional)"
+                  rows={3}
+                  className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-400 resize-none"
+                />
+                {reviewError && (
+                  <p className="text-sm text-red-600">{reviewError}</p>
+                )}
+                <button
+                  onClick={handleSubmitReview}
+                  disabled={submittingReview}
+                  className="bg-teal-600 hover:bg-teal-700 text-white px-5 py-2 rounded-lg font-semibold text-sm disabled:opacity-60"
+                >
+                  {submittingReview ? "Submitting…" : "Submit Review"}
+                </button>
+              </div>
+            )}
+          </div>
+        )}
 
         <div className="mt-6 text-center">
           <Link
