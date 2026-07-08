@@ -4,8 +4,8 @@ milestone: v1.4
 milestone_name: Revenue Unblock
 status: in_progress
 stopped_at: null
-last_updated: "2026-07-01"
-last_activity: 2026-07-01 — EAS-131: auth gap fixes — login page now surfaces auth_callback_failed URL param; company_name/phone saved in user metadata so email-confirmed signups don't lose them; DB migration 003 added; 132 tests green (b983ef4).
+last_updated: "2026-07-08"
+last_activity: 2026-07-08 — EAS-7 heartbeat: (1) booking-confirmed email bug fix — Stripe webhook now sends payment confirmation to both parties after checkout; (2) availability calendar on slip detail page for boat owners; (3) max price/night filter added to search. Commit 0c71a35; 132 tests green, build clean.
 progress:
   total_phases: 3
   completed_phases: 1
@@ -82,6 +82,7 @@ v1.4 EAS-118 (Stripe live-mode) pending board completing Stripe account verifica
 - Public marina profile page (2026-07-01 heartbeat 6): /marinas/[id] — photos carousel, description, amenities, contact (phone/email/website), all available slips with Book Now links; claim CTA for unclaimed marinas; edit link for owners; marina name in SlipCard + slip detail page links to profile; sitemap.ts made async to include all active marina URLs; generateMetadata for OG/Twitter; commit b4066b0; 128 tests green, build clean
 - Booking state guards (2026-07-01 heartbeat 8): deny + approve routes now return 422 for non-pending bookings — prevents state machine violations (e.g., approving a confirmed booking, denying a cancelled one); tests updated to split-mock pattern with hoisted update spy, new 422-for-non-pending cases; commits 28e6c38 (deny) + b716842 (approve); 132 tests green
 - Auth gaps fixed (2026-07-01 EAS-131): (1) login page now renders ?error=auth_callback_failed URL param as a human-readable message instead of silently swallowing it; (2) company_name and phone now passed in raw_user_meta_data during signUp so DB trigger captures them for email-confirmed signups — previously the early-return needsConfirmation path skipped the profile update entirely; database/003_profile_trigger_company_phone.sql updates the trigger; commit b983ef4; 132 tests green
+- Booking-confirmed email + calendar + price filter (2026-07-08 EAS-7 heartbeat): (1) Critical bug: Stripe webhook now sends booking-confirmed email to boat owner + marina owner after payment — previously users paid and got zero confirmation; (2) AvailabilityCalendar added to /slips/[id] for boat owners to see booked dates before booking; (3) Max Price/Night filter wired through search UI, buildSlipQuery (.lte), and mock-data fallback; commit 0c71a35; 132 tests green
 
 ### Completed v1.3 Post-Ship Work
 
@@ -100,6 +101,6 @@ v1.4 EAS-118 (Stripe live-mode) pending board completing Stripe account verifica
 
 ## Session Continuity
 
-Last session: 2026-07-01
-Stopped at: v1.4 in progress. EAS-118 still blocked on board Stripe verification (EAS-119 in_review with CEO). Heartbeat 8: approve + deny routes now both reject non-pending bookings with 422 (state machine integrity fix); 132 tests green, build clean. Next: unblock EAS-118 when board provides Stripe live keys.
+Last session: 2026-07-08
+Stopped at: v1.4 in progress. EAS-118 still blocked on board Stripe verification (EAS-119 in_review, board has not responded as of 2026-07-08). Heartbeat 9 (2026-07-08): booking-confirmed email bug fixed, availability calendar on slip detail, max price/night filter added; 132 tests green, build clean. Next: unblock EAS-118 when board provides Stripe live keys. Also consider: vessel profile management (repeat user friction) or review/rating system (marketplace trust).
 Resume file: None
