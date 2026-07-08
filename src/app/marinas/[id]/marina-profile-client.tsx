@@ -6,11 +6,15 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 import LoadingSpinner from "@/components/ui/loading-spinner";
+import StarRating from "@/components/star-rating";
 import { formatPrice } from "@/lib/utils/format";
 import type { Database } from "@/types/database";
 
 type Marina = Database["public"]["Tables"]["marinas"]["Row"];
 type Slip = Database["public"]["Tables"]["slips"]["Row"];
+type Review = Database["public"]["Tables"]["reviews"]["Row"] & {
+  profiles: { full_name: string | null } | null;
+};
 
 export default function MarinaProfileClient() {
   const params = useParams();
@@ -22,6 +26,7 @@ export default function MarinaProfileClient() {
   const [slips, setSlips] = useState<Slip[]>([]);
   const [loading, setLoading] = useState(true);
   const [photoIdx, setPhotoIdx] = useState(0);
+  const [reviews, setReviews] = useState<Review[]>([]);
 
   const isOwner = profile?.id === marina?.owner_id;
 
@@ -49,6 +54,16 @@ export default function MarinaProfileClient() {
         .order("price_per_night", { ascending: true });
 
       setSlips(slipData ?? []);
+
+      // Fetch reviews
+      try {
+        const res = await fetch(`/api/reviews?marina_id=${id}`);
+        const json = await res.json();
+        setReviews(json.reviews ?? []);
+      } catch {
+        // non-fatal
+      }
+
       setLoading(false);
     }
 
@@ -128,6 +143,20 @@ export default function MarinaProfileClient() {
           <h1 className="text-2xl sm:text-3xl font-bold text-navy-800 mb-1">
             {marina.name}
           </h1>
+          {reviews.length > 0 && (
+            <div className="flex items-center gap-1.5 mb-1">
+              <StarRating
+                value={reviews.reduce((s, r) => s + r.rating, 0) / reviews.length}
+                size="sm"
+              />
+              <span className="text-sm font-medium text-navy-700">
+                {(reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1)}
+              </span>
+              <span className="text-sm text-gray-400">
+                ({reviews.length} {reviews.length === 1 ? "review" : "reviews"})
+              </span>
+            </div>
+          )}
           <p className="text-gray-500">
             {marina.address}, {marina.city}, {marina.state}
             {marina.zip ? ` ${marina.zip}` : ""}
@@ -178,6 +207,47 @@ export default function MarinaProfileClient() {
               </div>
             </div>
           )}
+
+          {/* Reviews */}
+          {reviews.length > 0 && (() => {
+            const avg = reviews.reduce((s, r) => s + r.rating, 0) / reviews.length;
+            return (
+              <div>
+                <h2 className="text-lg font-semibold text-navy-800 mb-3">
+                  Reviews
+                  <span className="ml-2 text-sm font-normal text-gray-500">
+                    ({reviews.length})
+                  </span>
+                </h2>
+                <div className="flex items-center gap-2 mb-4">
+                  <StarRating value={avg} size="md" />
+                  <span className="font-semibold text-navy-800">{avg.toFixed(1)}</span>
+                  <span className="text-sm text-gray-500">out of 5</span>
+                </div>
+                <div className="space-y-4">
+                  {reviews.slice(0, 5).map((review) => (
+                    <div key={review.id} className="border-b pb-4 last:border-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <StarRating value={review.rating} size="sm" />
+                        <span className="text-xs text-gray-500">
+                          {review.profiles?.full_name ?? "Verified Guest"}
+                        </span>
+                        <span className="text-xs text-gray-400 ml-auto">
+                          {new Date(review.created_at).toLocaleDateString("en-US", {
+                            month: "short",
+                            year: "numeric",
+                          })}
+                        </span>
+                      </div>
+                      {review.comment && (
+                        <p className="text-sm text-gray-700">{review.comment}</p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })()}
 
           {/* Available slips */}
           <div>
