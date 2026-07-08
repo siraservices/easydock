@@ -34,6 +34,7 @@ export default function SearchPage() {
     boatBeam: "",
     boatDraft: "",
     shorePower: "",
+    maxPrice: "",
   });
   const [slips, setSlips] = useState<Slip[]>([]);
   const [loading, setLoading] = useState(false);
@@ -137,6 +138,7 @@ export default function SearchPage() {
               return false;
             }
           }
+          if (filters.maxPrice && slip.price_per_night > parseFloat(filters.maxPrice)) return false;
           return true;
         });
       } else {

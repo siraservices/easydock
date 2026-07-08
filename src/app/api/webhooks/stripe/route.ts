@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { sendBookingEmail, fetchBookingEmailParams } from "@/lib/email/send";
 
 function getStripe() {
   return new Stripe(process.env.STRIPE_SECRET_KEY!);
@@ -91,6 +92,14 @@ export async function POST(request: Request) {
         event_type: event.type,
         booking_id: bookingId,
       });
+
+      // Send booking-confirmed email to both parties (non-fatal)
+      try {
+        const emailParams = await fetchBookingEmailParams(supabase, bookingId);
+        await sendBookingEmail('confirmed', emailParams);
+      } catch (emailErr) {
+        console.error("Failed to send booking-confirmed email:", emailErr);
+      }
 
       break;
     }

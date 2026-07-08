@@ -11,6 +11,7 @@ export interface SearchFilters {
   boatBeam: string;
   boatDraft?: string;
   shorePower?: string;
+  maxPrice?: string;
 }
 
 /**
@@ -69,6 +70,10 @@ export function buildSlipQuery(
     } else {
       query = query.eq("shore_power_type", filters.shorePower);
     }
+  }
+
+  if (filters.maxPrice) {
+    query = query.lte("price_per_night", parseFloat(filters.maxPrice));
   }
 
   return query;

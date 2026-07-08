@@ -3,6 +3,7 @@ import BookingCreatedEmail from '@/emails/booking-created';
 import BookingApprovedEmail from '@/emails/booking-approved';
 import BookingDeniedEmail from '@/emails/booking-denied';
 import BookingCancelledEmail from '@/emails/booking-cancelled';
+import BookingConfirmedEmail from '@/emails/booking-confirmed';
 import LeadConfirmationEmail from '@/emails/lead-confirmation';
 import MarinaLeadConfirmation from '@/emails/marina-lead-confirmation';
 import MarinaActivationNudge from '@/emails/marina-activation-nudge';
@@ -30,7 +31,7 @@ export interface BookingEmailParams {
   marinaOwnerEmail: string;
 }
 
-type BookingTrigger = 'created' | 'approved' | 'denied' | 'cancelled';
+type BookingTrigger = 'created' | 'approved' | 'denied' | 'cancelled' | 'confirmed';
 
 function getSubject(trigger: BookingTrigger, marinaName: string): string {
   switch (trigger) {
@@ -42,6 +43,8 @@ function getSubject(trigger: BookingTrigger, marinaName: string): string {
       return `Booking update — ${marinaName}`;
     case 'cancelled':
       return `Booking cancelled — ${marinaName}`;
+    case 'confirmed':
+      return `Payment confirmed — ${marinaName}`;
   }
 }
 
@@ -54,6 +57,8 @@ function getRecipients(trigger: BookingTrigger, params: BookingEmailParams): str
     case 'denied':
       return [params.boatOwnerEmail];
     case 'cancelled':
+      return [params.boatOwnerEmail, params.marinaOwnerEmail];
+    case 'confirmed':
       return [params.boatOwnerEmail, params.marinaOwnerEmail];
   }
 }
@@ -68,6 +73,8 @@ function getTemplate(trigger: BookingTrigger, params: BookingEmailParams) {
       return BookingDeniedEmail(params);
     case 'cancelled':
       return BookingCancelledEmail(params);
+    case 'confirmed':
+      return BookingConfirmedEmail(params);
   }
 }
 

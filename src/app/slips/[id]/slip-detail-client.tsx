@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import BookingWidget from "@/components/booking-widget";
+import AvailabilityCalendar from "@/components/availability-calendar";
 import { formatPrice } from "@/lib/utils/format";
 import { MOCK_SLIPS } from "@/lib/mock-data";
 import type { Database } from "@/types/database";
@@ -205,6 +206,15 @@ export default function SlipDetailClient() {
                   <p className="text-sm text-gray-600">{slip.notes}</p>
                 </div>
               )}
+            </div>
+
+            {/* Availability calendar */}
+            <div className="bg-white rounded-xl shadow-sm border p-6">
+              <h3 className="font-semibold text-navy-800 mb-3">Availability</h3>
+              <AvailabilityCalendar
+                slips={[{ id: slip.id, name: slip.name }]}
+                marinaId={marina.id}
+              />
             </div>
 
             {/* Marina amenities */}
