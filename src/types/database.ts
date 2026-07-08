@@ -17,6 +17,9 @@ export interface Database {
           phone: string | null;
           role: "boat_owner" | "marina_owner" | "admin";
           company_name: string | null;
+          vessel_name: string | null;
+          vessel_length_ft: number | null;
+          vessel_type: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -27,6 +30,9 @@ export interface Database {
           phone?: string | null;
           role?: "boat_owner" | "marina_owner" | "admin";
           company_name?: string | null;
+          vessel_name?: string | null;
+          vessel_length_ft?: number | null;
+          vessel_type?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -37,6 +43,9 @@ export interface Database {
           phone?: string | null;
           role?: "boat_owner" | "marina_owner" | "admin";
           company_name?: string | null;
+          vessel_name?: string | null;
+          vessel_length_ft?: number | null;
+          vessel_type?: string | null;
           updated_at?: string;
         };
         Relationships: [

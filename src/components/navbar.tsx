@@ -88,6 +88,9 @@ export default function Navbar() {
               <Link href="/bookings" className="text-navy-200 hover:text-white transition-colors">
                 My Bookings
               </Link>
+              <Link href="/account" className="text-navy-200 hover:text-white transition-colors">
+                Account
+              </Link>
               <button onClick={handleSignOut} className="text-navy-200 hover:text-white transition-colors cursor-pointer">
                 Log Out
               </button>
@@ -172,6 +175,13 @@ export default function Navbar() {
                   className="block px-3 py-2.5 text-sm text-navy-200 hover:text-white hover:bg-navy-700 rounded-lg transition-colors"
                 >
                   My Bookings
+                </Link>
+                <Link
+                  href="/account"
+                  onClick={() => setMobileOpen(false)}
+                  className="block px-3 py-2.5 text-sm text-navy-200 hover:text-white hover:bg-navy-700 rounded-lg transition-colors"
+                >
+                  Account
                 </Link>
                 <button
                   onClick={handleSignOut}

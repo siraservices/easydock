@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import {
@@ -38,8 +38,26 @@ export default function BookingWidget({
   const [vesselLength, setVesselLength] = useState("");
   const [vesselType, setVesselType] = useState("");
   const [specialRequests, setSpecialRequests] = useState("");
+  const [saveVessel, setSaveVessel] = useState(false);
+  const [profileLoaded, setProfileLoaded] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+
+  // Pre-fill vessel info from saved profile
+  useEffect(() => {
+    if (!user || profileLoaded) return;
+    fetch("/api/profile")
+      .then((r) => r.ok ? r.json() : null)
+      .then((data) => {
+        if (data?.vessel_name || data?.vessel_length_ft || data?.vessel_type) {
+          setVesselName(data.vessel_name || "");
+          setVesselLength(data.vessel_length_ft ? String(data.vessel_length_ft) : "");
+          setVesselType(data.vessel_type || "");
+        }
+        setProfileLoaded(true);
+      })
+      .catch(() => setProfileLoaded(true));
+  }, [user, profileLoaded]);
 
   const nights =
     checkIn && checkOut ? calculateNights(checkIn, checkOut) : 0;
@@ -73,6 +91,23 @@ export default function BookingWidget({
     setSubmitting(true);
     setError("");
 
+    // Optionally save vessel info to profile before checkout
+    if (saveVessel && (vesselName || vesselLength || vesselType)) {
+      try {
+        await fetch("/api/profile", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            vessel_name: vesselName || null,
+            vessel_length_ft: vesselLength ? Number(vesselLength) : null,
+            vessel_type: vesselType || null,
+          }),
+        });
+      } catch {
+        // Non-fatal — proceed with booking
+      }
+    }
+
     try {
       const res = await fetch("/api/checkout", {
         method: "POST",
@@ -93,7 +128,6 @@ export default function BookingWidget({
 
       if (!res.ok) {
         if (res.status === 422) {
-          // Marina is not set up for online payments
           setError(data.error || "This marina is not currently accepting online payments. Please try another marina.");
         } else {
           setError(data.error || "Something went wrong.");
@@ -248,6 +282,19 @@ export default function BookingWidget({
             className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
           />
         </div>
+
+        {/* Save vessel info checkbox — only for logged-in boat owners */}
+        {user && (
+          <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={saveVessel}
+              onChange={(e) => setSaveVessel(e.target.checked)}
+              className="rounded border-gray-300 text-teal-600 focus:ring-teal-500"
+            />
+            Save vessel info for next time
+          </label>
+        )}
 
         {/* Price breakdown */}
         {nights > 0 && (
