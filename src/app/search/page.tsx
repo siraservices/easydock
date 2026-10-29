@@ -7,6 +7,8 @@ import SearchFiltersBar, {
   type SearchFilters,
 } from "@/components/search-filters";
 import SlipCard from "@/components/slip-card";
+import AiSearchBar from "@/components/ai-search-bar";
+import { SEARCH_AREAS, type AiSearchResult } from "@/lib/ai-search";
 import UnclaimedMarinaCard from "@/components/unclaimed-marina-card";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import EmptyState from "@/components/ui/empty-state";
@@ -19,6 +21,16 @@ type Slip = Database["public"]["Tables"]["slips"]["Row"] & {
   marinas: Marina;
 };
 
+const EMPTY_FILTERS: SearchFilters = {
+  checkIn: "",
+  checkOut: "",
+  boatLength: "",
+  boatBeam: "",
+  boatDraft: "",
+  shorePower: "",
+  maxPrice: "",
+};
+
 const MapView = dynamic(() => import("@/components/map-view"), {
   ssr: false,
   loading: () => <LoadingSpinner size="lg" message="Loading map..." />,
@@ -27,15 +39,7 @@ const MapView = dynamic(() => import("@/components/map-view"), {
 export default function SearchPage() {
   const supabase = useMemo(() => createClient(), []);
 
-  const [filters, setFilters] = useState<SearchFilters>({
-    checkIn: "",
-    checkOut: "",
-    boatLength: "",
-    boatBeam: "",
-    boatDraft: "",
-    shorePower: "",
-    maxPrice: "",
-  });
+  const [filters, setFilters] = useState<SearchFilters>(EMPTY_FILTERS);
   const [slips, setSlips] = useState<Slip[]>([]);
   const [loading, setLoading] = useState(false);
   const [visibleMarinaIds, setVisibleMarinaIds] = useState<Set<string>>(
@@ -105,13 +109,14 @@ export default function SearchPage() {
     setHoveredMarinaId(id);
   }, []);
 
-  const fetchSlips = useCallback(async () => {
+  const fetchSlips = useCallback(async (override?: SearchFilters) => {
+    const active = override ?? filters;
     setLoading(true);
 
     try {
       // Try Supabase first, fall back to mock data
       // Race against timeout — Supabase can hang if auth session is locked
-      const query = buildSlipQuery(supabase, filters);
+      const query = buildSlipQuery(supabase, active);
       const result = await Promise.race([
         query as Promise<{ data: Slip[] | null; error: { message: string } | null }>,
         new Promise<{ data: null; error: { message: string } }>((resolve) =>
@@ -128,32 +133,32 @@ export default function SearchPage() {
         }
         // Fall back to mock data with client-side filtering
         resultSlips = MOCK_SLIPS.filter((slip) => {
-          if (filters.boatLength && slip.length_ft < parseInt(filters.boatLength, 10)) return false;
-          if (filters.boatBeam && slip.width_ft !== null && slip.width_ft < parseInt(filters.boatBeam, 10)) return false;
-          if (filters.boatDraft && slip.depth_ft !== null && slip.depth_ft < parseInt(filters.boatDraft, 10)) return false;
-          if (filters.shorePower) {
-            if (filters.shorePower === "no_power") {
+          if (active.boatLength && slip.length_ft < parseInt(active.boatLength, 10)) return false;
+          if (active.boatBeam && slip.width_ft !== null && slip.width_ft < parseInt(active.boatBeam, 10)) return false;
+          if (active.boatDraft && slip.depth_ft !== null && slip.depth_ft < parseInt(active.boatDraft, 10)) return false;
+          if (active.shorePower) {
+            if (active.shorePower === "no_power") {
               if (slip.shore_power_type) return false;
-            } else if (slip.shore_power_type !== filters.shorePower) {
+            } else if (slip.shore_power_type !== active.shorePower) {
               return false;
             }
           }
-          if (filters.maxPrice && slip.price_per_night > parseFloat(filters.maxPrice)) return false;
+          if (active.maxPrice && slip.price_per_night > parseFloat(active.maxPrice)) return false;
           return true;
         });
       } else {
         resultSlips = rawSlips;
 
         // If dates selected, filter out slips with conflicting bookings
-        if (filters.checkIn && filters.checkOut) {
+        if (active.checkIn && active.checkOut) {
           const slipIds = resultSlips.map((s) => s.id);
           const { data: conflicts } = (await supabase
             .from("bookings")
             .select("slip_id")
             .in("slip_id", slipIds)
             .in("status", ["pending", "approved", "confirmed"])
-            .lt("check_in", filters.checkOut)
-            .gt("check_out", filters.checkIn)) as unknown as {
+            .lt("check_in", active.checkOut)
+            .gt("check_out", active.checkIn)) as unknown as {
             data: { slip_id: string }[] | null;
           };
 
@@ -170,6 +175,21 @@ export default function SearchPage() {
       setLoading(false);
     }
   }, [supabase, filters]);
+
+  // AI search: replace the filters with what Claude extracted, move the map
+  // to the named area, and run the same Supabase query as the Search button.
+  const handleAiResult = useCallback(
+    (result: AiSearchResult) => {
+      const next: SearchFilters = { ...EMPTY_FILTERS, ...result.filters };
+      setFilters(next);
+      if (result.area) {
+        const { longitude, latitude } = SEARCH_AREAS[result.area];
+        setInitialCenter({ longitude, latitude });
+      }
+      fetchSlips(next);
+    },
+    [fetchSlips]
+  );
 
   // Fetch slips on mount
   useEffect(() => {
@@ -243,10 +263,11 @@ export default function SearchPage() {
   const listPanel = (
     <div ref={listRef} className="h-full overflow-y-auto">
       <div className="p-4">
+        <AiSearchBar onResult={handleAiResult} />
         <SearchFiltersBar
           filters={filters}
           onFiltersChange={setFilters}
-          onSearch={fetchSlips}
+          onSearch={() => fetchSlips()}
         />
 
         {loading ? (
@@ -330,7 +351,7 @@ export default function SearchPage() {
               <SearchFiltersBar
                 filters={filters}
                 onFiltersChange={setFilters}
-                onSearch={fetchSlips}
+                onSearch={() => fetchSlips()}
               />
             </div>
 
